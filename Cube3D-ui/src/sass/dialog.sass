@@ -1,0 +1,40 @@
+@import "src/sass/mat-buttons.sass"
+
+.mat-mdc-dialog-title
+  margin-top: 0px
+  margin-left: 0px
+  margin-bottom: 20px
+  color: #626e75
+  font-size: 24px
+  border-bottom: 1px solid #ccc
+  margin-bottom: 20px
+  position: relative
+  white-space: nowrap
+  line-height: unset
+  span
+    border-bottom: 3px solid #626E75
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
+    font-size: 30px
+    option
+      font-weight: normal
+      font-size: 80%
+      background: #FFF
+    select
+      border-top: none
+      border-left: none
+      border-right: none
+      &:hover
+        background: #D9DFE3
+
+.mat-mdc-dialog-container
+  padding: 12px 24px 24px !important
+  background: #FFFFFF !important
+  h2
+    color: #FFF
+
+::ng-deep .cdk-overlay-pane:not(.full-width-dialog) .mat-mdc-dialog-container.mdc-dialog
+  .mdc-dialog__container
+    overflow: hidden
+    height: auto !important

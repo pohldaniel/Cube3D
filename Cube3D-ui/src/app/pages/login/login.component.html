@@ -1,0 +1,29 @@
+<app-spinner *ngIf="isWait"></app-spinner>
+
+<div *ngIf="dataLoaded" class="login">
+  <mat-card *ngIf="showRootPWForm">
+    <mat-card-header>
+     <!-- <div class="title">Login</div>-->
+      <img src="./assets/svg/questmark.svg" 
+           class="question-mark"
+           matTooltip="Benutzername und Password eingeben"
+           [matTooltipShowDelay]="0"/>
+    </mat-card-header>
+    <mat-card-content> 
+      <div class="container">
+        <input type="text" id="username" [(ngModel)]="username" autocomplete="off" autocorrect="off" placeholder="" class="form__input2">   
+        <label for="username">Benutzername</label>   
+        <input [type]="show ? 'text' : 'password'" id="password"  [(ngModel)]="password" autocomplete="off" autocorrect="off" placeholder="">
+        <label for="password">Passwort</label> 
+        <button (click)="onLogin()" class="login-button">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Login
+        </button>
+        <button (click)="toggle()" class="hide-button"><mat-icon>{{show ? 'visibility' : 'visibility_off'}}</mat-icon></button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

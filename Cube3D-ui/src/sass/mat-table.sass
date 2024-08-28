@@ -1,0 +1,123 @@
+@use '@angular/cdk'
+
+table
+  border-collapse: separate
+  border-spacing: 0
+  width: 100%
+  color: #000000
+
+// //! When focus arrow color | WOKRS ?!?
+// table:focus 
+//   outline: none
+//   border: 2px solid #2989d8
+
+::ng-deep .table-dimension
+  overflow-y: auto
+  overflow-x: auto
+  margin-left: 20px
+  width: calc(100% - 40px)
+  height: calc(90vh - 250px)
+
+
+// Border on the Leftn
+td:first-child, th:first-child
+   border-left: 1px solid rgba(0, 0, 0, 0.1)   
+
+// Header Cell Color and border
+.mat-mdc-header-row .mat-mdc-header-cell
+  border-top: 1px solid rgba(0, 0, 0, 0.1)
+  border-right: 1px solid rgba(0, 0, 0, 0.1)
+  background-image: linear-gradient(to top, #263A4B 0%, #334f66 100%) !important
+  color: #fff
+  font-weight: 700
+  font-size: 14px
+  padding: 0 5px !important
+
+//Border from cells
+td 
+  border-right: 1px solid rgba(0, 0, 0, 0.1) 
+  font-size: 14px
+  text-align: left
+  padding: 0 5px !important
+
+//rows different Colors
+.mat-mdc-row:nth-child(odd)
+  background-color: #ebf5fc
+.mat-mdc-row:nth-child(even)
+  background-color: #f9fcfd
+
+.mat-mdc-table
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) 
+
+
+//sort header button => hide the default icon
+th::ng-deep .mat-sort-header-arrow
+  display: none
+
+th::ng-deep .mat-sort-header-content::after
+  content:'\25b4\A\25be' / ''
+  white-space: pre
+  width: 20px
+  height: 12px
+  margin-left: 8px
+  margin-bottom: 8px
+  line-height: 10px
+  font-size: 25px
+  color: #AAAAAA
+  transform: scaleY(0.7)
+  speak: never
+  speak-as: spell-out
+ 
+//hover icon
+th::ng-deep .mat-sort-header-content:hover::after
+  color: #FFFFFF
+
+//ascending icon
+th[aria-sort='ascending']::ng-deep .mat-sort-header-content::after
+  content: '\25b4\A' / ''
+  color: #FFFFFF
+  speak: never
+  speak-as: spell-out
+
+//descending icon
+th[aria-sort='descending']::ng-deep .mat-sort-header-content::after
+  content: '\A\25be' / ''
+  color: #FFFFFF
+  speak: never
+  speak-as: spell-out
+
+
+
+//focus icon
+::ng-deep th.mat-sort-header.cdk-keyboard-focused .mat-sort-header-content::after
+  content: url(../assets/svg/sort.blue2.svg) / 'sortieren'
+  @include cdk.high-contrast()
+    padding-bottom: 25px
+    margin-top: 9px
+    padding-right: 20px
+    outline: solid 2px
+    outline-offset: 2px
+    content: url(../assets/svg/sort.yellow2.svg) / 'sortieren'
+ 
+::ng-deep th[aria-sort='ascending'].mat-sort-header.cdk-keyboard-focused .mat-sort-header-content::after
+  content: url(../assets/svg/sort.asc.blue2.svg) / 'sortieren'
+  color: #2989d8
+  @include cdk.high-contrast()
+    content: url(../assets/svg/sort.asc.yellow2.svg) / 'sortieren'
+
+
+::ng-deep th[aria-sort='descending'].mat-sort-header.cdk-keyboard-focused .mat-sort-header-content::after
+  content: url(../assets/svg/sort.desc.blue2.svg) / 'sortieren'
+  color: #2989d8
+  @include cdk.high-contrast()
+    content: url(../assets/svg/sort.desc.yellow2.svg) / 'sortieren'
+
+//remove default focus highlighting
+::ng-deep th.mat-sort-header.cdk-keyboard-focused .mat-sort-header-container
+  border-bottom: none
+
+::ng-deep .mdc-button.mat-mdc-button
+  .mat-icon
+    height: 75%
+    width: 75%
+    font-size: 24px

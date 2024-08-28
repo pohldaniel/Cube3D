@@ -1,0 +1,36 @@
+<div (ctrlB)="resetFocus()">
+  <h1 class="sitename"><span>Hilfe</span></h1>
+  <h3 style="padding-top: 0;margin-top: 0;margin-left: 20px; font-size: 25px;">Tastatur-Bedienung</h3>
+  <div style="margin-left: 20px;border: medium solid #2989d8;width: 90%;padding-left: 5px;">
+    <span style=" display:inline; margin-right: -20px;font-family: roboto-regular;font-size: 14px;">Alle Tab-Navigationen, wie abgebildet, lassen sich mit den Cursortasten links</span><img src="assets/img/left.jpg" style="transform: scale(0.2) translate(0px,-180px);margin-right: -20px;padding: 0;margin-bottom: -70px;"><span style=" display:inline;margin-right: -20px;font-family: roboto-regular;font-size: 14px;">und rechts</span><img src="assets/img/right.jpg" style="transform: scale(0.2) translate(0px,-180px);margin-right: -20px;padding: 0;margin-bottom: -70px;"><span style=" display:inline;font-family: roboto-regular;font-size: 14px;">zu bedienen.</span>
+    <br>
+    <span style="white-space: nowrap;">
+      <img src="assets/img/Tab2.jpg" style="transform: scale(0.7) translate(-170px,0px);margin: 0;">
+      <img src="assets/img/Tab1.jpg" style="transform: scale(0.8) translate(-250px,0px);margin: 0;">
+    </span>
+    <br>
+    <span style="font-family: roboto-regular;font-size: 14px;">Die Tastenkombination "Strg + m", navigiert direkt zum Anfang des Menüs.</span>
+    <br>
+    <span style="margin-top: 5px;font-family: roboto-regular;font-size: 14px;">Die Tastenkombination "Strg + b", navigiert zum ersten Element der jeweiligen Ansicht.</span>
+    <br>
+    <span style="margin-top: 5px;font-family: roboto-regular;font-size: 14px;">Mit der "Eingabetaste" können die fokussierten Elemente bedient werden. Checkboxen lassen sich, sowohl mit der "Eingabetaste" als auch mit der "Leertaste", bedienen.</span>
+  </div>
+  <h3 style="padding-top: 50px;margin-left: 22px;margin-top: -30px; font-size: 25px;">Hoher Kontrast</h3>
+  <div style="margin-left: 20px;border: medium solid #2989d8;width: 90%;padding-left: 5px;">
+    <span style=" display:inline; margin-right: -20px;font-family: roboto-regular;font-size: 14px;">Unter Windows lässt sich der hohe Kontrast-Modus mittels linkem "Alt" + "Shift" + "Druck" aktivieren bzw. deaktivieren. Nach Aktivierung bzw. Deaktivierung dieses Modus, bitte die Seite neu laden.</span>
+  </div>
+</div><!-- main content end-->
+
+<footer>
+    <div class="button-group">       
+      <button (click)="openInfoDialog();">
+        <div>Info</div>
+      </button> 
+      <button (click)="openPopUpDialog();" style="top: 9.5px;margin-top: -9.5px;">
+        <div>Pop <br> Up</div>
+      </button> 
+      <button (click)="openConfirmDialog();" style="margin-right: -0.2px;">
+        <div>Confirm</div>
+      </button> 
+    </div>       
+</footer>

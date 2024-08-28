@@ -1,0 +1,14 @@
+<app-spinner *ngIf="isWait"></app-spinner>
+
+<div content>
+  <h1 class="sitename"><span>Einstellungen</span></h1>
+  <h3 style="padding-top: 0;margin-top: 0;margin-left: 20px; font-size: 25px;">Log Level</h3>
+  <div style="margin-left: 20px;border: medium solid #2989d8;width: 90%;padding-left: 5px;">
+    <input #toggelLevel type="checkbox" style="margin-left: 20px;" (change)="changeLogLevel($event)">
+    <span [ngClass]="logLevel=='ERROR' ? 'filter-shadow' : 'filter-shadow-blue'">{{logLevel}}</span>
+  </div>
+</div><!-- main content end-->
+
+<footer>
+  
+</footer>

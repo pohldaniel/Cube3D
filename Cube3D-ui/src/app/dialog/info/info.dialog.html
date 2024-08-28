@@ -1,0 +1,34 @@
+<div >
+  <h1 mat-dialog-title><span>Info</span></h1>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="nameForm">
+    <div style="width: 100%;">
+      <mat-form-field [floatLabel]="'always'" #hook>
+        <mat-label style="font-size:20px;">Name</mat-label>
+        <input matInput cdkFocusInitial autocomplete="off" formControlName="name" required>
+      </mat-form-field>
+    </div>
+  </form>
+  <div style="width: 100%;">
+    <mat-form-field [floatLabel]="'always'" appearance="fill">
+      <mat-label style="font-size:20px;">Service</mat-label>
+      <input matInput
+       style="color: #A1A1A1;"
+       spellcheck="false" 
+       autocomplete="off" 
+       tabindex="-1"     
+       readonly       
+       type="text" 
+       [(ngModel)]="value">        
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button default [disabled]="nameForm.invalid" (click)="save()">
+    <div style="position: relative; top: -4px; font-size: 16px;">Anlegen</div>
+  </button>    
+  <button default (click)="close()">
+    <div style="position: relative; top: -4px; font-size: 16px;">Abbrechen</div>
+  </button>
+</mat-dialog-actions>

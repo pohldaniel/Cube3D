@@ -1,0 +1,47 @@
+<div >
+  <h1 mat-dialog-title><span>Edit Person</span></h1>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="personForm">
+    <div>
+      <mat-form-field style="margin-right: 20px; margin-top: 15px">
+        <input matInput formControlName="surname" placeholder="Surname" required>
+      </mat-form-field>
+      <mat-form-field style="margin-right: 20px; margin-top: 15px">
+        <input matInput formControlName="prename" placeholder="Prename" required>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field style="margin-right: 20px; margin-top: 15px">
+        <input matInput formControlName="mail" placeholder="E-Mail" required>
+      </mat-form-field>
+      <mat-form-field style="margin-right: 20px; margin-top: 15px">
+        <input matInput formControlName="externalCompany" placeholder="External Company">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field style="margin-top: 15px; position: relative; left: 30%; transform: translateX(-30%);">
+      <mat-label>Role</mat-label>
+      <select matNativeControl formControlName="role" required>
+        <option value="ADMIN">ADMIN</option>
+        <option value="ACTION_MANAGER">ACTION_MANAGER</option>
+        <option value="TOPICAREA_MANAGER">TOPICAREA_MANAGER</option>
+        <option value="USER">USER</option>
+        <option value="PERSON_MANAGER">PERSON_MANAGER</option>
+      </select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button default [disabled]=this.personForm.invalid (click)="editPerson()">
+    <div style="position: relative; top: -4px;">Save</div>
+  </button>
+  <button default (click)="close()">
+    <div style="position: relative; top: -4px;">Cancel</div>
+  </button>
+</mat-dialog-actions>
+
+

@@ -1,0 +1,69 @@
+<app-spinner *ngIf="isWait"></app-spinner>
+
+<div content>
+  <h1 class="sitename"><span>Benutzerverwaltung</span></h1>
+  <div class="table-dimension">
+    <table mat-table [dataSource]="dataSource" matSort matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+        <td mat-cell *matCellDef="let person"> {{person.id}} </td>
+      </ng-container>
+      <ng-container matColumnDef="passwordResetLink">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Reset Password Link </th>
+        <td mat-cell *matCellDef="let person">
+          <a href="{{person.passwordResetLink}}" 
+             class="link-primary"
+             target="_blank">{{person.passwordResetLink}}
+          </a>
+      </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef >Actions</th>
+        <td mat-cell *matCellDef="let person" >         
+          <button type="button" 
+                  class="btn btn-success" 
+                  (click)="genrateLink(person)"                          
+                  [ngStyle]="{'display' : authenticationService.containsRole(['ADMIN', 'PERSON_MANAGER']) ? 'inline-block' : 'none'}" 
+                  [disabled]="!authenticationService.containsRole(['ADMIN', 'PERSON_MANAGER'])"
+                  matTooltip="Generate Reset Password Link" 
+                  [matTooltipShowDelay]="0"><fa-icon [icon]="['fas', 'lock-open']"></fa-icon>
+          </button>
+          <button type="button" 
+                  class="btn btn-primary" 
+                  (click)="removeLink(person)"    
+                  [ngStyle]="{'display' : authenticationService.containsRole(['ADMIN', 'PERSON_MANAGER']) ? 'inline-block' : 'none'}" 
+                  [disabled]="!authenticationService.containsRole(['ADMIN', 'PERSON_MANAGER'])"
+                  matTooltip="Remove Reset Password Link"      
+                  [matTooltipShowDelay]="0"><fa-icon [icon]="['fas', 'lock']"></fa-icon>
+          </button>
+          <button type="button" 
+                  class="btn btn-warning" 
+                  (click)="editPerson(person)"><fa-icon [icon]="['far', 'edit']"></fa-icon>
+          </button>
+          <button type="button" 
+                  class="btn btn-danger" 
+                  (click)="deletePerson(person)"
+                  [ngStyle]="{'display' : authenticationService.containsRole(['ADMIN']) ? 'inline-block' : 'none'}" 
+                  [disabled]="!authenticationService.containsRole(['ADMIN']) || person.id === authenticationService.getCurrentId()"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+          </button>
+        </td>
+      </ng-container>     
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let person; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div><!-- main content end-->
+
+<footer>
+  <div class="button-group">       
+    <button (click)="register();">
+      <div>Registrieren</div>
+    </button> 
+    <button (click)="refreshTable()">
+      <div>Refresh</div>
+    </button>    
+  </div>
+</footer>

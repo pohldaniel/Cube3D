@@ -1,0 +1,113 @@
+@import "src/sass/dialog.sass"
+@import "src/sass/mat-form-field.sass"
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled.mdc-text-field
+  background-color: transparent 
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled .mat-mdc-form-field-focus-overlay
+  background-color: transparent
+
+//background hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled:hover .mat-mdc-form-field-focus-overlay
+  background-color: transparent
+
+//lable hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled:hover.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #0E77CD
+
+//ripple hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled:hover.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::before
+  border-bottom-color: #0E77CD  
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field
+  background-color: transparent 
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mat-mdc-form-field-focus-overlay
+  background-color: transparent
+
+//background hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:hover .mat-mdc-form-field-focus-overlay
+  background-color: transparent
+
+//lable hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:hover.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #074267
+
+////////////////////////////////////////////////////////////////////////////////
+
+//lable hover
+::ng-deep .mat-mdc-form-field:not(.ng-invalid) .mdc-text-field--filled:hover.mdc-text-field.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #0E77CD
+
+::ng-deep .mat-mdc-form-field.ng-invalid .mdc-text-field--filled:hover.mdc-text-field.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #ff0000
+
+//lable focused
+::ng-deep .mat-mdc-form-field .mdc-text-field.mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label
+  color: #ff0000
+  transition: none
+
+//lable focused hover
+::ng-deep .mat-mdc-form-field .mdc-text-field.mdc-text-field--filled:hover.mdc-text-field--invalid:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label
+  color: #ff0000
+
+//ripple hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled:hover.mdc-text-field.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::before
+  border-bottom-color: #ff0000
+
+//ripple focused
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled.mdc-text-field.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::after 
+  border-bottom-color: #ff0000
+
+//ripple focused
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled.mdc-text-field.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::after 
+  border-bottom-color: #ff0000
+
+//ripple focused hover
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled:hover.mdc-text-field.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::after 
+  border-bottom-color: #ff0000
+
+::ng-deep .mat-mdc-form-field:not(.ng-invalid) .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::before
+  border-bottom-color: #949494
+  margin-left: 16px
+  width: calc(100% - 25px)
+
+::ng-deep .mat-mdc-form-field:not(.ng-invalid) .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::after 
+  transition: none
+  border-bottom-color: #0E77CD
+  margin-left: 16px
+  width: calc(100% - 25px)
+
+::ng-deep .mat-mdc-form-field:not(.ng-invalid)  .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled):hover .mdc-line-ripple::before
+  border-bottom-color: #0E77CD
+  margin-left: 16px
+  width: calc(100% - 25px)
+
+::ng-deep .mat-mdc-form-field.ng-invalid .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::before
+  border-bottom-color: #ff0000
+  margin-left: 16px
+  width: calc(100% - 25px)
+
+::ng-deep .mat-mdc-form-field.ng-invalid .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::after 
+  transition: none
+  border-bottom-color: #ff0000
+  margin-left: 16px
+  width: calc(100% - 25px)
+
+::ng-deep .mat-mdc-form-field.ng-invalid .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled) .mdc-line-ripple::before
+  border-bottom-color: #ff0000
+  margin-left: 16px
+  width: calc(100% - 25px)
+
+
+::ng-deep .mat-mdc-form-field:not(.ng-invalid) .mdc-text-field--filled.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #074267
+  transition: none
+
+::ng-deep .mat-mdc-form-field:not(.ng-invalid) .mdc-text-field--filled.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #0E77CD
+  font-weight: bold
+
+::ng-deep .mat-mdc-form-field.ng-invalid .mdc-text-field--filled.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #ff0000
+  font-weight: bold

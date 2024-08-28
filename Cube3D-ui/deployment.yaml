@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cube3d-deployment
+  labels:
+    app: cube3d
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cube3d
+  template:
+    metadata:
+      labels:
+        app: cube3d
+    spec:
+      containers:
+      - name: cube3d
+        image: public.ecr.aws/a1l1z2r2/cube3d:latest
+        ports:
+        - containerPort: 80

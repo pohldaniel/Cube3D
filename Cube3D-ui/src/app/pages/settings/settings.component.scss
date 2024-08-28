@@ -1,0 +1,77 @@
+
+
+.filter-shadow {
+    font-weight: 600;
+    text-transform: uppercase; 
+    font-size: 70px;
+    color: transparent;
+    //background: linear-gradient(180deg, #fefefe, #bbb);
+    background: linear-gradient(180deg, #ed4e4e, rgb(92, 25, 25));
+
+    background-clip: text;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: -10px;
+    padding-left: 20px;
+    filter:
+      drop-shadow( -1px -1px white )     
+      drop-shadow( 1px 1px darken(white, 54%) )
+      drop-shadow( 1px 1px darken(white, 56%) )
+      drop-shadow( 1px 1px darken(white, 58%) )
+      drop-shadow( 1px 1px darken(white, 60%) )
+      drop-shadow( 1px 1px darken(white, 62%) )
+      drop-shadow( 1px 1px darken(white, 64%) )
+      drop-shadow( 1px 1px darken(white, 66%) )      
+      drop-shadow( 12px 12px 30px rgba(black, 0.2) )
+      drop-shadow( 12px 12px 10px rgba(black, 0.2) )
+    ; 
+  }
+
+  .filter-shadow-blue {
+    font-weight: 600;
+    text-transform: uppercase; 
+    font-size: 70px;
+    color: transparent;
+    //background: linear-gradient(180deg, #fefefe, #bbb);
+    background: linear-gradient(180deg, #4ea0ed, rgb(25, 66, 92));
+
+    background-clip: text;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: -10px;
+    padding-left: 20px;
+    filter:
+      drop-shadow( -1px -1px white )    
+      drop-shadow( 1px 1px darken(white, 54%) )
+      drop-shadow( 1px 1px darken(white, 56%) )
+      drop-shadow( 1px 1px darken(white, 58%) )
+      drop-shadow( 1px 1px darken(white, 60%) )
+      drop-shadow( 1px 1px darken(white, 62%) )
+      drop-shadow( 1px 1px darken(white, 64%) )
+      drop-shadow( 1px 1px darken(white, 66%) )      
+      drop-shadow( 12px 12px 30px rgba(black, 0.2) )
+      drop-shadow( 12px 12px 10px rgba(black, 0.2) )
+    ; 
+  }
+
+  .text-shadow {
+    color: #f4f4f4;
+   text-shadow:
+      -1px -1px white,
+      1px 1px darken(white, 50%),
+      2px 2px darken(white, 52%),
+      3px 3px darken(white, 54%),
+      4px 4px darken(white, 56%),
+      5px 5px darken(white, 58%),
+      6px 6px darken(white, 60%),
+      7px 7px darken(white, 62%),
+      8px 8px darken(white, 64%),
+      9px 9px darken(white, 66%),
+      10px 10px darken(white, 68%),
+      11px 11px darken(white, 70%),
+      18px 18px 30px rgba(black, 0.4),
+      18px 18px 10px rgba(black, 0.4)
+    ; 
+  }

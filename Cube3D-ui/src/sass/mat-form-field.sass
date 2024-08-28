@@ -1,0 +1,109 @@
+@use '@angular/cdk'
+
+// ::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field
+//   @include textfield.outline-color(#949494)
+  // @include textfield.disabled-outline-color(#949494)
+  // @include textfield.hover-outline-color(#949494)
+  // @include textfield.focused-outline-color(#ff0000)
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-notched-outline__leading 
+  border-color: #949494
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-notched-outline__notch 
+  border-color: #949494
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing 
+  border-color:#949494
+
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__leading
+  border-color: #949494
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__notch
+  border-color: #949494 
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__trailing
+  border-color: #949494
+
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__leading 
+  border-color: #0E77CD
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__notch 
+  border-color: #0E77CD
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing 
+  border-color: #0E77CD
+  
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//::ng-deep .mat-mdc-form-field .mdc-text-field--filled.mdc-text-field
+  //@include textfield.line-ripple-color(#949494)
+  //@include textfield.bottom-line-color(#949494)
+  //@include textfield.hover-bottom-line-color(#949494)
+
+
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--filled.mdc-text-field--disabled .mdc-line-ripple::before
+  margin-left: 16px
+  width: calc(100% - 25px)
+/////////////////////////////////////////////////////////////////////////////////////////////
+//::ng-deep .mat-mdc-form-field .mdc-text-field--filled.mdc-text-field
+  //@include textfield.label-color(#ff0000)
+  //@include textfield.fill-color(transparent)
+
+//::ng-deep .mat-mdc-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+  //@include textfield.label-color(#ff0000)
+
+
+
+
+
+
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #074267
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label
+  color: #0E77CD
+  font-weight: bold
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused input
+  caret-color: #000000
+
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused input
+  caret-color: #000000
+
+::ng-deep .mat-mdc-form-field
+  margin-left: -13px
+
+.mat-mdc-form-field[fullWidth]
+  width: 95%
+
+.mat-mdc-form-field.mat-form-field-disabled
+  margin-left: 0px
+
+::ng-deep .mdc-text-field--disabled
+  //@include textfield.disabled-label-color(#074267)
+  //@include textfield.disabled-ink-color(#000000)
+  //@include textfield.disabled-bottom-line-color(#000000)
+  //.mat-mdc-select-value
+    //color: #000000
+
+
+::ng-deep .mat-mdc-paginator .mat-mdc-paginator-container .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-notched-outline__leading 
+  border-top: none
+  border-left: none
+  border-right: none
+  border-radius: 0
+
+::ng-deep .mat-mdc-paginator .mat-mdc-paginator-container .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-notched-outline__notch 
+  border-top: none
+  border-left: none
+  border-right: none
+  border-radius: 0
+
+::ng-deep .mat-mdc-paginator .mat-mdc-paginator-container .mdc-text-field--outlined.mdc-text-field:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing 
+  border-top: none
+  border-left: none
+  border-right: none
+  border-radius: 0
