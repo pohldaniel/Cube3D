@@ -1,0 +1,30 @@
+#Production mode
+vault server -config=config.hcl
+
+set VAULT_ADDR=http://127.0.0.1:8200
+vault operator init
+
+Unseal Key 1: jCAzixlAAkjs3k1ZORadU2rO9yDdiN+Z1/JZhAAl+Il6
+Unseal Key 2: D+wydMzIwYD0KtcvOuuGV+NNFCUjDZEb/yGWFi2oPDm5
+Unseal Key 3: Bo/2KeaW6xwUv3WCLNpKl6gEYetT7WGJUu01M47gPisN
+Unseal Key 4: 5hjsVc+ofWJsBNLGtwN55P4UCB0dYVthmHaLX7kBlBLH
+Unseal Key 5: A3/Ux1z2nY9L+c8prJ+hX3s9kmCVKOUnLi3kwj3KNbFs
+
+Initial Root Token: hvs.PcUOa2KS9qlHvV5N4cPFp591
+
+set VAULT_TOKEN="hvs.PcUOa2KS9qlHvV5N4cPFp591"
+set VAULT_TOKEN=
+
+vault operator unseal
+vault operator seal
+vault login
+vault status
+vault secrets list -detailed
+
+vault secrets enable -path=secret/ kv
+vault secrets disable secret/
+vault write secret/git-credentials username="test" password="test"
+
+
+terraform init
+terraform apply
