@@ -8,5 +8,5 @@ listener "tcp" {
 }
 
 storage "file" {
-  path = "C:/vault"
+  path = "./data"
 }
