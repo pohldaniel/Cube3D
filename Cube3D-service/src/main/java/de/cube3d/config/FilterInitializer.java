@@ -31,7 +31,7 @@ public class FilterInitializer {
 	public FilterRegistrationBean<OIDCFilter> oidcFilterRegistration() {
 		FilterRegistrationBean<OIDCFilter> registration = new FilterRegistrationBean<OIDCFilter>();
 		registration.setFilter(new OIDCFilter());
-		registration.addUrlPatterns("/oidc/*");
+		registration.addUrlPatterns("/oidc/*", "/login");
 		return registration;
 	}
 }

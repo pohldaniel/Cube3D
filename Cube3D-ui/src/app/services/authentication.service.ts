@@ -14,6 +14,9 @@ import {Role} from '../models/Role.enum';
   public currentJwtSubject: BehaviorSubject<string | null>;
   public currentJwt: Observable<string | null>;
 
+  public currentTokenMapSubject: BehaviorSubject<string | null>;
+  public currentTokenMap: Observable<string | null>;
+
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private readonly http: HttpClient, private readonly jwtService : JwtHelperService) {
@@ -23,6 +26,9 @@ import {Role} from '../models/Role.enum';
 
     this.currentJwtSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('currentJwt'));
     this.currentJwt = this.currentJwtSubject.asObservable();
+
+    this.currentTokenMapSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('currentTokenMap'));
+    this.currentTokenMap = this.currentJwtSubject.asObservable();
   }
 
   public get currentRouteValue(): string {
@@ -33,26 +39,45 @@ import {Role} from '../models/Role.enum';
     return this.currentJwtSubject.value as string;
   }
 
+  public get currentTokenMapValue(): string {
+    return this.currentTokenMapSubject.value as string;
+  }
+
   public setCurrentRouteValue(route: string) {
     sessionStorage.setItem('currentRoute', route);
     this.currentRouteSubject.next(route);
   }
 
-  public setCurrentJwtValue(route: string) {
-    sessionStorage.setItem('currentJwt', route);
-    this.currentJwtSubject.next(route);
+  public setCurrentJwtValue(jwt: string) {
+    sessionStorage.setItem('currentJwt', jwt);
+    this.currentJwtSubject.next(jwt);
+  }
+
+  public setTokenMapValue(tokenMap: string) {
+    sessionStorage.setItem('currentTokenMap', tokenMap);
+    this.currentTokenMapSubject.next(tokenMap);
   }
 
   login(id: string, passwordHash: string) {
     return this.http.post<Person>(environment.baseUrl + '/auth/authenticate', {id, passwordHash}, {headers: this.headers});
   }
 
-  token(person: Person) {
+  getToken(person: Person) {
     return this.http.post<Person>(environment.baseUrl + '/auth/token', JSON.stringify(person), {headers: this.headers});
   }
 
   refreshToken() : Observable<string> {
     return this.http.post<string>(environment.baseUrl + '/auth/refresh', {'token': this.currentJwtSubject.value}, {headers: this.headers});   
+  }
+
+  gethTokenOIDC(code : string){
+    const params = new HttpParams()
+    .set('code', code)
+    return this.http.get<any[]>(environment.baseUrl + '/oidc/token', {params, headers: this.headers});
+  }
+
+  refreshTokenOIDC() : Observable<string> {
+    return this.http.post<string>(environment.baseUrl + '/oidc/refresh', {'id_token': this.currentJwtSubject.value, 'access_toke': JSON.parse(this.currentTokenMapSubject.value as string).accessToken, 'remoteUser': JSON.parse(this.currentTokenMapSubject.value as string).remoteUser}, {headers: this.headers});   
   }
 
   logout() {
@@ -61,6 +86,9 @@ import {Role} from '../models/Role.enum';
 
     sessionStorage.removeItem('currentJwt');
     this.currentJwtSubject.next(null);
+
+    sessionStorage.removeItem('currentTokenMap');
+    this.currentTokenMapSubject.next(null);
   }
 
   public getCurrentRoles() : Role[] {

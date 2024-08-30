@@ -43,7 +43,7 @@ export const routes: Routes = [
     data : {showSidebar: true, Roles: [Role.ADMIN, Role.PERSON_MANAGER] }
   }, 
   {
-    path: 'login',
+    path: 'gateway',
     component: LoginComponent,
     data : {showSidebar: false}
   },

@@ -65,7 +65,7 @@ curl -H "X-Vault-Token: hvs.CAESIA71O__2HZctLUATM_xpM_8OU2XMpU4lbe5C8Ja5o_utGh4K
 https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/token_auth_backend_role#token_explicit_max_ttl
 
 
-curl --header "X-Vault-Token: hvs.CAESID0tknV6nthYjmv2RV-_Q9Dg9EDNRi3B_w2E6Z6-hn9lGh4KHGh2cy5yZkVtWkw2ZHlyeUNjZU5LYUJjeElqUGU" --request POST http://127.0.0.1:8200/v1/auth/token/renew-self
+curl --header "X-Vault-Token: hvb.AAAAAQLhxRG7XFB75yRTJFlDGsIYd7nw4JtLunDJVtvaVs536lkC1SV3F4qhfy1GQRJ6ux2RRkKT9ThPNSbW_C-EQNHJWIK7jFnsNwTpU-_N3tHyBUSJGCk5B2vc1vY0lWDoXc8XUNRc5RhCg55civy3pOvC55STLntgSv0GwkzKRaHwNxHd7EpiB8-TkrW33tEsQ3C9EvbVtOOYH7Tw1V1rJPN8qnqnFLIQwafvQkb4KOtJlgss4kP4CsMA8k_x1_AHemLdGXh-jb7D1TqtSTCUQ0fEx4XSIJitwIqHgfSbuECVD6zXonPQl7YiLjLLrvw8ErCVbTV9pwaoUP4HRmz7iWR-29w2ElVTkzO_p49r-4FOzfsul4g99zb6gz0Xkdi4KDWX-qf10thE-oorFJbTALJlvwKL7VLl1gKxFcv4JQ" --request POST http://127.0.0.1:8200/v1/auth/token/renew-self
 curl --header "X-Vault-Token: hvs.RpXtV43cGcqbHklqD5W9dUHz" --request POST --data @payload.json http://127.0.0.1:8200/v1/auth/token/renew
 curl -X POST -H "Content-Type: application/json" -d "{ \"password\": \"salt\" }" http://127.0.0.1:8200/v1/auth/userpass/login/daniel
 
@@ -79,7 +79,7 @@ vault write auth/userpass/users/test policies=default password=test
 
 vault write auth/userpass/users/daniel policies=default password=salt
 
-vault read acess/identity/entities/id/4b32953c-1173-c375-48f5-3c3229d45aae
+
 
 vault read identity/entity/id/326b8881-f813-3c45-f72c-abb6051567fb
 vault read identity/oidc/client/cube
@@ -99,4 +99,53 @@ https://www.reddit.com/r/hashicorp/comments/13fnvv9/hashicorp_vault_oidc_provide
 
 http://localhost:8080/oidc/token?code=W0KcsvOdFB9qolyq0HTH2Cri5493e4SI
 
-http://localhost:8200/ui/vault/identity/oidc/provider/default/authorize?client_id=Y0DhaerCUBifYOYta9bMdHbLaJQk487k&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback&response_type=code&scope=openid
+http://localhost:8200/ui/vault/identity/oidc/provider/default/authorize?client_id=giuwUMpQx9zOP8qv2iZLCXlfys7Q1okq&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback&response_type=code&scope=openid
+
+
+curl --header "X-Vault-Token: hvs.CAESIFNzx8JFufN-tJnqDkkl46vFi1z7DEyuYjMeaaw-ngf7Gh4KHGh2cy5jNHdXM1ZLVE9BRTN1d3JoWUdGd21SZ3g" http://127.0.0.1:8200/v1/identity/entity/id/326b8881-f813-3c45-f72c-abb6051567fb
+
+
+vault write identity/group name="engineering" member_entity_ids="0dbc1ebe-cdf8-e1cc-fcf5-0497eebdb2e1"
+
+
+vault write identity/oidc/assignment/my-assignment group_ids="7ba5147c-31bd-f24a-3461-43170e9c60b9" entity_ids="326b8881-f813-3c45-f72c-abb6051567fb"
+
+    \"username\": {{identity.entity.aliases.$MOUNT_ACCESSOR.name}},\"contact\": {\"mail\": {{identity.entity.metadata.email}}}
+
+vault write identity/oidc/scope/user description="Scope for user metadata" template={\"username\": {{identity.entity.metadata.mail}}}
+
+
+vault write identity/oidc/scope/user description="Scope for user metadata" template="\"username\": {{identity.entity.aliases.$MOUNT_ACCESSOR.name}}",\"contact\": {\"mail\": {{identity.entity.metadata.email}}}"
+vault write identity/oidc/scope/groups description="Scope for groups metadata" template="{\"groups\": \"engineering\"}"
+
+vault write identity/oidc/key/my-key allowed_client_ids="*" verification_ttl="1h" rotation_period="1h" algorithm="RS256"
+vault write identity/oidc/client/cube2 redirect_uris="http://localhost:8080/oidc/callback" assignments="my-assignment" key="my-key" id_token_ttl="30m" access_token_ttl="1h"
+
+
+vault write identity/oidc/provider/my-provider allowed_client_ids="*" scopes_supported="user"
+
+vault write identity/oidc/provider/my-provider allowed_client_ids="EUiWeZLFQPpybbKwpOMYmAYN40jqdKvj" scopes_supported="groups,user"
+
+
+curl --request GET --location --header "X-Vault-Token: hvs.CAESIPcpyqEJsSkQ9_GItbUcLy6rzvDBn9xdP12Itzq2Y25xGh4KHGh2cy5GdE9oWXlPZnJMUXVwbnlWVzVmcmJHT0c" "http://localhost:8200/v1/identity/oidc/provider/default/authorize?client_id=EUiWeZLFQPpybbKwpOMYmAYN40jqdKvj&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback&response_type=code&scope=openid%20user&state=aaa"
+
+
+http://localhost:8080/oidc/token?code=BcMLRAtxxoHFpLE7oVxl86FwVEo4Jnfa
+
+###Get Moount Accsseor
+vault auth list -detailed
+
+
+###scopes 
+ -user
+ { "user": { 
+            "name": {{identity.entity.aliases.auth_userpass_7e1d4583.name}},
+            "mail": {{identity.entity.metadata.mail}}
+          }
+}
+
+-groups 
+{"groups": {{identity.entity.groups.names}}}
+
+https://brian-candler.medium.com/using-vault-as-an-openid-connect-identity-provider-ee0aaef2bba2
+https://developer.hashicorp.com/vault/tutorials/auth-methods/oidc-identity-provider

@@ -30,19 +30,19 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
         }else{     
           snackService.open('ERROR', "Token Expired");
           authenticationService.logout();
-          router.navigate(['/login']);
+          //router.navigate(['/login']);
           return false;
         }
       }),
       map(() => true),
       catchError(() => {
         authenticationService.logout();
-        router.navigate(['route-to-fallback-page']);
+        router.navigate(['/errorpage']);
         return of(false);
       })
     );
   }else{
-    router.navigate(['/login'], { queryParams: { returnUrl: state.url.replace(/\//g, "") }});
+    //router.navigate(['/login'], { queryParams: { returnUrl: state.url.replace(/\//g, "") }});
     return false;
   }
 };

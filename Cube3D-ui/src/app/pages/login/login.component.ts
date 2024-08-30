@@ -44,11 +44,33 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(){   
-
+    console.log("----------");
     if (this.authenticationService.currentJwtValue) {  
          this.router.navigate(['/dashboard']);
     }
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';   
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';  
+    this.dataLoaded = false;
+    this.route.queryParams.subscribe({
+      next: (params : any) => {
+        this.authenticationService.gethTokenOIDC(params['code']).subscribe( {
+          next: (response : any) =>{
+            console.log(response)
+            this.authenticationService.setCurrentJwtValue(response.token);
+            this.authenticationService.setTokenMapValue(response);
+            this.dataLoaded = true;
+          },
+          error: (error : HttpErrorResponse)=> { 
+            this.dataLoaded = true;               
+            this.router.navigate(['/errorpage']);              
+          }
+        })
+      
+      },
+      error: (error : HttpErrorResponse)=> {     
+        this.dataLoaded = true;         
+        this.router.navigate(['/errorpage']);            
+      }
+    }); 
   }
 
   onLogin() {
@@ -57,7 +79,7 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (person : Person) => {
 
-          this.authenticationService.token(person).subscribe({
+          this.authenticationService.getToken(person).subscribe({
             next: (data : any) => {
               this.authenticationService.setCurrentJwtValue(data.token);
               let path : string = this.returnUrl === '/' ? '/dashboard': this.returnUrl;

@@ -76,3 +76,20 @@ resource "vault_identity_oidc_client" "cube" {
   #id_token_ttl     = 2400
   #access_token_ttl = 7200
 }
+
+resource "vault_identity_oidc_scope" "groups" {
+  name        = "groups"
+  template    = "{\"groups\":{{identity.entity.groups.names}}}"
+  description = "Vault OIDC Groups Scope"
+}
+
+resource "vault_identity_oidc_scope" "user" {
+  name        = "user"
+  template    = "{ 
+                    "user": { 
+                             "name": {{identity.entity.aliases.auth_userpass_7e1d4583.name}},
+                             "mail": {{identity.entity.metadata.mail}}
+                           }
+                 }"
+  description = "Vault OIDC User Scope"
+}
