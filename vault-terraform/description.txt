@@ -4,27 +4,99 @@ vault server -config=config.hcl
 set VAULT_ADDR=http://127.0.0.1:8200
 vault operator init
 
-Unseal Key 1: jCAzixlAAkjs3k1ZORadU2rO9yDdiN+Z1/JZhAAl+Il6
-Unseal Key 2: D+wydMzIwYD0KtcvOuuGV+NNFCUjDZEb/yGWFi2oPDm5
-Unseal Key 3: Bo/2KeaW6xwUv3WCLNpKl6gEYetT7WGJUu01M47gPisN
-Unseal Key 4: 5hjsVc+ofWJsBNLGtwN55P4UCB0dYVthmHaLX7kBlBLH
-Unseal Key 5: A3/Ux1z2nY9L+c8prJ+hX3s9kmCVKOUnLi3kwj3KNbFs
+Unseal Key 1: IXwjN683BG1Xs5S6hyZpBvDiYcub4+6Ra77E6NWd6XtG
+Unseal Key 2: 78zgksfxkkx2QTpyzN8bP0ZO3BMTQr50+UAR2ltGBtq7
+Unseal Key 3: ccfDHh9MVm0RLjy/hSd06C8NX+29/oAsR5zDzFW7lQRk
+Unseal Key 4: RD0YPdyWT+bwIge7nRJ3l7lUQDARdbGpZn8Fo4e+VzVf
+Unseal Key 5: Do3dA6NsvZuy5cxy4J6mSYfZORidA9KfPo1iPlIg01kb
 
-Initial Root Token: hvs.PcUOa2KS9qlHvV5N4cPFp591
-
-set VAULT_TOKEN="hvs.PcUOa2KS9qlHvV5N4cPFp591"
-set VAULT_TOKEN=
+Initial Root Token: hvs.EYKmnkVqDUs5l8HSHDgmjlSQ
+hvs.CAESIHtNz4UejDl8mbWcoEWZqGSakNivnkJ9koJldjJXDgTrGh4KHGh2cy5vbW5KTDVla2NiR0J5MjBTU1FVSUNjNDI
 
 vault operator unseal
 vault operator seal
 vault login
 vault status
 vault secrets list -detailed
+vault roles list -detailed
+vault policy list
 
 vault secrets enable -path=secret/ kv
 vault secrets disable secret/
-vault write secret/git-credentials username="test" password="test"
 
+vault auth disable approle
 
+set VAULT_TOKEN=hvs.EYKmnkVqDUs5l8HSHDgmjlSQ
+set VAULT_TOKEN=
+
+vault write secret/credentials username="daniel" password="test"
+vault write auth/approle/role/app policies=token-policy
+
+vault operator unseal
 terraform init
+terraform init -upgrade
 terraform apply
+terraform plan -target=module.enable
+terraform plan -target=module.config
+
+vault token create -policy=token-policy -role=tokenrole -orphan -renewable=true -ttl="768h" -display-name="api-token" 
+
+vault token create -role=tokenrole -display-name="api-token" 
+
+vault token revoke -accessor JSNRvemGD3kFDYR5E1K60GEm
+vault list auth/token/accessors
+vault list auth/approle/role
+vault list auth/token/roles
+
+vault token revoke -mode=path auth/token
+vault token lookup hvs.CAESID0tknV6nthYjmv2RV-_Q9Dg9EDNRi3B_w2E6Z6-hn9lGh4KHGh2cy5yZkVtWkw2ZHlyeUNjZU5LYUJjeElqUGU
+vault token lookup -accessor b8vCXa1rZAXYX2Tf810EzJcE
+
+vault token renew -accessor CoFWXsWBzsntpm5wmdQ79U8w
+vault token renew hvs.CAESID0tknV6nthYjmv2RV-_Q9Dg9EDNRi3B_w2E6Z6-hn9lGh4KHGh2cy5yZkVtWkw2ZHlyeUNjZU5LYUJjeElqUGU
+
+
+vault delete auth/approle/role/app
+vault delete auth/approle/role/app2
+
+curl -H "X-Vault-Token: hvs.CAESID0tknV6nthYjmv2RV-_Q9Dg9EDNRi3B_w2E6Z6-hn9lGh4KHGh2cy5yZkVtWkw2ZHlyeUNjZU5LYUJjeElqUGU" -X GET http://127.0.0.1:8200/v1/secret/aws-access
+curl -H "X-Vault-Token: hvs.CAESIA71O__2HZctLUATM_xpM_8OU2XMpU4lbe5C8Ja5o_utGh4KHGh2cy45WG5WR3dQRWMzSFFIY1B5dEw2a3RST1o" -X GET http://127.0.0.1:8200/v1/secret/aws-access
+
+https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/token_auth_backend_role#token_explicit_max_ttl
+
+
+curl --header "X-Vault-Token: hvs.CAESID0tknV6nthYjmv2RV-_Q9Dg9EDNRi3B_w2E6Z6-hn9lGh4KHGh2cy5yZkVtWkw2ZHlyeUNjZU5LYUJjeElqUGU" --request POST http://127.0.0.1:8200/v1/auth/token/renew-self
+curl --header "X-Vault-Token: hvs.RpXtV43cGcqbHklqD5W9dUHz" --request POST --data @payload.json http://127.0.0.1:8200/v1/auth/token/renew
+curl -X POST -H "Content-Type: application/json" -d "{ \"password\": \"salt\" }" http://127.0.0.1:8200/v1/auth/userpass/login/daniel
+
+curl -X POST -H "Content-Type: application/json" -d "{ \"password\": \"salt\" }" http://127.0.0.1:8200/v1/auth/userpass/login/daniel
+
+vault auth enable userpass
+vault auth disable userpass
+
+vault write auth/userpass/users/test policies=default password=test
+
+
+vault write auth/userpass/users/daniel policies=default password=salt
+
+vault read acess/identity/entities/id/4b32953c-1173-c375-48f5-3c3229d45aae
+
+vault read identity/entity/id/326b8881-f813-3c45-f72c-abb6051567fb
+vault read identity/oidc/client/cube
+
+https://discuss.hashicorp.com/t/identity-entity-must-be-associated-with-the-request/48900/2
+
+curl -X POST -H "Content-Type: application/json" -d "{ \"password\": \"salt\" }" http://127.0.0.1:8200/v1/auth/userpass/login/daniel
+curl --request GET --location --header "X-Vault-Token: hvs.CAESIPV1dLrtaiC5Fmz22U9LXf9JGsa5aYc0lJODZjdxdd5eGh4KHGh2cy5mNmZiMEpJZ0NzdUVjdldQY3UyZEpOaEQ" "http://localhost:8200/v1/identity/oidc/provider/default/authorize?client_id=Y0DhaerCUBifYOYta9bMdHbLaJQk487k&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback&response_type=code&scope=openid&state=aaa"
+curl --request GET --location --header "X-Vault-Token: hvs.CAESIPV1dLrtaiC5Fmz22U9LXf9JGsa5aYc0lJODZjdxdd5eGh4KHGh2cy5mNmZiMEpJZ0NzdUVjdldQY3UyZEpOaEQ" "http://localhost:8200/v1/identity/oidc/provider/default/token"
+
+
+curl --request GET --location --header "X-Vault-Token: hvs.CAESIPV1dLrtaiC5Fmz22U9LXf9JGsa5aYc0lJODZjdxdd5eGh4KHGh2cy5mNmZiMEpJZ0NzdUVjdldQY3UyZEpOaEQ" "http://localhost:8200/ui/vault/identity/oidc/provider/default/authorize?client_id=Y0DhaerCUBifYOYta9bMdHbLaJQk487k&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback&response_type=code&scope=openid&state=aaa"
+
+hvs.CAESIIs_387ljBjA9HcxH12Xbvgi_AItEH2WBhutcWYcWx6DGh4KHGh2cy43WnRZN29ETmVEYzhReHhrdWhkUmlRZHA
+
+https://www.reddit.com/r/hashicorp/comments/13fnvv9/hashicorp_vault_oidc_provider/
+
+http://localhost:8080/oidc/token?code=W0KcsvOdFB9qolyq0HTH2Cri5493e4SI
+
+http://localhost:8200/ui/vault/identity/oidc/provider/default/authorize?client_id=Y0DhaerCUBifYOYta9bMdHbLaJQk487k&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback&response_type=code&scope=openid

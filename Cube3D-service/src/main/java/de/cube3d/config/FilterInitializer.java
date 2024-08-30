@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.cube3d.filter.AuthFilter;
+import de.cube3d.filter.OIDCFilter;
 import de.cube3d.filter.RestAPIFilter;
 
 @Configuration
@@ -23,6 +24,14 @@ public class FilterInitializer {
 		FilterRegistrationBean<AuthFilter> registration = new FilterRegistrationBean<AuthFilter>();
 		registration.setFilter(new AuthFilter());
 		registration.addUrlPatterns("/auth/*");
+		return registration;
+	}
+	
+	@Bean(name="oidc")
+	public FilterRegistrationBean<OIDCFilter> oidcFilterRegistration() {
+		FilterRegistrationBean<OIDCFilter> registration = new FilterRegistrationBean<OIDCFilter>();
+		registration.setFilter(new OIDCFilter());
+		registration.addUrlPatterns("/oidc/*");
 		return registration;
 	}
 }

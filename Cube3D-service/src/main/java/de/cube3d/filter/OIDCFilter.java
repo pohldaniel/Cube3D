@@ -1,9 +1,8 @@
 package de.cube3d.filter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import org.springframework.http.HttpMethod;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -13,20 +12,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpMethod;
-
-public class AuthFilter implements Filter {
-
-	 private List<String> corsUrls = new ArrayList<>(Arrays.asList(
-			 "http://localhost:4200", 
-			 "http://127.0.0.1:4200", 
-			 "http://0:0:0:0:0:0:0:1:4200",
-			 "http://localhost:5000", 
-			 "http://127.0.0.1:5000", 
-			 "http://0:0:0:0:0:0:0:1:5000",
-			 "http://localhost:8080",
-			 "http://127.0.0.1:8080", 
-			 "http://0:0:0:0:0:0:0:1:8080"));
+public class OIDCFilter implements Filter{
 	 
 	 @Override
 	 public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -34,12 +20,7 @@ public class AuthFilter implements Filter {
 		 HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 	     HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 	     
-	     String origin = httpServletRequest.getHeader("Origin");
-	     for (String url : corsUrls) {
-	            if (origin != null && origin.startsWith(url)) {
-	                httpServletResponse.setHeader("Access-Control-Allow-Origin", origin);
-	            }
-	     }
+	     httpServletResponse.setHeader("Access-Control-Allow-Origin", httpServletRequest.getHeader("Origin"));
 	              
 	     httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
 	     httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -48,7 +29,26 @@ public class AuthFilter implements Filter {
 	     if (httpServletRequest.getMethod().equals(HttpMethod.OPTIONS.name())) {
 	    	 return;
 	     }
-	     
+	     String code = httpServletRequest.getParameter("code");
+	     if(code != null) {
+	    	 httpServletRequest.setAttribute("code", code);  
+	     }else { 
+	    	 httpServletRequest.setAttribute("code", "undefined");  
+	     }
+			
+	     String returnUrl = httpServletRequest.getParameter("returnUrl");
+	     if(returnUrl != null) {
+	    	 httpServletRequest.setAttribute("returnUrl", returnUrl);  
+	     }else { 
+	    	 httpServletRequest.setAttribute("returnUrl", "none");  
+	     }
+			
+	     String state = httpServletRequest.getParameter("state");
+	     if(state != null) {
+	    	 httpServletRequest.setAttribute("state", state);  
+	     }else { 
+	    	 httpServletRequest.setAttribute("state", "none");  
+	     }
 	     chain.doFilter(httpServletRequest, httpServletResponse);
 	 }
 }
