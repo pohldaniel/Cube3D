@@ -5,8 +5,7 @@ import {AuthenticationService} from '../services/authentication.service';
 export const intercept: HttpInterceptorFn = (request : HttpRequest<unknown>, next : HttpHandlerFn) => {
   const authenticationService = inject(AuthenticationService);
 
-  if(request.url.indexOf('/restAPI') > -1 && authenticationService.currentJwtValue){  
-    console.log(authenticationService.currentJwtValue)      
+  if(request.url.indexOf('/restAPI') > -1 && authenticationService.currentJwtValue){      
     request = request.clone({headers: request.headers.set('Authorization', 'Bearer ' + authenticationService.currentJwtValue)});    
   }
   return next(request);

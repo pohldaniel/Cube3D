@@ -1,0 +1,85 @@
+cd /cygdrive/c/Cube/vault-terraform
+
+
+openssl genrsa -out root.key 4096
+openssl req -x509 -new -nodes -key root.key -sha256 -days 3650 -out root.crt -subj "/CN=vault" -addext "extendedKeyUsage=serverAuth"
+
+
+openssl req -new -newkey rsa:4096 -nodes -keyout vault.key -out vault.csr -subj "/CN=vault" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault.csr -out vault.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=critical,CA:TRUE\nextendedKeyUsage = serverAuth\nsubjectKeyIdentifier=hash")
+#openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault.csr -out vault.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=critical,CA:TRUE\nextendedKeyUsage = clientAuth\nsubjectKeyIdentifier=hash")
+
+
+
+#openssl x509 -in vault.crt -out vault.pem -outform pem
+openssl pkcs12 -export -out vault.p12 -inkey vault.key -in vault.crt -name "clientVault"
+
+openssl x509 -in root.crt -text -noout
+
+
+openssl pkcs12 -export -out vault.p12 -inkey vault.key -in vault.crt -certfile root.crt -name "Client Vault"  
+
+
+#openssl pkcs12 -in vault.p12 -out vault.pem -nodes -passin pass:password
+#openssl pkcs12 -export -in vault.pem -out vault2.p12 -passout pass:password -name "Client Vault"
+
+
+#openssl pkcs12 -export -out root.p12 -in root.crt -nodes -name "Root Vault"
+#openssl pkcs12 -in root.p12 -out root.pem -nodes -passin pass:password
+
+
+vault write pki_int/roles/vault-cert allow_any_name=true max_ttl="720h" generate_lease=true
+
+
+vault pki_int enable roles
+
+
+vault write auth/cert/certs/web display_name=web policies=web,prod certificate=@web-cert.pem ttl=3600
+
+
+vault write -format=json pki/root/generate/internal common_name="vault-ca-root-pki" | tee >(jq -r .data.certificate > vault-ca-root-pki.pem) >(jq -r .data.issuing_ca > vault-ca-root-pki-issuing.pem) >(jq -r .data.private_key > vault-ca-root-pki-key.pem)
+
+./vault write -format=json pki/root/generate/internal \
+common_name="vault-ca-root-pki" | tee \
+>(jq -r .data.certificate > vault-ca-root-pki.pem) \
+>(jq -r .data.issuing_ca > vault-ca-root-pki-issuing.pem) \
+>(jq -r .data.private_key > vault-ca-root-pki-key.pem)
+
+./vault write pki/config/urls issuing_certificates="http://localhost:8200/v1/pki/ca" crl_distribution_points="http://localhost:8200/v1/pki/crl"
+
+./vault write -format=json pki_int/intermediate/generate/internal \
+common_name="vault-ca-root-pki Intermediate Authority" \
+| jq -r '.data.csr' > vault-ca-root-pki-int.csr
+
+
+./vault write -format=json pki/root/sign-intermediate csr=@vault-ca-root-pki-int.csr \
+common_name="vault-ca-root-pki-int" \
+format=pem_bundle ttl="43800h" \
+| jq -r '.data.certificate' > vault-ca-root-pki-int.pem
+
+./vault write pki_int/intermediate/set-signed certificate=@vault-ca-root-pki-int.pem
+
+./vault write pki_int/config/urls issuing_certificates="http://127.0.0.1:8300/v1/pki_int/ca" crl_distribution_points="http://127.0.0.1:8300/v1/pki_int/crl"
+
+./vault policy write vault-cert vault-cert.hcl
+
+
+./vault write pki_int/roles/vault-cert \
+allow_any_name=true \
+max_ttl="720h" \
+generate_lease=true
+
+./vault write -format=json pki_int/issue/vault-cert \
+common_name="vault-cert" | tee \
+>(jq -r .data.certificate > vault-cert-certificate.pem) \
+>(jq -r .data.issuing_ca > vault-cert-issuing-ca.pem) \
+>(jq -r .data.private_key > vault-cert-private-key.pem)
+
+./vault auth enable cert
+
+./vault write auth/cert/certs/vault-cert \
+display_name=vault-cert \
+policies=vault-cert \
+certificate=@vault-cert-certificate.pem
+
+./vault login -method=cert -client-cert=vault-cert-certificate.pem -client-key=vault-cert-private-key.pem name=vault-cert

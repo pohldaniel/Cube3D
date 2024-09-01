@@ -1,18 +1,25 @@
 #Production mode
 vault server -config=config.hcl
 
-set VAULT_ADDR=http://127.0.0.1:8200
+set VAULT_ADDR=https://127.0.0.1:8200
+set VAULT_CACERT=certs/root.crt
+set VAULT_TOKEN=hvs.o2bMEY32LKp8DYjwqEjQ3WGL
+
+export VAULT_ADDR=https://127.0.0.1:8200
+export VAULT_CACERT=certs/root.crt
+export VAULT_TOKEN=hvs.o2bMEY32LKp8DYjwqEjQ3WGL
+
 vault operator init
 
-Unseal Key 1: IXwjN683BG1Xs5S6hyZpBvDiYcub4+6Ra77E6NWd6XtG
-Unseal Key 2: 78zgksfxkkx2QTpyzN8bP0ZO3BMTQr50+UAR2ltGBtq7
-Unseal Key 3: ccfDHh9MVm0RLjy/hSd06C8NX+29/oAsR5zDzFW7lQRk
-Unseal Key 4: RD0YPdyWT+bwIge7nRJ3l7lUQDARdbGpZn8Fo4e+VzVf
-Unseal Key 5: Do3dA6NsvZuy5cxy4J6mSYfZORidA9KfPo1iPlIg01kb
+Unseal Key 1: gM7KJ9SuvokRtO81rtZR5L0nx2Wkz0fatPeXwSJdo/T4
+Unseal Key 2: I/g0dycpLowFP87JQIgLZ2wLDMvZ2Ikw257ufQa4D3Sx
+Unseal Key 3: vXwH5Fe/eMiue+lRg06TMyJUFewBoxSkeGs2tR05R1HE
+Unseal Key 4: A2gtzMpQ96GWMHd6PoJSj48VK/N1B7ncsb74BUNQhXIa
+Unseal Key 5: WgsMgUZjpD3gx+lHoex4wpxW0yxX3v2JyCJyTlXlkdt4
 
-Initial Root Token: hvs.EYKmnkVqDUs5l8HSHDgmjlSQ
+Initial Root Token: hvs.o2bMEY32LKp8DYjwqEjQ3WGL
 hvs.CAESIHtNz4UejDl8mbWcoEWZqGSakNivnkJ9koJldjJXDgTrGh4KHGh2cy5vbW5KTDVla2NiR0J5MjBTU1FVSUNjNDI
-
+chrome://net-internals/#hsts
 vault operator unseal
 vault operator seal
 vault login
@@ -149,3 +156,5 @@ vault auth list -detailed
 
 https://brian-candler.medium.com/using-vault-as-an-openid-connect-identity-provider-ee0aaef2bba2
 https://developer.hashicorp.com/vault/tutorials/auth-methods/oidc-identity-provider
+https://localhost:8200/ui/vault/identity/oidc/provider/my-provider/authorize?with=github
+chrome://net-internals/#hsts

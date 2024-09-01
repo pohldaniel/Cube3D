@@ -1,21 +1,7 @@
-provider "vault" {
-  address = "http://127.0.0.1:8200"
-  token = "hvs.EYKmnkVqDUs5l8HSHDgmjlSQ"
-}
-
 resource "vault_policy" "token-policy" {
   name   = "token-policy"
   policy = file("policy.hcl")
 }
-
-/*resource "vault_auth_backend" "approle" {
-  type = "approle"
-}
-
-resource "vault_approle_auth_backend_role" "approle" {
-  role_name      = "app"
-  token_policies = ["token-policy"]
-}*/
 
 resource "vault_token_auth_backend_role" "tokenrole" {
   role_name      = "tokenrole"
@@ -28,6 +14,7 @@ resource "vault_token_auth_backend_role" "tokenrole" {
 }
 
 resource "vault_generic_secret" "userpass" {
+  depends_on = [vault_auth_backend.userpass]
   path = "auth/userpass/users/daniel"
   data_json = <<EOT
   {
@@ -37,12 +24,21 @@ resource "vault_generic_secret" "userpass" {
   EOT
 }
 
-/*resource "vault_identity_entity" "userpass" {
+resource "vault_identity_entity" "daniel" {
     name = "daniel"
-    policies = ["token-policy", "default"]
+    policies = ["token-policy"]
+    metadata = {
+        mail = "pohl.daniel@freent.de"
+    }
 }
 
-resource "vault_generic_endpoint" "userpass" {
+resource "vault_identity_entity_alias" "daniel_alias" {
+    name = "daniel"
+    mount_accessor = vault_auth_backend.userpass.accessor
+    canonical_id = vault_identity_entity.daniel.id
+}
+
+/*resource "vault_generic_endpoint" "userpass" {
   path = "auth/userpass/users/daniel2"
   ignore_absent_fields = true
 
@@ -55,6 +51,7 @@ resource "vault_generic_endpoint" "userpass" {
 }*/
 
 resource "vault_generic_secret" "aws-access" {
+  depends_on = [vault_mount.secret]
   path = "secret/aws-access"
 
   data_json = <<EOT
@@ -65,31 +62,40 @@ resource "vault_generic_secret" "aws-access" {
   EOT
 }
 
-resource "vault_identity_oidc_client" "cube" {
-  name          = "cube"
-  redirect_uris = [
-    "http://localhost:8080/oidc/callback"
-  ]
-  assignments = [
-    "allow_all"
-  ]
-  #id_token_ttl     = 2400
-  #access_token_ttl = 7200
+resource "vault_identity_group" "personmanager" {
+  name                        = "PERSON_MANAGER"
+  type                        = "internal"
+  external_member_entity_ids  = true
+  policies = ["token-policy"]
+  metadata = {
+    version = "2"
+  }
 }
 
-resource "vault_identity_oidc_scope" "groups" {
-  name        = "groups"
-  template    = "{\"groups\":{{identity.entity.groups.names}}}"
-  description = "Vault OIDC Groups Scope"
+resource "vault_identity_group_member_entity_ids" "members_personmanager" {
+  member_entity_ids = [vault_identity_entity.daniel.id]
+  exclusive = false
+  group_id = vault_identity_group.personmanager.id
 }
 
-resource "vault_identity_oidc_scope" "user" {
-  name        = "user"
-  template    = "{ 
-                    "user": { 
-                             "name": {{identity.entity.aliases.auth_userpass_7e1d4583.name}},
-                             "mail": {{identity.entity.metadata.mail}}
-                           }
-                 }"
-  description = "Vault OIDC User Scope"
+resource "vault_identity_group" "admin" {
+  name                        = "ADMIN"
+  type                        = "internal"
+  external_member_entity_ids  = true
+  policies = ["token-policy"]
+  metadata = {
+    version = "2"
+  }
 }
+
+resource "vault_identity_group_member_entity_ids" "members_admin" {
+  member_entity_ids = [vault_identity_entity.daniel.id]
+  exclusive = false
+  group_id = vault_identity_group.admin.id
+}
+
+/*resource "vault_identity_group_alias" "group-alias" {
+  name           = "PERSON_MANAGER"
+  mount_accessor = vault_auth_backend.userpass.accessor
+  canonical_id   = vault_identity_group.personmanager.id
+}*/

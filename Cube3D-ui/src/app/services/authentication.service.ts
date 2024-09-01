@@ -14,8 +14,11 @@ import {Role} from '../models/Role.enum';
   public currentJwtSubject: BehaviorSubject<string | null>;
   public currentJwt: Observable<string | null>;
 
-  public currentTokenMapSubject: BehaviorSubject<string | null>;
-  public currentTokenMap: Observable<string | null>;
+  public currentTokenMapSubject: BehaviorSubject<any>;
+  public currentTokenMap: Observable<any>;
+
+  public currentLogintSubject: BehaviorSubject<string | null>;
+  public currentLogin: Observable<string | null>;
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -27,8 +30,11 @@ import {Role} from '../models/Role.enum';
     this.currentJwtSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('currentJwt'));
     this.currentJwt = this.currentJwtSubject.asObservable();
 
-    this.currentTokenMapSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('currentTokenMap'));
-    this.currentTokenMap = this.currentJwtSubject.asObservable();
+    this.currentTokenMapSubject = new BehaviorSubject<any>(sessionStorage.getItem('currentTokenMap'));
+    this.currentTokenMap = this.currentTokenMapSubject.asObservable();
+
+    this.currentLogintSubject = new BehaviorSubject<any>(sessionStorage.getItem('currentLogin'));
+    this.currentLogin = this.currentTokenMapSubject.asObservable();
   }
 
   public get currentRouteValue(): string {
@@ -39,8 +45,12 @@ import {Role} from '../models/Role.enum';
     return this.currentJwtSubject.value as string;
   }
 
-  public get currentTokenMapValue(): string {
-    return this.currentTokenMapSubject.value as string;
+  public get currentTokenMapValue(): any {
+    return this.currentTokenMapSubject.value;
+  }
+
+  public get currentLoginValue(): string {
+    return this.currentLogintSubject.value as string;
   }
 
   public setCurrentRouteValue(route: string) {
@@ -53,9 +63,14 @@ import {Role} from '../models/Role.enum';
     this.currentJwtSubject.next(jwt);
   }
 
-  public setTokenMapValue(tokenMap: string) {
-    sessionStorage.setItem('currentTokenMap', tokenMap);
-    this.currentTokenMapSubject.next(tokenMap);
+  public setTokenMapValue(tokenMap: any) {
+    sessionStorage.setItem('currentTokenMap', JSON.stringify(tokenMap));
+    this.currentTokenMapSubject.next(JSON.stringify(tokenMap));
+  }
+
+  public setLoginValue(login: string) {
+    sessionStorage.setItem('currentLogin', login);
+    this.currentLogintSubject.next(login);
   }
 
   login(id: string, passwordHash: string) {
@@ -77,7 +92,7 @@ import {Role} from '../models/Role.enum';
   }
 
   refreshTokenOIDC() : Observable<string> {
-    return this.http.post<string>(environment.baseUrl + '/oidc/refresh', {'id_token': this.currentJwtSubject.value, 'access_toke': JSON.parse(this.currentTokenMapSubject.value as string).accessToken, 'remoteUser': JSON.parse(this.currentTokenMapSubject.value as string).remoteUser}, {headers: this.headers});   
+    return this.http.post<string>(environment.baseUrl + '/oidc/refresh', {'id_token': JSON.parse(this.currentTokenMapSubject.value as string).token, 'access_token': JSON.parse(this.currentTokenMapSubject.value as string).accessToken, 'remoteUser': JSON.parse(this.currentTokenMapSubject.value as string).remoteUser}, {headers: this.headers});   
   }
 
   logout() {
@@ -89,6 +104,10 @@ import {Role} from '../models/Role.enum';
 
     sessionStorage.removeItem('currentTokenMap');
     this.currentTokenMapSubject.next(null);
+
+    sessionStorage.removeItem('currentLogin');
+    this.currentLogintSubject.next(null);
+
   }
 
   public getCurrentRoles() : Role[] {

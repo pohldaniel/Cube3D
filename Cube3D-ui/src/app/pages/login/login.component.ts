@@ -12,6 +12,7 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {SnackService} from '../../services/snack.service';
 import {SpinnerComponent} from '../../shared/spinner/spinner.component';
 import {Person} from '../../models/Person';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-login',
@@ -22,9 +23,7 @@ import {Person} from '../../models/Person';
 })
 export class LoginComponent implements OnInit {
 
-  showRootPWForm = true;
   returnUrl: string = '';
-  //username: string = 'actionmanager'; 
   username: string = 'admin';
   password: string = 'main100';
   show: boolean = false;
@@ -32,6 +31,8 @@ export class LoginComponent implements OnInit {
   isWait: boolean = false;
   dataLoaded: boolean = true;
   delayIntervall = 100;
+
+  showLogout: boolean = false;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(){   
-    console.log("----------");
+    
     if (this.authenticationService.currentJwtValue) {  
          this.router.navigate(['/dashboard']);
     }
@@ -52,19 +53,24 @@ export class LoginComponent implements OnInit {
     this.dataLoaded = false;
     this.route.queryParams.subscribe({
       next: (params : any) => {
-        this.authenticationService.gethTokenOIDC(params['code']).subscribe( {
-          next: (response : any) =>{
-            console.log(response)
-            this.authenticationService.setCurrentJwtValue(response.token);
-            this.authenticationService.setTokenMapValue(response);
-            this.dataLoaded = true;
-          },
-          error: (error : HttpErrorResponse)=> { 
-            this.dataLoaded = true;               
-            this.router.navigate(['/errorpage']);              
-          }
-        })
-      
+        if(!_.isEmpty(params)) {
+          this.authenticationService.gethTokenOIDC(params['code']).subscribe( {
+            next: (response : any) =>{
+              this.authenticationService.setTokenMapValue(response);
+              this.authenticationService.setCurrentJwtValue(response.token);        
+              this.authenticationService.setLoginValue("oidc");  
+              //this.dataLoaded = true;
+              let path : string = this.returnUrl === '/' ? '/dashboard': this.returnUrl;
+              this.router.navigate([path]);   
+            },
+            error: (error : HttpErrorResponse)=> { 
+              //this.dataLoaded = true;               
+              this.router.navigate(['/errorpage']);              
+            }
+          })
+        }else{
+          this.dataLoaded = true;
+        }  
       },
       error: (error : HttpErrorResponse)=> {     
         this.dataLoaded = true;         
@@ -81,7 +87,10 @@ export class LoginComponent implements OnInit {
 
           this.authenticationService.getToken(person).subscribe({
             next: (data : any) => {
+              this.authenticationService.setTokenMapValue(data);
               this.authenticationService.setCurrentJwtValue(data.token);
+              this.authenticationService.setLoginValue("jwt");
+              this.dataLoaded = true;
               let path : string = this.returnUrl === '/' ? '/dashboard': this.returnUrl;
               this.router.navigate([path]);    
             },

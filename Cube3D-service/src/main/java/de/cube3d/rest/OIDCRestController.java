@@ -50,18 +50,19 @@ public class OIDCRestController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OIDCRestController.class);
 	private String redirect = "http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback";
-	private String clinetId = "EUiWeZLFQPpybbKwpOMYmAYN40jqdKvj";
-	private String clientSecret = "hvo_secret_AVFhQcTdCNZqxJnIODb6tcsWVfYUyB3fg1kGgJi4AosIKU7GAzpEYilLm9YwKjua";
+	private String clinetId = "1phXV5PdtOcgwmCQQ3tQQ4rUivA6fjlu";
+	private String clientSecret = "hvo_secret_jpUWV8zwFLPQgHamKrBubTudXuqqpfTNcbAEojJQflhRjQxQXqdC6IwZg7jW0Aie";
+	private String provider = "user-provider";
 	
 	@RequestMapping(value = "login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> login(@RequestAttribute("code") String code, @RequestAttribute("returnUrl") String returnUrl, @RequestAttribute("state") String state) throws URISyntaxException, UnsupportedEncodingException {
-		LOG.info("/auth/login was called");	
+		LOG.info("/oidc/login was called");	
 		
 		if(code.equalsIgnoreCase("undefined")) {
 						
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("http://localhost:8200/ui/vault/identity/oidc/provider/my-provider/authorize?client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
-				new URI("http://localhost:8200/ui/vault/identity/oidc/provider/my-provider/authorize?client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
+				new URI("http://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
+				new URI("http://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -80,7 +81,6 @@ public class OIDCRestController {
 	
 	@RequestMapping(value = "oidc/callback", method = RequestMethod.GET)
 	public ModelAndView callback(ModelMap model, @RequestAttribute("code") String code, @RequestAttribute("state") String state) {
-		System.out.println("Code: " + code);
 		return state.equalsIgnoreCase("none") ? new ModelAndView("redirect:/login?code=" + code, model) : new ModelAndView("redirect:/login?code=" + code + "&state=" + state, model) ;
 	}
 	
@@ -89,7 +89,6 @@ public class OIDCRestController {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		if(code.equalsIgnoreCase("undefined")) {
-			System.out.println("#############");
 			ObjectNode statusMap = mapper.createObjectNode();
 			statusMap.put("remoteUser", "Anonymus");
 			return ResponseEntity.status(HttpStatus.OK).body(statusMap);
@@ -124,13 +123,13 @@ public class OIDCRestController {
 				//.setProxy(new HttpHost(proxyHost, proxyPort, "http"))
 				.build();
 
-		HttpPost httpPost = new HttpPost("http://localhost:8200/v1/identity/oidc/provider/my-provider/token");        	
+		HttpPost httpPost = new HttpPost("http://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
 		String output = EntityUtils.toString(response.getEntity());	
 		JsonNode actualObj = mapper.readTree(output);
-		System.out.println(actualObj);
+
 		String jwt = actualObj.get("id_token").asText();	
 		String[] jwtSplit = jwt.split("\\.");
 		
@@ -139,15 +138,17 @@ public class OIDCRestController {
 		
 		ObjectNode statusMap = mapper.createObjectNode();
 		statusMap.put("status", "200");
-		statusMap.put("remoteUser", bodyJson.get("sub").asText().toLowerCase());
+		statusMap.put("remoteUser", bodyJson.get("user").get("name").asText().toLowerCase());
 		statusMap.put("token", jwt);
 		statusMap.put("accessToken", actualObj.get("access_token").asText());
 
 		return ResponseEntity.status(HttpStatus.OK).body(statusMap);
 	}
 	
-	@RequestMapping(value = "oidc/refreshToken", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "oidc/refresh", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> getRefreshToken(@RequestBody JsonNode tokenMap) throws Exception  {
+		LOG.info("/oidc/refreshToken was called");	
+		System.out.println(tokenMap);
 		ObjectMapper mapper = new ObjectMapper();
 				
 		String idToken = tokenMap.get("id_token").asText();
@@ -182,7 +183,7 @@ public class OIDCRestController {
 				//.setProxy(new HttpHost(proxyHost, proxyPort, "http"))
 				.build();
 		
-		HttpPost httpPost = new HttpPost("http://localhost:8200/v1/identity/oidc/provider/my-provider/token");        	
+		HttpPost httpPost = new HttpPost("http://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		

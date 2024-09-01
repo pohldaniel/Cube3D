@@ -1,9 +1,8 @@
-<app-spinner *ngIf="isWait"></app-spinner>
+<app-spinner [ngStyle]="{'display' : isWait ? 'unset' : 'none'}" ></app-spinner>
 
-<div *ngIf="dataLoaded" class="login">
-  <mat-card *ngIf="showRootPWForm">
+<div class="login" [ngStyle]="{'display' : dataLoaded ? 'grid' : 'none'}">
+  <mat-card>
     <mat-card-header>
-     <!-- <div class="title">Login</div>-->
       <img src="./assets/svg/questmark.svg" 
            class="question-mark"
            matTooltip="Benutzername und Password eingeben"
@@ -26,4 +25,9 @@
       </div>
     </mat-card-content>
   </mat-card>
+</div>
+
+<div [ngStyle]="{'display' : showLogout ? 'unset' : 'none'}">
+  <h1 class="sitename" style="border-bottom: none;padding-right:350px;text-align: center;"><span>Successfully loged out!</span></h1>
+  <img class="logout-logo" src="assets/img/salute.png">
 </div>
