@@ -1,0 +1,17 @@
+ACCESOR="$(./vault auth list -format=json | jq -r '.["cert/"].accessor')"
+ID="$(./vault write -format=json identity/entity name="daniel_cert" policies="token-policy" | jq -r ".data.id")"
+
+if [[ "$ID" == "" ]]; then
+    ID="$(./vault read -format=json identity/entity/name/daniel_cert policies="token-policy" | jq -r ".data.id")"
+fi
+
+./vault write identity/entity-alias name="Daniel Pohl" canonical_id=$ID mount_accessor="$ACCESOR"
+./vault write auth/cert/certs/daniel_cert display_name=daniel policies=user-cert certificate=@certs/daniel.crt
+
+VAR=`echo $(./vault read identity/group/name/ADMIN -format=json | jq --arg id $ID '.data.member_entity_ids += [$id]' | jq '.data.member_entity_ids | join(",")') | tr -d '"'`
+./vault write identity/group/name/ADMIN member_entity_ids=$VAR
+
+VAR=`echo $(./vault read identity/group/name/PERSON_MANAGER -format=json | jq --arg id $ID '.data.member_entity_ids += [$id]' | jq '.data.member_entity_ids | join(",")') | tr -d '"'`
+./vault write identity/group/name/PERSON_MANAGER member_entity_ids=$VAR
+
+#./vault write identity/oidc/assignment/my-assignment entity_ids="${ENTITY_ID}" group_ids="${GROUP_ID}"

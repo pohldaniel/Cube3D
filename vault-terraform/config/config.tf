@@ -24,19 +24,33 @@ resource "vault_generic_secret" "userpass" {
   EOT
 }
 
-resource "vault_identity_entity" "daniel" {
-    name = "daniel"
+resource "vault_identity_entity" "daniel_userpass" {
+    name = "daniel_userpass"
     policies = ["token-policy"]
     metadata = {
         mail = "pohl.daniel@freent.de"
     }
 }
 
-resource "vault_identity_entity_alias" "daniel_alias" {
-    name = "daniel"
+resource "vault_identity_entity_alias" "daniel_userpass_alias" {
+    name = "daniel_userpass"
     mount_accessor = vault_auth_backend.userpass.accessor
-    canonical_id = vault_identity_entity.daniel.id
+    canonical_id = vault_identity_entity.daniel_userpass.id
 }
+
+/*resource "vault_identity_entity" "daniel_cert" {
+    name = "daniel_cert"
+    policies = ["token-policy"]
+    metadata = {
+        mail = "pohl.daniel@freent.de"
+    }
+}
+
+resource "vault_identity_entity_alias" "daniel_cert_alias" {
+    name = "Daniel Pohl"
+    mount_accessor = vault_auth_backend.cert.accessor
+    canonical_id = vault_identity_entity.daniel_cert.id
+}*/
 
 /*resource "vault_generic_endpoint" "userpass" {
   path = "auth/userpass/users/daniel2"
@@ -73,7 +87,7 @@ resource "vault_identity_group" "personmanager" {
 }
 
 resource "vault_identity_group_member_entity_ids" "members_personmanager" {
-  member_entity_ids = [vault_identity_entity.daniel.id]
+  member_entity_ids = [vault_identity_entity.daniel_userpass.id]
   exclusive = false
   group_id = vault_identity_group.personmanager.id
 }
@@ -89,7 +103,7 @@ resource "vault_identity_group" "admin" {
 }
 
 resource "vault_identity_group_member_entity_ids" "members_admin" {
-  member_entity_ids = [vault_identity_entity.daniel.id]
+  member_entity_ids = [vault_identity_entity.daniel_userpass.id]
   exclusive = false
   group_id = vault_identity_group.admin.id
 }

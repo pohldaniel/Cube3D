@@ -1,4 +1,0 @@
-{
-   "template":"{ \"username\": {{identity.entity.metadata.mail}} }",
-   "description":"Scope for groups metadata"
-}

@@ -18,6 +18,7 @@ resource "vault_identity_oidc_scope" "user" {
 }
 
 resource "vault_identity_oidc_provider" "userprovider" {
+  depends_on = [vault_identity_oidc_scope.groups, vault_identity_oidc_scope.user]
   name = "user-provider"
   https_enabled = "false"
   issuer_host = "127.0.0.1:8200"
@@ -27,18 +28,19 @@ resource "vault_identity_oidc_provider" "userprovider" {
 
 resource "vault_identity_oidc_assignment" "userassignment" {
   name       = "user-assignment"
-  entity_ids = [vault_identity_entity.daniel.id]
-  group_ids  = [vault_identity_group.personmanager.id]
+  entity_ids = ["*"]
+  group_ids  = [vault_identity_group.personmanager.id, vault_identity_group.admin.id]
 }
 
 resource "vault_identity_oidc_key" "key" {
   name      = "key"
   algorithm = "RS256"
-  #allowed_client_ids = ["*"]
-  allowed_client_ids = [vault_identity_oidc_client.cube.client_id]
+  allowed_client_ids = ["*"]
+  #allowed_client_ids = [vault_identity_oidc_client.cube.client_id]
 }
 
 resource "vault_identity_oidc_client" "cube" {
+  depends_on = [vault_identity_oidc_assignment.userassignment]
   name          = "cube"
   redirect_uris = [
     "http://localhost:8080/oidc/callback"

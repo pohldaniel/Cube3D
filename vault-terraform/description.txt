@@ -1,23 +1,30 @@
 #Production mode
 vault server -config=config.hcl
+vault server -config=config-tls.hcl
 
+set VAULT_ADDR=http://127.0.0.1:8200
 set VAULT_ADDR=https://127.0.0.1:8200
 set VAULT_CACERT=certs/root.crt
-set VAULT_TOKEN=hvs.o2bMEY32LKp8DYjwqEjQ3WGL
+set VAULT_CLIENT_CERT=certs/vault-int.crt
+set VAULT_CLIENT_KEY=certs/vault-int.key
+set VAULT_TOKEN=hvs.33HFYMAB50m488xffs4zbUWc
 
+export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_ADDR=https://127.0.0.1:8200
 export VAULT_CACERT=certs/root.crt
-export VAULT_TOKEN=hvs.o2bMEY32LKp8DYjwqEjQ3WGL
+export VAULT_CLIENT_CERT=certs/vault-int.crt
+export VAULT_CLIENT_KEY=certs/vault-int.key
+export VAULT_TOKEN=hvs.33HFYMAB50m488xffs4zbUWc
 
 vault operator init
 
-Unseal Key 1: gM7KJ9SuvokRtO81rtZR5L0nx2Wkz0fatPeXwSJdo/T4
-Unseal Key 2: I/g0dycpLowFP87JQIgLZ2wLDMvZ2Ikw257ufQa4D3Sx
-Unseal Key 3: vXwH5Fe/eMiue+lRg06TMyJUFewBoxSkeGs2tR05R1HE
-Unseal Key 4: A2gtzMpQ96GWMHd6PoJSj48VK/N1B7ncsb74BUNQhXIa
-Unseal Key 5: WgsMgUZjpD3gx+lHoex4wpxW0yxX3v2JyCJyTlXlkdt4
+Unseal Key 1: mBQZV0tbxvYoIgKqp/Hofr8o7faZYsRtJJtDegldyUCR
+Unseal Key 2: HVlVCYRbXIz5F1chUdQhBECPEAE5TP11nGyt94T0N3PR
+Unseal Key 3: S695RDAKex5QUgJRzrBlrB+LJsE0cOvaZyx6zCHRc9xU
+Unseal Key 4: nXEAoCpvTLw+zAxJhoaSwIzuw00kDwKrVP0UAjYPEb1q
+Unseal Key 5: NgugbKs4KVrv+yxSPKsD2f2C2Y7qxM5e8ipIMI/bdmDQ
 
-Initial Root Token: hvs.o2bMEY32LKp8DYjwqEjQ3WGL
+Initial Root Token: hvs.33HFYMAB50m488xffs4zbUWc
 hvs.CAESIHtNz4UejDl8mbWcoEWZqGSakNivnkJ9koJldjJXDgTrGh4KHGh2cy5vbW5KTDVla2NiR0J5MjBTU1FVSUNjNDI
 chrome://net-internals/#hsts
 vault operator unseal

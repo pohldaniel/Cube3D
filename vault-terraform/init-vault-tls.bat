@@ -2,16 +2,12 @@ REM after unsealing VAULT
 
 set VAULT_ADDR=https://localhost:8200
 set VAULT_CACERT=../certs/root.crt
-set VAULT_TOKEN=hvs.o2bMEY32LKp8DYjwqEjQ3WGL
-
-REM pushd enable
-REM ..\terraform init
-REM ..\terraform apply
-REM popd
+set VAULT_CLIENT_CERT=../certs/vault-int.crt
+set VAULT_CLIENT_KEY=../certs/vault-int.key
+set VAULT_TOKEN=hvs.33HFYMAB50m488xffs4zbUWc
 
 pushd config
 ..\terraform init
-rem ..\terraform import vault_auth_backend.userpass userpass
 ..\terraform apply
 popd
 
