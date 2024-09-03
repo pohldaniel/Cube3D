@@ -148,7 +148,6 @@ public class OIDCRestController {
 	@RequestMapping(value = "oidc/refresh", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> getRefreshToken(@RequestBody JsonNode tokenMap) throws Exception  {
 		LOG.info("/oidc/refreshToken was called");	
-		System.out.println(tokenMap);
 		ObjectMapper mapper = new ObjectMapper();
 				
 		String idToken = tokenMap.get("id_token").asText();

@@ -10,17 +10,14 @@ cat certs/joe.crt certs/joe.key certs/chain.pem > certs/joe.pem
 openssl pkcs12 -export -out certs/joe.p12 -inkey certs/joe.key -in certs/joe.pem  -name "Joe Dudgeon" -passout pass:
 
 ACCESOR="$(./vault auth list -format=json | jq -r '.["cert/"].accessor')"
-ID="$(./vault write -format=json identity/entity name="joe_cert" policies="token-policy" | jq -r ".data.id")"
+ID="$(./vault write -format=json identity/entity name="joe_cert" policies="token-policy" metadata=mail="dudgeon.joe-cert@freenet.de"| jq -r ".data.id")"
 
 if [[ "$ID" == "" ]]; then
-    ID="$(./vault read -format=json identity/entity/name/joe_cert policies="token-policy" | jq -r ".data.id")"
+    ID="$(./vault read -format=json identity/entity/name/joe_cert | jq -r ".data.id")"
 fi
 
 ./vault write identity/entity-alias name="Joe Dudgeon" canonical_id=$ID mount_accessor="$ACCESOR"
 ./vault write auth/cert/certs/joe_cert display_name=joe policies=user-cert certificate=@certs/joe.crt
-
-VAR=`echo $(./vault read identity/group/name/ADMIN -format=json | jq --arg id $ID '.data.member_entity_ids += [$id]' | jq '.data.member_entity_ids | join(",")') | tr -d '"'`
-./vault write identity/group/name/ADMIN member_entity_ids=$VAR
 
 VAR=`echo $(./vault read identity/group/name/PERSON_MANAGER -format=json | jq --arg id $ID '.data.member_entity_ids += [$id]' | jq '.data.member_entity_ids | join(",")') | tr -d '"'`
 ./vault write identity/group/name/PERSON_MANAGER member_entity_ids=$VAR

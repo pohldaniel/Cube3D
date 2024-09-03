@@ -1,8 +1,8 @@
 ACCESOR="$(./vault auth list -format=json | jq -r '.["cert/"].accessor')"
-ID="$(./vault write -format=json identity/entity name="daniel_cert" policies="token-policy" | jq -r ".data.id")"
+ID="$(./vault write -format=json identity/entity name="daniel_cert" policies="token-policy" metadata=mail="pohl.daniel-cert@freenet.de" | jq -r ".data.id")"
 
 if [[ "$ID" == "" ]]; then
-    ID="$(./vault read -format=json identity/entity/name/daniel_cert policies="token-policy" | jq -r ".data.id")"
+    ID="$(./vault read -format=json identity/entity/name/daniel_cert | jq -r ".data.id")"
 fi
 
 ./vault write identity/entity-alias name="Daniel Pohl" canonical_id=$ID mount_accessor="$ACCESOR"

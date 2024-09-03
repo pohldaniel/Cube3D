@@ -20,7 +20,7 @@ openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/d
 
 
 #openssl x509 -in vault.crt -out vault.pem -outform pem
-openssl pkcs12 -export -out vault.p12 -inkey vault.key -in vault.crt -name "clientVault"
+openssl pkcs12 -export -out vault-int.p12 -inkey vault-int.key -in vault-int.crt -name "Vault Intermediate"  -passout pass:
 
 openssl pkcs12 -export -out certs/daniel.p12 -inkey daniel-private-key.pem -in daniel-certificate.pem -name "Daniel Pohl"
 
@@ -128,3 +128,5 @@ vault write auth/cert/certs/daniel-cert display_name=daniel-cert policies=user-c
 vault write auth/cert/certs/daniel_cert display_name=daniel policies=user-cert certificate=@certs/daniel.crt -format=json > output/daniel.json
 
 vault write pki_int_ca/issue/user-cert common_name="DanielPohl" ip_sans="127.0.0.1" lt_names="localhost" -format=json > daniel.json
+
+ng serve --ssl true --ssl-key "vault-int.key" --ssl-cert "vault-int.crt" --host localhost --port 4200
