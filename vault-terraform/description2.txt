@@ -162,3 +162,6 @@ vault write -format=json pki_iss/intermediate/set-signed certificate=@vault-iss.
 
 
 vault write -format=json pki_iss/issue/user-cert common_name="Daniel Pohl" > daniel.crt.json
+
+
+ng serve --ssl true --ssl-key angular-server.key --ssl-cert angular-server.crt --host localhost --port 4200

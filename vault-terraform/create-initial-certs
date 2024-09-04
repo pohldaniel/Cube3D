@@ -16,11 +16,14 @@ openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in c
 #Spring Server
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-server.key -out certs/spring-server.csr -subj "/CN=Spring Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
 openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/spring-server.csr -out certs/spring-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
-openssl pkcs12 -export -out certs/spring.p12 -inkey certs/spring.key -in certs/spring.crt  -name "Spring Server" -passout pass:password
+openssl pkcs12 -export -out certs/spring-server.p12 -inkey certs/spring-server.key -in certs/spring-server.crt  -name "Spring Server" -passout pass:password
+cp certs/spring-server.p12 ../Cube3D-service/src/main/resources
 
-#Angular Client
-openssl req -new -newkey rsa:4096 -nodes -keyout certs/angular-client.key -out certs/angular-client.csr -subj "/CN=Angular Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
-openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/angular-client.csr -out certs/angular-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
+#Angular Server
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/angular-server.key -out certs/angular-server.csr -subj "/CN=Angular Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/angular-server.csr -out certs/angular-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
+cp certs/angular-server.crt ../Cube3D-ui
+cp certs/angular-server.key ../Cube3D-ui
 
 #Vault Intermediate
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-int.key -out certs/vault-int.csr -subj "/CN=Vault Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"

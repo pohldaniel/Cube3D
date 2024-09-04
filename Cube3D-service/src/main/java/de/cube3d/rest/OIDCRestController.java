@@ -25,6 +25,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,10 +50,17 @@ import de.cube3d.utils.SSLUtil;
 public class OIDCRestController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OIDCRestController.class);
+	
+	@Value("${oidc.client.id}")
+	private String clinetId;
+	
+	@Value("${oidc.client.secret}")
+	private String clientSecret;
+	
+	@Value("${oidc.provider}")
+	private String provider;
+	
 	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback";
-	private String clinetId = "PukTzoEHP34McRQtUbxBzKl4BAmj9sV2";
-	private String clientSecret = "hvo_secret_ZQDQOYJ3zlyo7WmXX1OOBuk6pLpAnPjyNHnXQgtx88XLbqqK6BokugTwqsQecfbG";
-	private String provider = "user-provider";
 	
 	@RequestMapping(value = "login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> login(@RequestAttribute("code") String code, @RequestAttribute("returnUrl") String returnUrl, @RequestAttribute("state") String state) throws URISyntaxException, UnsupportedEncodingException {

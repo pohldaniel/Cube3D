@@ -1,3 +1,9 @@
+export VAULT_ADDR=https://127.0.0.1:8200
+export VAULT_CACERT=certs/root.crt
+export VAULT_CLIENT_CERT=certs/vault-client.crt
+export VAULT_CLIENT_KEY=certs/vault-client.key
+export VAULT_TOKEN=hvs.KTUgeupMpVklqEM2B4mXDgkI
+
 ./vault write pki_iss/issue/user-cert common_name="Joe Dudgeon" -format=json > certs/joe.json
 
 cat certs/joe.json | jq -r '.data.certificate' > certs/joe.crt

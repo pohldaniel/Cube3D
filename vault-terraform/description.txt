@@ -7,24 +7,24 @@ set VAULT_ADDR=https://127.0.0.1:8200
 set VAULT_CACERT=certs/root.crt
 set VAULT_CLIENT_CERT=certs/vault-client.crt
 set VAULT_CLIENT_KEY=certs/vault-client.key
-set VAULT_TOKEN=hvs.CmlIRPJRtMhkjnmN5uKid3pK
+set VAULT_TOKEN=hvs.KTUgeupMpVklqEM2B4mXDgkI
 
 export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_ADDR=https://127.0.0.1:8200
 export VAULT_CACERT=certs/root.crt
 export VAULT_CLIENT_CERT=certs/vault-client.crt
 export VAULT_CLIENT_KEY=certs/vault-client.key
-export VAULT_TOKEN=hvs.CmlIRPJRtMhkjnmN5uKid3pK
+export VAULT_TOKEN=hvs.KTUgeupMpVklqEM2B4mXDgkI
 
 vault operator init
 
-Unseal Key 1: uBqzgDKhw8YfQSPQlw5f6PVSwLiJRVQ5JiiQzaBn5kol
-Unseal Key 2: K9Fgd4vOxBGjeh4HRZJxijyT+Kr+FP8Co5dg0kVYGzt8
-Unseal Key 3: IexRcSaExPs2YfXBPKO6zG867sgKEG+Rs0a8m4qhHqSq
-Unseal Key 4: CdzqDIOj7qXbTjnMC+/MtglwAWV4WoiX4CD/anvcT3iW
-Unseal Key 5: sYX12e001bldiF2QQZUjxkFI4h/B9T1ZSAI9p2q+sBnv
+Unseal Key 1: hRJmFYnCx9hcwtxNUCtuL528i22AeNlqo9rV9elAiTH/
+Unseal Key 2: xo/zWi9a3iwY/igh5ByuPxo3/ydx06oeYs3ko/ugvSVq
+Unseal Key 3: MQXL8G4SaAPxN4XqB5QdpgQ4u6ptv/clO2PAOngM8BZf
+Unseal Key 4: GkzTbvxmXx6mFi+5J96ApeQLPlsnEaKcQT1PiFXD1Hj3
+Unseal Key 5: DQrHDupLH33Ho5UcnkaSgfJ1tuq2TD68fT+zExpgysAd
 
-Initial Root Token: hvs.CmlIRPJRtMhkjnmN5uKid3pK
+Initial Root Token: hvs.KTUgeupMpVklqEM2B4mXDgkI
 hvs.CAESIHtNz4UejDl8mbWcoEWZqGSakNivnkJ9koJldjJXDgTrGh4KHGh2cy5vbW5KTDVla2NiR0J5MjBTU1FVSUNjNDI
 chrome://net-internals/#hsts
 vault operator unseal
