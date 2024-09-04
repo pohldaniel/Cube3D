@@ -1,5 +1,6 @@
 cd /cygdrive/c/Cube/vault-terraform/certs
 choco install openssl
+choco install certstrap
 
 openssl genrsa -out root.key 4096
 openssl req -x509 -new -nodes -key root.key -sha256 -days 3650 -out root.crt -subj "/CN=Vault Root CA/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage = cRLSign, keyCertSign" -addext "extendedKeyUsage=serverAuth, clientAuth" 
@@ -7,14 +8,23 @@ openssl req -x509 -new -nodes -key root.key -sha256 -days 3650 -out root.crt -su
 
 cat root.key root.crt > root.pem
 
-openssl req -new -newkey rsa:4096 -nodes -keyout vault-int.key -out vault-int.csr -subj "/CN=Vault Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage = cRLSign, keyCertSign, digitalSignature" -addext "extendedKeyUsage=clientAuth,serverAuth"
+openssl req -new -newkey rsa:4096 -nodes -keyout vault-server.key -out vault-server.csr -subj "/CN=Vault Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault-server.csr -out vault-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
+
+
+openssl req -new -newkey rsa:4096 -nodes -keyout vault-client.key -out vault-client.csr -subj "/CN=Vault Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault-client.csr -out vault-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
+
+
+
+openssl req -new -newkey rsa:4096 -nodes -keyout vault-int.key -out vault-int.csr -subj "/CN=Vault Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"
 #openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault-int.csr -out vault-int.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=critical,CA:TRUE\nextendedKeyUsage = clientAuth\nsubjectKeyIdentifier=hash\n[ policy_anything ]\nOU=Development\nO=Main Gruppe\ncountryName=DE\nstateOrProvinceName=Saxonia\nlocalityName=Leipzig")
-openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault-int.csr -out vault-int.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=critical,CA:TRUE\nextendedKeyUsage=clientAuth,serverAuth\nkeyUsage = cRLSign, keyCertSign,digitalSignature")
-cat vault-int.crt vault-int.key root.crt > vault-int.pem
+openssl x509 -req -CA root.crt -CAkey root.key -CAcreateserial -in vault-int.csr -out vault-int.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:1\nkeyUsage =critical,cRLSign,keyCertSign")
+cat certs/vault-int.crt certs/vault-int.key > certs/vault-int.pem
 
 
 openssl req -new -newkey rsa:4096 -nodes -keyout daniel.key -out daniel.csr -subj "/CN=Daniel Pohl/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage = cRLSign, keyCertSign, digitalSignature" -addext "extendedKeyUsage=clientAuth"
-openssl x509 -req -CA vault-int.crt -CAkey vault-int.key -CAcreateserial -in daniel.csr -out daniel.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=critical,CA:FALSE\nextendedKeyUsage=clientAuth\nkeyUsage = keyAgreement,digitalSignature")
+openssl x509 -req -CA vault-int.crt -CAkey vault-int.key -CAcreateserial -in daniel.csr -out daniel.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=clientAuth\nkeyUsage=keyAgreement,digitalSignature\nbasicConstraints=critical,CA:FALSE")
 cat daniel.crt > daniel.pem
 openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/daniel.crt  -name "Daniel Pohl"
 
@@ -24,7 +34,7 @@ openssl pkcs12 -export -out vault-int.p12 -inkey vault-int.key -in vault-int.crt
 
 openssl pkcs12 -export -out certs/daniel.p12 -inkey daniel-private-key.pem -in daniel-certificate.pem -name "Daniel Pohl"
 
-openssl x509 -in daniel.p12 -text -noout
+openssl x509 -in vault-int.crt -text -noout
 
 
 openssl pkcs12 -export -out vault.p12 -inkey vault.key -in vault.crt -certfile root.crt -name "Client Vault"  
@@ -130,3 +140,25 @@ vault write auth/cert/certs/daniel_cert display_name=daniel policies=user-cert c
 vault write pki_int_ca/issue/user-cert common_name="DanielPohl" ip_sans="127.0.0.1" lt_names="localhost" -format=json > daniel.json
 
 ng serve --ssl true --ssl-key "vault-int.key" --ssl-cert "vault-int.crt" --host localhost --port 4200
+
+
+
+vault write -format=json pki_int/intermediate/generate/internal common_name="Vault Intermediate" key_type=ec key_bits=256 > vault-int.csr.json
+cat vault-int.csr.json | jq -r '.data.csr' > vault-int.csr
+openssl req -text -noout -verify -in vault-int.csr
+vault write -format=json pki_int/issuers/import/bundle pem_bundel=@certs/vault-int.pem
+
+
+
+
+vault write -format=json pki_iss/intermediate/generate/internal organization="Main" common_name="Vault Issuing" key_type=rsa key_bits=4096 > vault-iss.csr.json
+cat vault-iss.csr.json | jq -r '.data.csr' > vault-iss.csr
+openssl req -text -noout -verify -in vault-iss.csr
+vault write -format=json pki_int/root/sign-intermediate organization="Main" csr=@vault-iss.csr ttl=8760h format=pem > vault-iss.crt.json
+cat vault-iss.crt.json | jq -r '.data.certificate' > vault-iss.crt
+openssl x509 -in vault-iss.crt -text -noout
+cat vault-iss.crt certs/vault-int.crt > vault-iss.pem
+vault write -format=json pki_iss/intermediate/set-signed certificate=@vault-iss.pem
+
+
+vault write -format=json pki_iss/issue/user-cert common_name="Daniel Pohl" > daniel.crt.json

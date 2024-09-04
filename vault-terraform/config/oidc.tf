@@ -10,6 +10,7 @@ resource "vault_identity_oidc_scope" "user" {
                     { 
                         "user": { 
                                   "name": {{identity.entity.aliases.${vault_auth_backend.userpass.accessor}.name}},
+								  "name-cert": {{identity.entity.aliases.${vault_auth_backend.cert.accessor}.name}},
                                   "mail": {{identity.entity.metadata.mail}}
                                 }
                     }
@@ -43,7 +44,8 @@ resource "vault_identity_oidc_client" "cube" {
   depends_on = [vault_identity_oidc_assignment.userassignment]
   name          = "cube"
   redirect_uris = [
-    "http://localhost:8080/oidc/callback"
+    "http://localhost:8080/oidc/callback",
+	"https://localhost:8080/oidc/callback"
   ]
   key = "key"
   assignments = ["user-assignment"]

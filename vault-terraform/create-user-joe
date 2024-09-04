@@ -1,4 +1,4 @@
-./vault write pki_int_ca/issue/user-cert common_name="Joe Dudgeon" ip_sans="127.0.0.1" lt_names="localhost" -format=json > certs/joe.json
+./vault write pki_iss/issue/user-cert common_name="Joe Dudgeon" -format=json > certs/joe.json
 
 cat certs/joe.json | jq -r '.data.certificate' > certs/joe.crt
 cat certs/joe.json | jq -r '.data.private_key' > certs/joe.key

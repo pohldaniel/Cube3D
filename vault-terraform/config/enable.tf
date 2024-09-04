@@ -14,7 +14,7 @@ resource "vault_auth_backend" "cert" {
 
 resource "vault_mount" "root" {
     type = "pki"
-    path = "pki_root_ca"
+    path = "pki_root"
     default_lease_ttl_seconds = 31556952 # 1 years
     max_lease_ttl_seconds = 157680000 # 5 years
     description = "Root Certificate Authority"
@@ -22,8 +22,17 @@ resource "vault_mount" "root" {
 
 resource "vault_mount" "pki_int" {
     type = "pki"
-    path = "pki_int_ca"
+    path = "pki_int"
     default_lease_ttl_seconds = 63072000 # 2 years
     max_lease_ttl_seconds = 63072000 # 2 years
-    description = "Intermediate Authority for Vault"
+    description = "Intermediate Authority"
+}
+
+
+resource "vault_mount" "pki_iss" {
+    type = "pki"
+    path = "pki_iss"
+    default_lease_ttl_seconds = 63072000 # 2 years
+    max_lease_ttl_seconds = 63072000 # 2 years
+    description = "Issuing Authority"
 }
