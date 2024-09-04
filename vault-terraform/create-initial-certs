@@ -1,17 +1,17 @@
 mkdir -p certs
 
 #Create Root Authority
-#openssl genrsa -out certs/root.key 4096
-#openssl req -x509 -new -nodes -key certs/root.key -sha256 -days 3650 -out certs/root.crt -subj "/CN=Vault Root CA/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
-#cat certs/root.key certs/root.crt > certs/root.pem
+openssl genrsa -out certs/root.key 4096
+openssl req -x509 -new -nodes -key certs/root.key -sha256 -days 3650 -out certs/root.crt -subj "/CN=Vault Root CA/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
+cat certs/root.key certs/root.crt > certs/root.pem
 
 #Vault Server
-#openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-server.key -out certs/vault-server.csr -subj "/CN=Vault Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
-#openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-server.csr -out certs/vault-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-server.key -out certs/vault-server.csr -subj "/CN=Vault Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-server.csr -out certs/vault-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
 
 #Vault Client
-#openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-client.key -out certs/vault-client.csr -subj "/CN=Vault Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
-#openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-client.csr -out certs/vault-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-client.key -out certs/vault-client.csr -subj "/CN=Vault Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-client.csr -out certs/vault-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
 
 #Spring Server
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-server.key -out certs/spring-server.csr -subj "/CN=Spring Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
@@ -23,15 +23,15 @@ openssl req -new -newkey rsa:4096 -nodes -keyout certs/angular-client.key -out c
 openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/angular-client.csr -out certs/angular-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
 
 #Vault Intermediate
-#openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-int.key -out certs/vault-int.csr -subj "/CN=Vault Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"
-#openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-int.csr -out certs/vault-int.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:1\nkeyUsage =critical,cRLSign,keyCertSign")
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-int.key -out certs/vault-int.csr -subj "/CN=Vault Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-int.csr -out certs/vault-int.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:1\nkeyUsage =critical,cRLSign,keyCertSign")
 
 #Vault Issuing
-#openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-iss.key -out certs/vault-iss.csr -subj "/CN=Vault Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
-#openssl x509 -req -CA certs/vault-int.crt -CAkey certs/vault-int.key -CAcreateserial -in certs/vault-iss.csr -out certs/vault-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-iss.key -out certs/vault-iss.csr -subj "/CN=Vault Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
+openssl x509 -req -CA certs/vault-int.crt -CAkey certs/vault-int.key -CAcreateserial -in certs/vault-iss.csr -out certs/vault-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
 
 #Daniel User Cert
-#openssl req -new -newkey rsa:4096 -nodes -keyout certs/daniel.key -out certs/daniel.csr -subj "/CN=Daniel Pohl/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
-#openssl x509 -req -CA certs/vault-iss.crt -CAkey certs/vault-iss.key -CAcreateserial -in certs/daniel.csr -out certs/daniel.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_iss/ca")
-#cat certs/daniel.crt certs/vault-iss.crt certs/vault-int.crt > certs/daniel.pem
-#openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/daniel.pem  -name "Daniel Pohl" -passout pass:
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/daniel.key -out certs/daniel.csr -subj "/CN=Daniel Pohl/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/vault-iss.crt -CAkey certs/vault-iss.key -CAcreateserial -in certs/daniel.csr -out certs/daniel.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_iss/ca")
+cat certs/daniel.crt certs/vault-iss.crt certs/vault-int.crt > certs/daniel.pem
+openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/daniel.pem  -name "Daniel Pohl" -passout pass:
