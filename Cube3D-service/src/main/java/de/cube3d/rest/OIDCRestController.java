@@ -49,9 +49,9 @@ import de.cube3d.utils.SSLUtil;
 public class OIDCRestController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OIDCRestController.class);
-	private String redirect = "http%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback";
-	private String clinetId = "1phXV5PdtOcgwmCQQ3tQQ4rUivA6fjlu";
-	private String clientSecret = "hvo_secret_jpUWV8zwFLPQgHamKrBubTudXuqqpfTNcbAEojJQflhRjQxQXqdC6IwZg7jW0Aie";
+	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Foidc%2Fcallback";
+	private String clinetId = "PukTzoEHP34McRQtUbxBzKl4BAmj9sV2";
+	private String clientSecret = "hvo_secret_ZQDQOYJ3zlyo7WmXX1OOBuk6pLpAnPjyNHnXQgtx88XLbqqK6BokugTwqsQecfbG";
 	private String provider = "user-provider";
 	
 	@RequestMapping(value = "login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,8 +61,8 @@ public class OIDCRestController {
 		if(code.equalsIgnoreCase("undefined")) {
 						
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("http://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
-				new URI("http://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
+				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
+				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -70,8 +70,8 @@ public class OIDCRestController {
 		}else {
 
 			URI uri = state.equalsIgnoreCase("none") ?
-				new URI("http://localhost:4200/gateway?code=" + code) :			
-				new URI("http://localhost:4200/gateway?code=" + code + "&returnUrl=" + state);
+				new URI("https://localhost:4200/gateway?code=" + code) :			
+				new URI("https://localhost:4200/gateway?code=" + code + "&returnUrl=" + state);
 
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -99,8 +99,8 @@ public class OIDCRestController {
 		parameters.put("code", code);
 		parameters.put("client_id", this.clinetId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "http://localhost:8080/oidc/callback");
-		parameters.put("scope", "openid,user,groups");
+		parameters.put("redirect_uri", "https://localhost:8080/oidc/callback");
+		parameters.put("scope", "openid user groups");
 		
 		String form = parameters.keySet().stream()
 						.map(key -> {
@@ -123,7 +123,7 @@ public class OIDCRestController {
 				//.setProxy(new HttpHost(proxyHost, proxyPort, "http"))
 				.build();
 
-		HttpPost httpPost = new HttpPost("http://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
+		HttpPost httpPost = new HttpPost("https://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
@@ -138,7 +138,7 @@ public class OIDCRestController {
 		
 		ObjectNode statusMap = mapper.createObjectNode();
 		statusMap.put("status", "200");
-		statusMap.put("remoteUser", bodyJson.get("user").get("name").asText().toLowerCase());
+		statusMap.put("remoteUser", bodyJson.get("user").get("name-cert").asText().toLowerCase());
 		statusMap.put("token", jwt);
 		statusMap.put("accessToken", actualObj.get("access_token").asText());
 
@@ -158,7 +158,7 @@ public class OIDCRestController {
 		parameters.put("refresh_token", accessToken);
 		parameters.put("client_id", this.clinetId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "http://localhost:8080/oidc/callback");
+		parameters.put("redirect_uri", "https://localhost:8080/oidc/callback");
 		parameters.put("scope", "openid,user,groups");
 		
 		String form = parameters.keySet().stream()
@@ -182,7 +182,7 @@ public class OIDCRestController {
 				//.setProxy(new HttpHost(proxyHost, proxyPort, "http"))
 				.build();
 		
-		HttpPost httpPost = new HttpPost("http://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
+		HttpPost httpPost = new HttpPost("https://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		

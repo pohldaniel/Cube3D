@@ -26,7 +26,7 @@ public class HibernateUtil {
       settings.put(Environment.JAKARTA_JDBC_USER, username);
       settings.put(Environment.JAKARTA_JDBC_PASSWORD, password);
       settings.put(Environment.JAKARTA_JDBC_DRIVER, "org.h2.Driver");
-      settings.put(Environment.DIALECT, "org.hibernate.dialect.H2Dialect");
+      //settings.put(Environment.DIALECT, "org.hibernate.dialect.H2Dialect");
       settings.put(Environment.POOL_SIZE, 20);
       settings.put("hibernate.connection.min_pool_size", 5);
       settings.put("hibernate.connection.autocommit", false);

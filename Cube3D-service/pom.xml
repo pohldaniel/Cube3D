@@ -78,7 +78,6 @@
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-c3p0</artifactId>
 		    <version>6.6.0.Final</version>
-            <type>pom</type>
        </dependency>
 
     	<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
