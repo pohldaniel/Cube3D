@@ -15,6 +15,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import de.cube3d.filter.RestAPIFilter;
 import de.cube3d.service.JwtService;
 import de.cube3d.utils.HibernateUtil;
+import de.cube3d.utils.SSLUtil;
 import jakarta.annotation.PostConstruct;
 
 /** starts the application in case everything is running check "localhost:8080/h2-console" */
@@ -34,6 +35,7 @@ public class Main extends SpringBootServletInitializer{
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
 		Locale.setDefault(Locale.GERMANY);
+		SSLUtil.init("password");
 		SpringApplication.run(Main.class, args);    	  	
 	}
 

@@ -1,4 +1,4 @@
-cd /cygdrive/c/Cube/vault-terraform/certs
+cd /cygdrive/c/Cube3/vault-terraform/certs
 choco install openssl
 choco install certstrap
 
@@ -165,3 +165,9 @@ vault write -format=json pki_iss/issue/user-cert common_name="Daniel Pohl" > dan
 
 
 ng serve --ssl true --ssl-key angular-server.key --ssl-cert angular-server.crt --host localhost --port 4200
+
+https://github.com/Baeldung/spring-security-oauth/tree/master/oauth-authorization-server
+
+curl -L -X POST "http://auth-server:8200/oauth2/token" -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode "scope=openid" --data-urlencode "code=P" --data-urlencode "grant_type=authorization_code" --data-urlencode "client_id=cube" --data-urlencode "client_secret=secret" --data-urlencode "redirect_uri=http://localhost:8080/spring/oidc/callback"  
+
+https://stackoverflow.com/questions/47202657/spring-security-oauth2-post-request-to-oauth-token-redirects-to-login-and-role

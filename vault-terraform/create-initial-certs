@@ -2,22 +2,23 @@ mkdir -p certs
 
 #Create Root Authority
 openssl genrsa -out certs/root.key 4096
-openssl req -x509 -new -nodes -key certs/root.key -sha256 -days 3650 -out certs/root.crt -subj "/CN=Vault Root CA/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
+openssl req -x509 -new -nodes -key certs/root.key -sha256 -days 3650 -out certs/root.crt -subj "/CN=Cube Root CA/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
 cat certs/root.key certs/root.crt > certs/root.pem
 
-#Vault Server
-openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-server.key -out certs/vault-server.csr -subj "/CN=Vault Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
-openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-server.csr -out certs/vault-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
+#Cube Server
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-server.key -out certs/cube-server.csr -subj "/CN=Cube Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/cube-server.csr -out certs/cube-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
 
-#Vault Client
-openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-client.key -out certs/vault-client.csr -subj "/CN=Vault Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
-openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-client.csr -out certs/vault-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
+#Cube Client
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-client.key -out certs/cube-client.csr -subj "/CN=Cube Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/cube-client.csr -out certs/cube-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
 
 #Spring Server
-openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-server.key -out certs/spring-server.csr -subj "/CN=Spring Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
-openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/spring-server.csr -out certs/spring-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
-openssl pkcs12 -export -out certs/spring-server.p12 -inkey certs/spring-server.key -in certs/spring-server.crt  -name "Spring Server" -passout pass:password
-cp certs/spring-server.p12 ../Cube3D-service/src/main/resources
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-server.key -out certs/spring-server.csr -subj "/CN=Spring Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,DNS:auth-server,IP:127.0.0.1" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/spring-server.csr -out certs/spring-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,DNS:auth-server,IP:127.0.0.1\nextendedKeyUsage=serverAuth")
+#cat certs/spring-server.crt certs/root.crt > certs/spring-server.pem
+openssl pkcs12 -export -out certs/spring-server.p12 -inkey certs/spring-server.key -in certs/spring-server.crt -name "Spring Server" -passout pass:password
+cp certs/spring-server.p12 ../Cube3D-service/src/main/resources/certs
 
 #Angular Server
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/angular-server.key -out certs/angular-server.csr -subj "/CN=Angular Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
@@ -25,16 +26,39 @@ openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in c
 cp certs/angular-server.crt ../Cube3D-ui
 cp certs/angular-server.key ../Cube3D-ui
 
-#Vault Intermediate
-openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-int.key -out certs/vault-int.csr -subj "/CN=Vault Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"
-openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/vault-int.csr -out certs/vault-int.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:1\nkeyUsage =critical,cRLSign,keyCertSign")
+#Cube Intermediate
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-int.key -out certs/cube-int.csr -subj "/CN=Cube Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/cube-int.csr -out certs/cube-int.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:1\nkeyUsage =critical,cRLSign,keyCertSign")
 
-#Vault Issuing
-openssl req -new -newkey rsa:4096 -nodes -keyout certs/vault-iss.key -out certs/vault-iss.csr -subj "/CN=Vault Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
-openssl x509 -req -CA certs/vault-int.crt -CAkey certs/vault-int.key -CAcreateserial -in certs/vault-iss.csr -out certs/vault-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
+#Cube Issuing
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-iss.key -out certs/cube-iss.csr -subj "/CN=Cube Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
+openssl x509 -req -CA certs/cube-int.crt -CAkey certs/cube-int.key -CAcreateserial -in certs/cube-iss.csr -out certs/cube-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
 
-#Daniel User Cert
+#Spring Client
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-client.key -out certs/spring-client.csr -subj "/CN=Spring Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/cube-iss.crt -CAkey certs/cube-iss.key -CAcreateserial -in certs/spring-client.csr -out certs/spring-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
+cat certs/spring-client.crt certs/cube-iss.crt > certs/spring-client.pem
+openssl pkcs12 -export -out certs/spring-client.p12 -inkey certs/spring-client.key -in certs/spring-client.crt -name "Spring Client" -passout pass:password
+
+#Daniel Cert
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/daniel.key -out certs/daniel.csr -subj "/CN=Daniel Pohl/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
-openssl x509 -req -CA certs/vault-iss.crt -CAkey certs/vault-iss.key -CAcreateserial -in certs/daniel.csr -out certs/daniel.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_iss/ca")
-cat certs/daniel.crt certs/vault-iss.crt certs/vault-int.crt > certs/daniel.pem
-openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/daniel.pem  -name "Daniel Pohl" -passout pass:
+openssl x509 -req -CA certs/cube-iss.crt -CAkey certs/cube-iss.key -CAcreateserial -in certs/daniel.csr -out certs/daniel.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_iss/ca")
+cat certs/daniel.crt certs/cube-iss.crt certs/cube-int.crt > certs/daniel.pem
+openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/daniel.pem -name "Daniel Pohl" -passout pass:
+
+#Admin Cert
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/admin.key -out certs/admin.csr -subj "/CN=Admin/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/cube-iss.crt -CAkey certs/cube-iss.key -CAcreateserial -in certs/admin.csr -out certs/admin.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_iss/ca")
+cat certs/admin.crt certs/cube-iss.crt certs/cube-int.crt > certs/admin.pem
+openssl pkcs12 -export -out certs/admin.p12 -inkey certs/admin.key -in certs/admin.pem -name "Admin" -passout pass:
+
+#Personmanager Cert
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/personmanager.key -out certs/personmanager.csr -subj "/CN=Personmanager/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/cube-iss.crt -CAkey certs/cube-iss.key -CAcreateserial -in certs/personmanager.csr -out certs/personmanager.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_iss/ca")
+cat certs/personmanager.crt certs/cube-iss.crt certs/cube-int.crt > certs/personmanager.pem
+openssl pkcs12 -export -out certs/personmanager.p12 -inkey certs/personmanager.key -in certs/personmanager.pem -name "Personmanager" -passout pass:
+
+#Spring TrustStore unfortunately there is no way without keytool
+#./keytool -import -trustcacerts -noprompt -file certs/cube-iss.crt -alias "Cube issuing" -deststoretype PKCS12 -keystore certs/spring-trust.p12 -deststorepass password
+#cp certs/cube-iss.crt ../Cube3D-service/src/main/resources/certs
+#keytool -import -trustcacerts -noprompt -file root.crt -alias "Cube Root" -deststoretype PKCS12 -keystore spring-trust-root.p12 -deststorepass password

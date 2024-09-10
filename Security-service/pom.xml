@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion> 
+    <groupId>de.security</groupId>
+    <artifactId>Security-service</artifactId>
+    <version>1.0.0</version>
+    <name>security-service</name>
+	
+    <parent>
+       	<groupId>org.springframework.boot</groupId>
+       	<artifactId>spring-boot-starter-parent</artifactId>
+       	<version>3.3.2</version>
+    </parent>
+    <properties>
+        <java.version>22</java.version>
+    </properties>
+
+	<!-- I will let the DB2 jdbc driver there maybe someone has to use it also-->
+	<repositories>
+  		<repository>
+    	<id>repo</id>
+    	<url>file://${project.basedir}/lib</url>
+  		</repository>
+	</repositories>   
+
+    <dependencies>
+    	<!-- DB2 jdbc driver added during local repository-->
+    	<!--<dependency>
+    		<groupId>com.ibm.db2.jcc</groupId>
+    		<artifactId>db2jcc4</artifactId>
+    		<version>4.25.13</version>
+  		</dependency>-->
+    
+    	<!-- Use H2 for copy and past this application -->
+    	<dependency>
+    		<groupId>com.h2database</groupId>
+    		<artifactId>h2</artifactId>
+    	</dependency>
+    
+    	<!-- SpringBoot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency> 
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
+        </dependency>
+
+		<dependency>
+        	<groupId>org.springframework.security</groupId>
+        	<artifactId>spring-security-oauth2-client</artifactId>
+		</dependency>
+
+ 		<!--<dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <version>2.6.8</version>
+        </dependency>-->
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.1.0</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+        
+        <dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>6.6.0.Final</version>
+		</dependency>
+        
+       <dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-c3p0</artifactId>
+		    <version>6.6.0.Final</version>
+       </dependency>
+      
+       <dependency>
+    		<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-lang3</artifactId>
+		</dependency>
+        <dependency>
+    		<groupId>commons-io</groupId>
+    		<artifactId>commons-io</artifactId>
+    		<version>2.15.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.cryptacular</groupId>
+		    <artifactId>cryptacular</artifactId>
+		    <version>1.2.6</version>
+		</dependency> 
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

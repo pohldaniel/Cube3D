@@ -34,4 +34,12 @@ public class FilterInitializer {
 		registration.addUrlPatterns("/oidc/*", "/login");
 		return registration;
 	}
+	
+	@Bean(name="spring")
+	public FilterRegistrationBean<OIDCFilter> springOidcFilterRegistration() {
+		FilterRegistrationBean<OIDCFilter> registration = new FilterRegistrationBean<OIDCFilter>();
+		registration.setFilter(new OIDCFilter());
+		registration.addUrlPatterns("/spring/oidc/*", "/login");
+		return registration;
+	}
 }
