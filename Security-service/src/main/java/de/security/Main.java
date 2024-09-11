@@ -15,7 +15,7 @@ import jakarta.annotation.PostConstruct;
 
 @SuppressWarnings("unused")
 @SpringBootApplication
-@PropertySource({"classpath:application.properties"})
+@PropertySource({"classpath:application.properties", /*"classpath:application.yml"*/})
 public class Main extends SpringBootServletInitializer{
    
     public static void main(String[] args) throws Exception  {

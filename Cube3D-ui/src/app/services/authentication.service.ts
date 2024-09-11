@@ -88,11 +88,11 @@ import {Role} from '../models/Role.enum';
   gethTokenOIDC(code : string){
     const params = new HttpParams()
     .set('code', code)
-    return this.http.get<any[]>(environment.baseUrl + '/oidc/token', {params, headers: this.headers});
+    return this.http.get<any[]>(environment.baseUrl + '/spring/oidc/token', {params, headers: this.headers});
   }
 
   refreshTokenOIDC() : Observable<string> {
-    return this.http.post<string>(environment.baseUrl + '/oidc/refresh', {'id_token': JSON.parse(this.currentTokenMapSubject.value as string).token, 'access_token': JSON.parse(this.currentTokenMapSubject.value as string).accessToken, 'remoteUser': JSON.parse(this.currentTokenMapSubject.value as string).remoteUser}, {headers: this.headers});   
+    return this.http.post<string>(environment.baseUrl + '/spring/oidc/refresh', {'id_token': JSON.parse(this.currentTokenMapSubject.value as string).token, 'access_token': JSON.parse(this.currentTokenMapSubject.value as string).accessToken, 'remoteUser': JSON.parse(this.currentTokenMapSubject.value as string).remoteUser}, {headers: this.headers});   
   }
 
   logout() {

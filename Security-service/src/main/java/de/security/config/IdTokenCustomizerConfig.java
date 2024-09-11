@@ -15,7 +15,6 @@ public class IdTokenCustomizerConfig {
 	public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer(OidcUserInfoService userInfoService) {
 		return (context) -> {
 			if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
-				System.out.println("Principal: " + context.getPrincipal().getName());
 				OidcUserInfo userInfo = userInfoService.loadUser( context.getPrincipal().getName());
 				context.getClaims().claims(claims ->claims.putAll(userInfo.getClaims()));
 			}

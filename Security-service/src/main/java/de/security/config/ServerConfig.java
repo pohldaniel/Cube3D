@@ -47,27 +47,6 @@ public class ServerConfig {
         return http.formLogin(withDefaults()).build();
     }
 	
-	/*@Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(this.cubeClientRegistration());
-    }
-	
-	private ClientRegistration cubeClientRegistration() {
-		return ClientRegistration.withRegistrationId(UUID.randomUUID().toString())
-	                .clientId("cube")
-	                .clientSecret("{noop}secret")
-	                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-	                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-	                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-	                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-	                .redirectUri("https://localhost:8080/spring/oidc/callback")
-	                .scope("openid")
-	                .authorizationUri("https://auth-server:8200/oauth2/authorize")
-	                .tokenUri("https://auth-server:8200/oauth2/token")	               
-	                .clientName("Cube Client")
-	                .build();
-	}*/
-	
 	@Bean
     AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
