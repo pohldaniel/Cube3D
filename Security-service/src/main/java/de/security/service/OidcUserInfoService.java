@@ -1,6 +1,8 @@
 package de.security.service;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,10 @@ public class OidcUserInfoService {
 		
 	public OidcUserInfo loadUser(String id) {
 		Person person = personDao.findById(id);
+		
+		List<String> roles = Arrays.asList(person.getRole().toString(), "USER");	
 		return OidcUserInfo.builder()
 				.subject(person.getId())
-				.claim("roles", Arrays.asList(person.getRole())).build();
+				.claim("roles", roles.stream().distinct().collect(Collectors.toList())).build();
 	}
 }

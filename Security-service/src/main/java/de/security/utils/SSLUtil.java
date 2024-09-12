@@ -6,15 +6,22 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.conn.ssl.TrustStrategy;
 
 public class SSLUtil {
 	
@@ -113,5 +120,54 @@ public class SSLUtil {
 		SSLContext sslContext = SSLContext.getInstance("TLS");
 		sslContext.init(null, new TrustManager[] { customTm }, null);
 		SSLContext.setDefault(sslContext);
+	}
+	
+	public static SSLContext getSSLContext(String password) throws CertificateException, SSLException {
+		
+		TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
+			@Override
+			public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {					
+				return true;
+			}
+		};
+			
+		try {		
+			
+			KeyStore keyStore = KeyStore.getInstance("PKCS12");
+			keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("certs/spring-client.p12"), password.toCharArray());
+			
+			
+			SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy)
+					.loadKeyMaterial(keyStore, password.toCharArray())
+					.build();
+			return sslContext;
+		} catch (Exception e) {	
+			throw new SSLException("Unable to initialize SSL-context", e);
+		} 
+	}
+	
+	public static void init(String password) {
+		
+		TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
+			@Override
+			public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {					
+				return true;
+			}
+		};
+			
+		try {					
+			KeyStore keyStore = KeyStore.getInstance("PKCS12");
+			keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("certs/spring-client.p12"), password.toCharArray());
+						
+			SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy)
+					.loadKeyMaterial(keyStore, password.toCharArray())
+					.build();
+
+			SSLContext.setDefault(sslContext);
+		} catch (IOException | KeyStoreException | KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException e) {	
+			e.printStackTrace();
+		}
 	}
 }

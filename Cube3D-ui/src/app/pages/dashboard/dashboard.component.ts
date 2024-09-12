@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SpinnerComponent} from '../../shared/spinner/spinner.component';
 import {AuthenticationService} from '../../services/authentication.service';
-import {Person} from '../../models/Person';
+import {Role} from '../../models/Role.enum';
 
 @Component({
     selector: 'app-dashboard',
@@ -14,9 +14,10 @@ import {Person} from '../../models/Person';
 export class DashboardComponent implements OnInit {
 
   isWait: boolean = false;
-
+  currentRoles : Role[];
+  
   constructor(private readonly authenticationService: AuthenticationService){
-
+    this.currentRoles = this.authenticationService.getCurrentRoles();
   }
 
   ngOnInit() {

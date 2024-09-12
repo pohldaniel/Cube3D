@@ -7,12 +7,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import de.security.service.PasswordUserDetailsService;
+import de.security.service.CubeUserDetailsService;
 
 public class CertificateAuthenticationProvider implements AuthenticationProvider{
 	
 	@Autowired 
-	private PasswordUserDetailsService userDetailsService; 
+	private CubeUserDetailsService userDetailsService; 
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {

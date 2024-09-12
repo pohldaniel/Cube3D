@@ -12,14 +12,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import de.security.service.PasswordUserDetailsService;
+import de.security.service.CubeUserDetailsService;
 
 public class PasswordAuthenticationProvider implements AuthenticationProvider {
 
 	private String pepper = "sjddjw768wlsmj882z2rnknlahffajsdgw2mAW!sjhjsc9870asfj3f";
 	
 	@Autowired 
-	private PasswordUserDetailsService userDetailsService; 
+	private CubeUserDetailsService userDetailsService; 
 	
 	@SuppressWarnings("serial")
 	@Override

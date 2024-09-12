@@ -2,6 +2,16 @@
 
 <div content>
   <h1 class="sitename"><span>Willkommen bei Cube 3D</span></h1>
+
+
+  <div class="itemlist">
+    <span class="item">Current Roles:&emsp;[</span>
+    <div  *ngFor="let role of currentRoles; let isLast=last">
+      <span class="item" *ngIf="!isLast">{{role}},&ensp;</span>
+      <span class="item" *ngIf="isLast">{{role}}</span>
+    </div>
+    <span class="item">]</span>
+  </div>
 </div><!-- main content end-->
 
 <footer>

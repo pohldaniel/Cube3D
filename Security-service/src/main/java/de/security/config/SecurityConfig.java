@@ -1,44 +1,24 @@
 package de.security.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import java.util.UUID;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
 
-import de.security.SpringContext;
 import de.security.components.CertificateAuthenticationProvider;
 import de.security.components.PasswordAuthenticationProvider;
-import de.security.service.PasswordUserDetailsService;
+import de.security.service.CubeUserDetailsService;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 	
-	/*@Bean
-    @Order(2)
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest()
-                .authenticated())
-            .userDetailsService(passwordUserDetailsService())
-            .authenticationProvider(passwordAuthenticationProvider())
-            .formLogin(withDefaults());
-        return http.build();
-    }*/
-	
 	@Bean
-	public PasswordUserDetailsService passwordUserDetailsService() {		
-		return new PasswordUserDetailsService();
+	public CubeUserDetailsService cubeUserDetailsService() {		
+		return new CubeUserDetailsService();
 	}
 	
 	@Bean
@@ -55,32 +35,27 @@ public class SecurityConfig {
 	@Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		 http
-		 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
+		 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/images/**","/css/**", "/login", "/message").permitAll().requestMatchers(HttpMethod.POST, "/perform_login").permitAll().anyRequest().authenticated())
 		 .x509(cert ->cert.subjectPrincipalRegex("CN=(.*?)(?:,|$)"))
-		 .userDetailsService(passwordUserDetailsService())
-		 .authenticationProvider(certificateAuthenticationProvider()).formLogin(withDefaults());
-		 //.oauth2Login(withDefaults());
-		 //.formLogin(login -> login.loginPage("/login"));
-		 //.oauth2Login(oauth2Login ->
-		 	//oauth2Login.loginPage("/oauth2/authorize/cube"))
-		 //.oauth2Login(withDefaults());
-		 //.oauth2Client(withDefaults());   
+		 .userDetailsService(cubeUserDetailsService())
+		 .authenticationProvider(certificateAuthenticationProvider()).formLogin(form->form
+                 .loginPage("/login")
+                 .loginProcessingUrl("/perform_login")
+                 //.successForwardUrl("/login_success_handler")
+                 .permitAll()
+                 );
 	     return http.build();
 	}
 	
 	/*@Bean
-	public CertificateUserDetailsService certificateUserDetailsService() {		
-		return new CertificateUserDetailsService();
-	}
-	
-	@Bean
-	public CertificateAuthenticationProvider certificateAuthenticationProvider() {		
-		return new CertificateAuthenticationProvider();
-	}
-	
-	@Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(this.cubeClientRegistration());
+    @Order(2)
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest()
+                .authenticated())
+            .userDetailsService(cubeUserDetailsService())
+            .authenticationProvider(passwordAuthenticationProvider())
+            .formLogin(withDefaults());
+        return http.build();
     }
 	
 	private ClientRegistration cubeClientRegistration() {
