@@ -20,14 +20,6 @@ git lfs clone https://github.com/pohldaniel/Cube3D.git C:\Cube
 Additionally: For the Spring Authorization server is an IP alias necessary. For Windows go to "C:\Windows\System32\drivers\etc\hosts" and add the line "127.0.0.1 auth-server"
 at the end of the File.
 
-#Spring Security Server
-
-- open "Cube3D-ui" with Visual Studio Code and run
-  * npm install
-  * ng serve --ssl true --ssl-key angular-server.key --ssl-cert angular-server.crt --host localhost --port 4200
-- open "https:\localhost:8080\login" inside your Webbrowser
-- https://auth-server:8443/.well-known/openid-configuration
-
 #Vault Security Server
 - open cmd and change to the directory "C:\Cube\vault-terraform" run the command
   
