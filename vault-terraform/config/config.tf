@@ -28,7 +28,7 @@ resource "vault_identity_entity" "daniel_userpass" {
     name = "daniel_userpass"
     policies = ["token-policy"]
     metadata = {
-        mail = "pohl.daniel@freent.de"
+        mail = "test@test.de"
     }
 }
 
@@ -42,7 +42,7 @@ resource "vault_identity_entity_alias" "daniel_userpass_alias" {
     name = "daniel_cert"
     policies = ["token-policy"]
     metadata = {
-        mail = "pohl.daniel@freent.de"
+        mail = "test@test.de"
     }
 }
 

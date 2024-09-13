@@ -11,13 +11,13 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
 
   const router = inject(Router);
   const authenticationService = inject(AuthenticationService);
-  const currentJwt = authenticationService.currentJwtValue;
+  const currentJwt = authenticationService.jwtValue;
   const snackService = inject(SnackService);
   let found : boolean = false;
 
   if (currentJwt) {
 
-    if(authenticationService.currentLoginValue === 'jwt'){
+    if(authenticationService.providerValue === 'jwt'){
       return authenticationService.refreshToken().pipe(
         tap((data: any) => {
           if(data.token){
@@ -27,7 +27,7 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
               authenticationService.setCurrentRouteValue(state.url);
               return found;
             }else{
-              router.navigate([authenticationService.currentRouteValue]);
+              router.navigate([authenticationService.routeValue]);
               return found;
             } 
           }else{     
@@ -56,13 +56,13 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
               authenticationService.setCurrentRouteValue(state.url);
               return found;
             }else{
-              router.navigate([authenticationService.currentRouteValue]);
+              router.navigate([authenticationService.routeValue]);
               return found;
             } 
           }else{     
             snackService.open('ERROR', "Token Expired");
             authenticationService.logout();
-            window.location.href = environment.baseUrl + '/login?returnUrl=' + state.url.replace(/\//g, "");
+            window.location.href = environment.baseUrl + '/spring/login?returnUrl=' + state.url.replace(/\//g, "");
             return false;
           }
         }),
@@ -75,7 +75,8 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
       );
     }
   }else{
-    router.navigate(['/login'], { queryParams: { returnUrl: state.url.replace(/\//g, "") }});
+    //router.navigate(['/login'], { queryParams: { returnUrl: state.url.replace(/\//g, "") }});
+    window.location.href = environment.baseUrl + '/' + environment.defaultProvider +'/login?returnUrl=' + state.url.replace(/\//g, "");
     return false;
   }
 };

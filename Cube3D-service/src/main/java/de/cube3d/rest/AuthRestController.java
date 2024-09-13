@@ -40,9 +40,10 @@ public class AuthRestController {
 	public ResponseEntity<Object> token(@RequestBody Person person){
 		log.info("/auth/token was called");
 		ObjectMapper mapper = new ObjectMapper(); 
-		ObjectNode statusMap = mapper.createObjectNode();
-		statusMap.put("token", jwtService.getJwtForUser(person.getId()));       
-		return ResponseEntity.status(HttpStatus.OK).body(statusMap);
+		ObjectNode tokenMap = mapper.createObjectNode();
+		tokenMap.put("token", jwtService.getJwtForUser(person.getId()));    
+		tokenMap.put("user", jwtService.getUsername(tokenMap.get("token").asText()));   
+		return ResponseEntity.status(HttpStatus.OK).body(tokenMap);
 	}
 	
 	@PostMapping(value = "/authenticate")
@@ -51,12 +52,11 @@ public class AuthRestController {
         try {
             Person optionalPerson = personDao.findById(resp.get("id"));
             MessageDigest digest = MessageDigest.getInstance("SHA-512");
-            byte[] hash = digest.digest((resp.get("passwordHash") + pepper).getBytes());
+            byte[] hash = digest.digest((resp.get("password") + pepper).getBytes());
             String hexHash = String.format("%x", new BigInteger(1, hash));
             if (optionalPerson != null) {
                 Person person = optionalPerson;
                 if (person.getPasswordHash() != null && person.getPasswordHash().equals(hexHash)) {
-                    person = personDao.save(person);
                     return ResponseEntity.status(HttpStatus.ACCEPTED).body(person);
                 }else {
                 	ObjectMapper mapper = new ObjectMapper(); 
@@ -80,8 +80,9 @@ public class AuthRestController {
 	public ResponseEntity<Object> refresh(@RequestBody Map<String, String> resp){
 		log.info("/auth/refresh was called");
 		ObjectMapper mapper = new ObjectMapper(); 
-		ObjectNode statusMap = mapper.createObjectNode();
-		statusMap.put("token", jwtService.refreshToken(resp.get("token"), false));      
-		return ResponseEntity.status(HttpStatus.OK).body(statusMap);
+		ObjectNode tokenMap = mapper.createObjectNode();
+		tokenMap.put("token", jwtService.refreshToken(resp.get("token"), false));    
+		tokenMap.put("user", jwtService.getUsername(tokenMap.get("token").asText())); 
+		return ResponseEntity.status(HttpStatus.OK).body(tokenMap);
 	}
 }

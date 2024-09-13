@@ -45,7 +45,7 @@
                   class="btn btn-danger" 
                   (click)="deletePerson(person)"
                   [ngStyle]="{'display' : authenticationService.containsRole(['ADMIN']) ? 'inline-block' : 'none'}" 
-                  [disabled]="!authenticationService.containsRole(['ADMIN']) || person.id === authenticationService.getCurrentId()"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
+                  [disabled]="!authenticationService.containsRole(['ADMIN']) || person.id === authenticationService.getCurrentUser()"><fa-icon [icon]="['far', 'trash-alt']"></fa-icon>
           </button>
         </td>
       </ng-container>     

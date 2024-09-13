@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/test")
-public class TestController {
+public class TestRestController {
 	
 	@RequestMapping(value = "/execute", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> execute(){		

@@ -20,25 +20,34 @@ import org.springframework.http.HttpStatus;
 import de.cube3d.service.JwtService;
 
 public class RestAPIFilter implements Filter{
-
+	
 	 private List<String> corsUrls = new ArrayList<>(Arrays.asList(
 			 "http://localhost:4200", 
 			 "http://127.0.0.1:4200", 
 			 "http://0:0:0:0:0:0:0:1:4200",
-			 "http://localhost:8200", 
-			 "http://127.0.0.1:8200", 
-			 "http://0:0:0:0:0:0:0:1:8200",
 			 "http://localhost:8080",
 			 "http://127.0.0.1:8080", 
-			 "http://0:0:0:0:0:0:0:1:8080"));
+			 "http://0:0:0:0:0:0:0:1:8080",
+			 "https://localhost:4200", 
+			 "https://127.0.0.1:4200", 
+			 "https://0:0:0:0:0:0:0:1:4200",
+			 "https://localhost:8080",
+			 "https://127.0.0.1:8080", 
+			 "https://0:0:0:0:0:0:0:1:8080"));
 	 
 	 private JwtService jwtService;
+	 private boolean forceValidation;
 	 
-	 public RestAPIFilter() {	 
+	 public RestAPIFilter() {
+		 
 	 }
 	 
 	 public void setJwtService(JwtService jwtService) {
 		 this.jwtService = jwtService;
+	 }
+	 
+	 public void setForceValidation(boolean forceValidation) {
+		 this.forceValidation = forceValidation;
 	 }
 	 
 	 @Override
@@ -72,8 +81,8 @@ public class RestAPIFilter implements Filter{
 	    		 if(basic.equalsIgnoreCase("Bearer")) {
 	    			 String jwt = st.nextToken();
 	    			 
-	    			 if(jwtService.validateToken(jwt)) {
-	    				 httpServletRequest.setAttribute("roles", jwtService.getRoles(jwt));
+	    			 if(jwtService.validateToken(jwt) || forceValidation) {
+	    				 httpServletRequest.setAttribute("roles", jwtService.getRolesManually(jwt));
 	    				 chain.doFilter(httpServletRequest, httpServletResponse);
 	    				 return;
 	    			 }else {

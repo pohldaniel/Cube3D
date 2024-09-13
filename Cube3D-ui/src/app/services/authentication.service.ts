@@ -8,73 +8,73 @@ import {Role} from '../models/Role.enum';
 
 @Injectable({providedIn: 'root'}) export class AuthenticationService {
 
-  public currentRouteSubject: BehaviorSubject<string | null>;
-  public currentRoute: Observable<string | null>;
+  public routeSubject: BehaviorSubject<string | null>;
+  public route: Observable<string | null>;
 
-  public currentJwtSubject: BehaviorSubject<string | null>;
-  public currentJwt: Observable<string | null>;
+  public jwtSubject: BehaviorSubject<string | null>;
+  public jwt: Observable<string | null>;
 
-  public currentTokenMapSubject: BehaviorSubject<any>;
-  public currentTokenMap: Observable<any>;
+  public tokenMapSubject: BehaviorSubject<any>;
+  public tokenMap: Observable<any>;
 
-  public currentLogintSubject: BehaviorSubject<string | null>;
-  public currentLogin: Observable<string | null>;
+  public providerSubject: BehaviorSubject<string | null>;
+  public provider: Observable<string | null>;
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private readonly http: HttpClient, private readonly jwtService : JwtHelperService) {
 
-    this.currentRouteSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('currentRoute'));
-    this.currentRoute = this.currentRouteSubject.asObservable();
+    this.routeSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('route'));
+    this.route = this.routeSubject.asObservable();
 
-    this.currentJwtSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('currentJwt'));
-    this.currentJwt = this.currentJwtSubject.asObservable();
+    this.jwtSubject = new BehaviorSubject<string | null>(sessionStorage.getItem('jwt'));
+    this.jwt = this.jwtSubject.asObservable();
 
-    this.currentTokenMapSubject = new BehaviorSubject<any>(sessionStorage.getItem('currentTokenMap'));
-    this.currentTokenMap = this.currentTokenMapSubject.asObservable();
+    this.tokenMapSubject = new BehaviorSubject<any>(sessionStorage.getItem('tokenMap'));
+    this.tokenMap = this.tokenMapSubject.asObservable();
 
-    this.currentLogintSubject = new BehaviorSubject<any>(sessionStorage.getItem('currentLogin'));
-    this.currentLogin = this.currentTokenMapSubject.asObservable();
+    this.providerSubject = new BehaviorSubject<any>(sessionStorage.getItem('provider'));
+    this.provider = this.providerSubject.asObservable();
   }
 
-  public get currentRouteValue(): string {
-    return this.currentRouteSubject.value as string;
+  public get routeValue(): string {
+    return this.routeSubject.value as string;
   }
 
-  public get currentJwtValue(): string {
-    return this.currentJwtSubject.value as string;
+  public get jwtValue(): string {
+    return this.jwtSubject.value as string;
   }
 
-  public get currentTokenMapValue(): any {
-    return this.currentTokenMapSubject.value;
+  public get tokenMapValue(): any {
+    return this.tokenMapSubject.value;
   }
 
-  public get currentLoginValue(): string {
-    return this.currentLogintSubject.value as string;
+  public get providerValue(): string {
+    return this.providerSubject.value as string;
   }
 
   public setCurrentRouteValue(route: string) {
-    sessionStorage.setItem('currentRoute', route);
-    this.currentRouteSubject.next(route);
+    sessionStorage.setItem('route', route);
+    this.routeSubject.next(route);
   }
 
   public setCurrentJwtValue(jwt: string) {
-    sessionStorage.setItem('currentJwt', jwt);
-    this.currentJwtSubject.next(jwt);
+    sessionStorage.setItem('jwt', jwt);
+    this.jwtSubject.next(jwt);
   }
 
   public setTokenMapValue(tokenMap: any) {
-    sessionStorage.setItem('currentTokenMap', JSON.stringify(tokenMap));
-    this.currentTokenMapSubject.next(JSON.stringify(tokenMap));
+    sessionStorage.setItem('tokenMap', JSON.stringify(tokenMap));
+    this.tokenMapSubject.next(JSON.stringify(tokenMap));
   }
 
-  public setLoginValue(login: string) {
-    sessionStorage.setItem('currentLogin', login);
-    this.currentLogintSubject.next(login);
+  public setProvider(provider: string) {
+    sessionStorage.setItem('provider', provider);
+    this.providerSubject.next(provider);
   }
 
-  login(id: string, passwordHash: string) {
-    return this.http.post<Person>(environment.baseUrl + '/auth/authenticate', {id, passwordHash}, {headers: this.headers});
+  login(id: string, password: string) {
+    return this.http.post<Person>(environment.baseUrl + '/auth/authenticate', {id, password}, {headers: this.headers});
   }
 
   getToken(person: Person) {
@@ -82,40 +82,49 @@ import {Role} from '../models/Role.enum';
   }
 
   refreshToken() : Observable<string> {
-    return this.http.post<string>(environment.baseUrl + '/auth/refresh', {'token': this.currentJwtSubject.value}, {headers: this.headers});   
+    return this.http.post<string>(environment.baseUrl + '/auth/refresh', {'token': this.jwtSubject.value}, {headers: this.headers});   
   }
 
   gethTokenOIDC(code : string){
     const params = new HttpParams()
     .set('code', code)
-    return this.http.get<any[]>(environment.baseUrl + '/spring/oidc/token', {params, headers: this.headers});
+    return this.http.get<any[]>(environment.baseUrl + '/' + this.providerSubject.value as String + '/oidc/token', {params, headers: this.headers});
   }
 
   refreshTokenOIDC() : Observable<string> {
-    return this.http.post<string>(environment.baseUrl + '/spring/oidc/refresh', {'id_token': JSON.parse(this.currentTokenMapSubject.value as string).token, 'access_token': JSON.parse(this.currentTokenMapSubject.value as string).accessToken, 'remoteUser': JSON.parse(this.currentTokenMapSubject.value as string).remoteUser}, {headers: this.headers});   
+    console.log(this.providerSubject.value)
+    return this.http.post<string>(environment.baseUrl + '/' + this.providerSubject.value as String  + '/oidc/refresh', {'token': JSON.parse(this.tokenMapSubject.value as string).token, 'accessToken': JSON.parse(this.tokenMapSubject.value as string).accessToken, 'user': JSON.parse(this.tokenMapSubject.value as string).user, 'refreshToken': JSON.parse(this.tokenMapSubject.value as string).refreshToken}, {headers: this.headers});   
   }
 
   logout() {
-    sessionStorage.removeItem('currentRoute');
-    this.currentRouteSubject.next(null);
+    sessionStorage.removeItem('route');
+    this.routeSubject.next(null);
 
-    sessionStorage.removeItem('currentJwt');
-    this.currentJwtSubject.next(null);
+    sessionStorage.removeItem('jwt');
+    this.jwtSubject.next(null);
 
-    sessionStorage.removeItem('currentTokenMap');
-    this.currentTokenMapSubject.next(null);
+    sessionStorage.removeItem('tokenMap');
+    this.tokenMapSubject.next(null);
 
-    sessionStorage.removeItem('currentLogin');
-    this.currentLogintSubject.next(null);
+    sessionStorage.removeItem('provider');
+    this.providerSubject.next(null);
 
   }
 
   public getCurrentRoles() : Role[] {
-    return this.jwtService.decodeToken(this.currentJwtValue).roles;
+    return this.jwtService.decodeToken(this.jwtValue).roles;
   }
 
-  public getCurrentId() : string{
-    return this.jwtService.decodeToken(this.currentJwtValue).sub;
+  public getCurrentSub() : string{
+    return this.jwtService.decodeToken(this.jwtValue).sub;
+  }
+
+  public getCurrentUser() : string{
+    return JSON.parse(this.tokenMapSubject.value as string).user;
+  }
+
+  public getCurrentProvider() : string{
+    return this.providerSubject.value as string;
   }
 
   public containsRole(roles: string[]) : boolean{

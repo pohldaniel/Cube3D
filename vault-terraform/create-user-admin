@@ -6,14 +6,14 @@ export VAULT_TOKEN=hvs.VaZVJa9L6TyR88QTVITZBZL6
 
 
 ACCESOR="$(./vault auth list -format=json | jq -r '.["cert/"].accessor')"
-ID="$(./vault write -format=json identity/entity name="daniel_cert" policies="token-policy" metadata=mail="test@test.de" | jq -r ".data.id")"
+ID="$(./vault write -format=json identity/entity name="admin_cert" policies="token-policy" metadata=mail="test@test.de" | jq -r ".data.id")"
 
 if [[ "$ID" == "" ]]; then
-    ID="$(./vault read -format=json identity/entity/name/daniel_cert | jq -r ".data.id")"
+    ID="$(./vault read -format=json identity/entity/name/admin_cert | jq -r ".data.id")"
 fi
 
-./vault write identity/entity-alias name="Daniel Pohl" canonical_id=$ID mount_accessor="$ACCESOR"
-./vault write auth/cert/certs/daniel_cert display_name=daniel policies=user-cert certificate=@certs/daniel.crt
+./vault write identity/entity-alias name="admin" canonical_id=$ID mount_accessor="$ACCESOR"
+./vault write auth/cert/certs/daniel_cert display_name=admin policies=user-cert certificate=@certs/admin.crt
 
 VAR=`echo $(./vault read identity/group/name/ADMIN -format=json | jq --arg id $ID '.data.member_entity_ids += [$id]' | jq '.data.member_entity_ids | join(",")') | tr -d '"'`
 ./vault write identity/group/name/ADMIN member_entity_ids=$VAR

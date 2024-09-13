@@ -25,6 +25,9 @@ public class Main extends SpringBootServletInitializer{
 	@Value("${jwt.secret.key}")
 	private String jwtSecretKey;
 	
+	@Value("${token.force.valiadtion}")
+	private boolean forceValidation;
+	
 	@Autowired
 	@Qualifier("restAPI")
 	private FilterRegistrationBean<RestAPIFilter> restAPIFilterRegistration;
@@ -49,5 +52,6 @@ public class Main extends SpringBootServletInitializer{
 		HibernateUtil.createSessionFactoryH2("jdbc:h2:./database/cube;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE", "sa", "main100");   		
 		jwtService.setSecretKey(jwtSecretKey);
 		restAPIFilterRegistration.getFilter().setJwtService(jwtService);
+		restAPIFilterRegistration.getFilter().setForceValidation(forceValidation);
 	}
 }

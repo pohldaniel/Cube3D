@@ -68,8 +68,8 @@ public class SecurityConfig {
 	                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 	                .redirectUri("https://localhost:8080/spring/oidc/callback")
 	                .scope("openid")
-	                .authorizationUri("https://auth-server:8200/oauth2/authorize")
-	                .tokenUri("https://auth-server:8200/oauth2/token")	               
+	                .authorizationUri("https://auth-server:8443/oauth2/authorize")
+	                .tokenUri("https://auth-server:8443/oauth2/token")	               
 	                .clientName("Cube Client").p
 	                .build();
 	}*/	

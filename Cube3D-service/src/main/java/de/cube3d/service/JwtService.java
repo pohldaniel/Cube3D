@@ -1,5 +1,6 @@
 package de.cube3d.service;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,12 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import de.cube3d.dao.PersonDao;
 import de.cube3d.entities.Person;
@@ -23,6 +29,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 	
+	static ObjectMapper Mapper = new ObjectMapper();
 	private PersonDao personDao = PersonDao.getInstance();
 	
 	static String secretKey;
@@ -96,6 +103,21 @@ public class JwtService {
 		return convertObjectToList(extractAllClaims(token).get("roles"));
 	}
 
+	public List<Role> getRolesManually(String token){	
+		String[] jwtSplit = token.split("\\.");	    					
+		String body;
+		JsonNode bodyJson;
+		try {
+			body = new String(Base64.decodeBase64(jwtSplit[1]), "UTF-8");
+			bodyJson = Mapper.readTree(body);		 
+			ObjectReader reader = Mapper.readerForListOf(String.class);				 
+			return reader.readValue(bodyJson.get("roles"));
+		} catch (IOException e) {
+			return new ArrayList<Role>(Arrays.asList(Role.USER));
+		}
+		
+	}
+	
 	public Date getIssuedAt(String token) {
 	    return extractClaim(token, Claims::getIssuedAt);
 	}

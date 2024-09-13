@@ -15,9 +15,13 @@ export class DashboardComponent implements OnInit {
 
   isWait: boolean = false;
   currentRoles : Role[];
+  currentUser : String;
+  currentProvider : String;
   
   constructor(private readonly authenticationService: AuthenticationService){
     this.currentRoles = this.authenticationService.getCurrentRoles();
+    this.currentUser = this.authenticationService.getCurrentUser();
+    this.currentProvider = this.authenticationService.getCurrentProvider();
   }
 
   ngOnInit() {

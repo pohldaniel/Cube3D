@@ -1,6 +1,6 @@
 set VAULT_ADDR=http://localhost:8200
 
-curl --request POST --data "{\"key\": \"hRJmFYnCx9hcwtxNUCtuL528i22AeNlqo9rV9elAiTH/\"}" http://127.0.0.1:8200/v1/sys/unseal
-curl --request POST --data "{\"key\": \"xo/zWi9a3iwY/igh5ByuPxo3/ydx06oeYs3ko/ugvSVq\"}" http://127.0.0.1:8200/v1/sys/unseal
-curl --request POST --data "{\"key\": \"MQXL8G4SaAPxN4XqB5QdpgQ4u6ptv/clO2PAOngM8BZf\"}" http://127.0.0.1:8200/v1/sys/unseal
+curl --request POST --data "{\"key\": \"t15JH1YfbaQDKksCMbKsvpFL2KuV1wuRxQunqvXd9cd4\"}" http://127.0.0.1:8200/v1/sys/unseal
+curl --request POST --data "{\"key\": \"mgjIVVTrzWNDF6jQ2OeLp+cG4XgAG1jBoTFgc85YqifT\"}" http://127.0.0.1:8200/v1/sys/unseal
+curl --request POST --data "{\"key\": \"Nd6ySJOG6r66s47XndzC5qLOsjvrNEyabq+nye4dxmQG\"}" http://127.0.0.1:8200/v1/sys/unseal
 rem cmd /k

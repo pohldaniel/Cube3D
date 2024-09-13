@@ -27,11 +27,11 @@ public class FilterInitializer {
 		return registration;
 	}
 	
-	@Bean(name="oidc")
-	public FilterRegistrationBean<OIDCFilter> oidcFilterRegistration() {
+	@Bean(name="vault")
+	public FilterRegistrationBean<OIDCFilter> vaultOidcFilterRegistration() {
 		FilterRegistrationBean<OIDCFilter> registration = new FilterRegistrationBean<OIDCFilter>();
 		registration.setFilter(new OIDCFilter());
-		registration.addUrlPatterns("/oidc/*", "/login");
+		registration.addUrlPatterns("/vault/oidc/*", "/vault/login");
 		return registration;
 	}
 	
@@ -39,7 +39,7 @@ public class FilterInitializer {
 	public FilterRegistrationBean<OIDCFilter> springOidcFilterRegistration() {
 		FilterRegistrationBean<OIDCFilter> registration = new FilterRegistrationBean<OIDCFilter>();
 		registration.setFilter(new OIDCFilter());
-		registration.addUrlPatterns("/spring/oidc/*", "/login");
+		registration.addUrlPatterns("/spring/oidc/*", "/spring/login");
 		return registration;
 	}
 }

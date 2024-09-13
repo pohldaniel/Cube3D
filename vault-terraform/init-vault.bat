@@ -1,7 +1,7 @@
 REM after unsealing VAULT
 
 set VAULT_ADDR=http://localhost:8200
-set VAULT_TOKEN=hvs.KTUgeupMpVklqEM2B4mXDgkI
+set VAULT_TOKEN=hvs.VaZVJa9L6TyR88QTVITZBZL6
 
 pushd config
 ..\terraform init

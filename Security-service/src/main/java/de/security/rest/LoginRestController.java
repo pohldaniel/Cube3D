@@ -67,7 +67,7 @@ public class LoginRestController {
 			}
 		}).collect(Collectors.joining("&"));
 		
-		HttpPost httpPost = new HttpPost("https://localhost:8200/perform_login");        	
+		HttpPost httpPost = new HttpPost("https://localhost:8443/perform_login");        	
 		httpPost.setEntity(new StringEntity(form));
 		
 		
@@ -79,6 +79,7 @@ public class LoginRestController {
 		
 		return currentUser.getUsername();
 	}*/
+	
 	@RequestMapping(value = "/message", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
 	public String confirm(Model model) {		
 		return model.getAttribute("message").toString();

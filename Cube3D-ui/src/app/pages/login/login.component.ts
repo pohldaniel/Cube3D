@@ -45,26 +45,22 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(){   
-    
-    if (this.authenticationService.currentJwtValue) {  
-         this.router.navigate(['/dashboard']);
-    }
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';  
+    
     this.dataLoaded = false;
     this.route.queryParams.subscribe({
       next: (params : any) => {
         if(!_.isEmpty(params)) {
+          this.authenticationService.setProvider(params['provider']);  
           this.authenticationService.gethTokenOIDC(params['code']).subscribe( {
             next: (response : any) =>{
               this.authenticationService.setTokenMapValue(response);
-              this.authenticationService.setCurrentJwtValue(response.token);        
-              this.authenticationService.setLoginValue("oidc");  
-              //this.dataLoaded = true;
+              this.authenticationService.setCurrentJwtValue(response.token);  
+              console.log(response.token);
               let path : string = this.returnUrl === '/' ? '/dashboard': this.returnUrl;
               this.router.navigate([path]);   
             },
-            error: (error : HttpErrorResponse)=> { 
-              //this.dataLoaded = true;               
+            error: (error : HttpErrorResponse)=> {              
               this.router.navigate(['/errorpage']);              
             }
           })
@@ -89,7 +85,7 @@ export class LoginComponent implements OnInit {
             next: (data : any) => {
               this.authenticationService.setTokenMapValue(data);
               this.authenticationService.setCurrentJwtValue(data.token);
-              this.authenticationService.setLoginValue("jwt");
+              this.authenticationService.setProvider("jwt");
               this.dataLoaded = true;
               let path : string = this.returnUrl === '/' ? '/dashboard': this.returnUrl;
               this.router.navigate([path]);    
@@ -99,8 +95,6 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['/errorpage']);
             }
           })
-
-          
         },
         error: (error : HttpErrorResponse) => {
           this.router.navigate(['/errorpage']);

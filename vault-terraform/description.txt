@@ -18,13 +18,13 @@ export VAULT_TOKEN=hvs.KTUgeupMpVklqEM2B4mXDgkI
 
 vault operator init
 
-Unseal Key 1: hRJmFYnCx9hcwtxNUCtuL528i22AeNlqo9rV9elAiTH/
-Unseal Key 2: xo/zWi9a3iwY/igh5ByuPxo3/ydx06oeYs3ko/ugvSVq
-Unseal Key 3: MQXL8G4SaAPxN4XqB5QdpgQ4u6ptv/clO2PAOngM8BZf
-Unseal Key 4: GkzTbvxmXx6mFi+5J96ApeQLPlsnEaKcQT1PiFXD1Hj3
-Unseal Key 5: DQrHDupLH33Ho5UcnkaSgfJ1tuq2TD68fT+zExpgysAd
+Unseal Key 1: t15JH1YfbaQDKksCMbKsvpFL2KuV1wuRxQunqvXd9cd4
+Unseal Key 2: mgjIVVTrzWNDF6jQ2OeLp+cG4XgAG1jBoTFgc85YqifT
+Unseal Key 3: Nd6ySJOG6r66s47XndzC5qLOsjvrNEyabq+nye4dxmQG
+Unseal Key 4: vA9ce34WcUVGsVohh7wotdOIr4pwoParyi1hM9yOEj/y
+Unseal Key 5: L6wlvdCTf4AKuA21m5NOneFtVpIAsIZrNOnp3+Nr7PEp
 
-Initial Root Token: hvs.KTUgeupMpVklqEM2B4mXDgkI
+Initial Root Token: hvs.VaZVJa9L6TyR88QTVITZBZL6
 hvs.CAESIHtNz4UejDl8mbWcoEWZqGSakNivnkJ9koJldjJXDgTrGh4KHGh2cy5vbW5KTDVla2NiR0J5MjBTU1FVSUNjNDI
 chrome://net-internals/#hsts
 vault operator unseal
@@ -165,3 +165,7 @@ https://brian-candler.medium.com/using-vault-as-an-openid-connect-identity-provi
 https://developer.hashicorp.com/vault/tutorials/auth-methods/oidc-identity-provider
 https://localhost:8200/ui/vault/identity/oidc/provider/my-provider/authorize?with=github
 chrome://net-internals/#hsts
+
+https://localhost:8200/login
+
+http://localhost:8080/login

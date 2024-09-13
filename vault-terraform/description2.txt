@@ -1,4 +1,4 @@
-cd /cygdrive/c/Cube3/vault-terraform/certs
+cd /cygdrive/c/Cube/vault-terraform/certs
 choco install openssl
 choco install certstrap
 

@@ -21,19 +21,19 @@ data "local_file" "rootcrt" {
 }
 
 data "local_file" "intermediatecrt" {
-  filename = "../certs/vault-int.crt"
+  filename = "../certs/cube-int.crt"
 }
 
 data "local_file" "intermediatekey" {
-  filename = "../certs/vault-int.key"
+  filename = "../certs/cube-int.key"
 }
 
 data "local_file" "issuingcrt" {
-  filename = "../certs/vault-iss.crt"
+  filename = "../certs/cube-iss.crt"
 }
 
 data "local_file" "issuingkey" {
-  filename = "../certs/vault-iss.key"
+  filename = "../certs/cube-iss.key"
 }
 
 resource "vault_pki_secret_backend_config_ca" "ca_config_ca" {

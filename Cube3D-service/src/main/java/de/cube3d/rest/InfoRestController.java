@@ -19,9 +19,9 @@ import ch.qos.logback.classic.Level;
 
 @RestController
 @RequestMapping("/cube/restAPI")
-public class InfoController {
+public class InfoRestController {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(InfoController.class);	
+	private static final Logger LOG = LoggerFactory.getLogger(InfoRestController.class);	
 	ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 	
 	@RequestMapping(value = "/info/getLogLevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
