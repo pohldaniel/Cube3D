@@ -5,7 +5,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -74,11 +76,10 @@ public class VaultOIDCClient {
 		this.clientSecret = builder.clientSecret; 
 		this.provider = builder.provider; 
 		
-        String credentials64 = new String(org.apache.commons.codec.binary.Base64.encodeBase64((clientId + ":" + clientSecret).getBytes()));			
+        //String credentials64 = new String(org.apache.commons.codec.binary.Base64.encodeBase64((clientId + ":" + clientSecret).getBytes()));			
 		
 		List<BasicHeader> header = new ArrayList<>(Arrays.asList(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded"),
-                                                                 new BasicHeader(HttpHeaders.ACCEPT, "application/json"),
-																 new BasicHeader("Authorization", "Basic " + credentials64)));
+                                                                 new BasicHeader(HttpHeaders.ACCEPT, "application/json")));
 		
 		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
 		
@@ -93,6 +94,12 @@ public class VaultOIDCClient {
 	
 	public boolean introspect(String token) {
 		try {
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("token", token);
+			parameters.put("client_secret", this.clientSecret);
+			parameters.put("client_id", this.clientId);
+			
+			
 			HttpPost httpPost = new HttpPost(this.endpoint + "/v1/identity/oidc/provider/" + provider + "/introspect");        	
 			httpPost.setEntity(new StringEntity("token=" + URLEncoder.encode(token, StandardCharsets.UTF_8.toString())));
 			

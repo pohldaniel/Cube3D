@@ -80,7 +80,7 @@ public class LoginRestController {
 		return currentUser.getUsername();
 	}*/
 	
-	@RequestMapping(value = "/message", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+	@RequestMapping(value = "message", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
 	public String confirm(Model model) {		
 		return model.getAttribute("message").toString();
 	}

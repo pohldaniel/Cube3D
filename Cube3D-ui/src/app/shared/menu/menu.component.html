@@ -40,7 +40,7 @@
           </li> 
         </ul>
       </li>
-      <li id="four" >
+      <li id="four" [ngStyle]="{'display' : getAccessAdmin() || getAccessPersonManager() ? 'revert' : 'none'}">
         <button [attr.tabindex]="storeTargetedSubmenu=='four' ? -1 : 0" [class.active]="storeTargetedSubmenu=='four'">Verwaltung</button>
         <ul class="sub-menu" [class.sub-menu-open]="storeTargetedSubmenu=='four'" role="presentation">
           <li id="four-one" class="list-item-button">

@@ -54,7 +54,18 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-    @Order(2)
+	@Order(2)
+	public SecurityFilterChain downloadFilterChain(HttpSecurity http) throws Exception {
+		http
+		.securityMatcher("/download/**")
+		.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher.antMatcher("/download/**")).permitAll())
+	                .headers(headers -> headers.frameOptions(withDefaults()).disable())
+	                .csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/download/**")));
+		return http.build();
+	}
+	
+	@Bean
+    @Order(3)
     SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
         http
         .securityMatcher("/cert/**") 
@@ -66,7 +77,7 @@ public class SecurityConfig {
     }
 	
 	@Bean
-	@Order(3)
+	@Order(4)
     public SecurityFilterChain certFilterChain(HttpSecurity http) throws Exception {
 		 http
 		 //.securityMatcher("/login") 

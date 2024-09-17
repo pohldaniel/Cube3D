@@ -51,7 +51,7 @@ import de.cube3d.utils.SSLUtil;
 public class SpringOIDCRestController {
 	private static final Logger LOG = LoggerFactory.getLogger(SpringOIDCRestController.class);
 	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fspring%2Foidc%2Fcallback";
-	private String clinetId = "cube";
+	private String clientId = "cube";
 	private String clientSecret = "secret";
 	
 	@Autowired
@@ -63,8 +63,8 @@ public class SpringOIDCRestController {
 		
 		if(code.equalsIgnoreCase("undefined")) {	
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("https://auth-server:8443/oauth2/authorize?client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
-				new URI("https://auth-server:8443/oauth2/authorize?client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
+				new URI("https://auth-server:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
+				new URI("https://auth-server:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -99,7 +99,7 @@ public class SpringOIDCRestController {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("grant_type", "authorization_code");
 		parameters.put("code", code);
-		parameters.put("client_id", this.clinetId);
+		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
 		parameters.put("redirect_uri", "https://localhost:8080/spring/oidc/callback");
 		parameters.put("scope", "openid");
@@ -158,7 +158,7 @@ public class SpringOIDCRestController {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("grant_type", "refresh_token");
 		parameters.put("refresh_token", refreshToken);
-		parameters.put("client_id", this.clinetId);
+		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
 		parameters.put("redirect_uri", "https://localhost:8080/spring/oidc/callback");
 		parameters.put("scope", "openid");

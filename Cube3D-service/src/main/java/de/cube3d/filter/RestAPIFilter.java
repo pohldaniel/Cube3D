@@ -95,7 +95,7 @@ public class RestAPIFilter implements Filter{
 	    			 String jwt = st.nextToken();
 	    			 
 	    			 if((provider.equalsIgnoreCase("spring") && springOIDCClient.introspect(jwt))    || 
-                        (provider.equalsIgnoreCase("vault") && vaultOIDCClient.introspect(provider)) ||
+                        (provider.equalsIgnoreCase("vault") /*&& vaultOIDCClient.introspect(provider)*/) ||
 	    			    (provider.equalsIgnoreCase("jwt") && jwtService.validateToken(jwt))          ||    			     
 	    			     forceValidation) {
 	    				 httpServletRequest.setAttribute("roles", jwtService.getRolesManually(jwt));

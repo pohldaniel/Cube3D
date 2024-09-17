@@ -52,7 +52,7 @@ public class VaultOIDCRestController {
 	private static final Logger LOG = LoggerFactory.getLogger(VaultOIDCRestController.class);
 	
 	@Value("${oidc.vault.client.id}")
-	private String clinetId;
+	private String clientId;
 	
 	@Value("${oidc.vault.client.secret}")
 	private String clientSecret;
@@ -69,8 +69,8 @@ public class VaultOIDCRestController {
 		if(code.equalsIgnoreCase("undefined")) {
 						
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
-				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clinetId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
+				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
+				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -105,7 +105,7 @@ public class VaultOIDCRestController {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("grant_type", "authorization_code");
 		parameters.put("code", code);
-		parameters.put("client_id", this.clinetId);
+		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
 		parameters.put("redirect_uri", "https://localhost:8080/vault/oidc/callback");
 		parameters.put("scope", "openid user groups");

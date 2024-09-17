@@ -56,3 +56,15 @@ Login with OIDC
 
 Login with Username Password
 - Open the side https://localhost:4200/gateway and press "Sign in"
+
+#Useful Curls and Links
+
+
+curl -k -X POST "https://auth-server:8443/oauth2/introspect" -H "Authorization: Basic Y3ViZTpzZWNyZXQ" -H "Content-type: application/x-www-form-urlencoded" -H "Accept: application/json" -d "token=eyJraWQiOiIzZGMxZmUyMy03ODQyLTQwZDEtOWMzNS1kMjc1ZDFmYTM4OTkiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZCI6ImN1YmUiLCJuYmYiOjE3MjY1NjAyNTksInNjb3BlIjpbIm9wZW5pZCJdLCJpc3MiOiJodHRwczovL2F1dGgtc2VydmVyOjgyMDAiLCJleHAiOjE3MjY1NjA1NTksImlhdCI6MTcyNjU2MDI1OSwianRpIjoiZWRmODJlNzEtYjhmNi00ZDAzLTljOGEtMjYzNDc2NzU0ODY5In0.hF1ZDBjrnw289gHJzjr_OQPyB5-TuWFdr53KytiL4G5xLUmm66p_TOMhC_jCElkBZUkkjdJVn_shvMuaoa51zBQDXWz-_PpmnGKct-vDmEhKZsNr_KzuA_ADxSxcQ_7eB7r-Zgr7RcrTBb1suhztf9xeuJaaAtKhvWE8vIigUweaUP03v4KbD-D6b46ByOP66OKuWLAQ197JN1NLqjXLjLTxbsGITaLxMSpvOEuPT-BoPp82BMxOlAdWIQrrAmFzxB-OI7EvF-eJnuIOkjY4e5u87_eW1HsGLA6Befqsy6kH4FF-jhfSuveg9ww8iYoss8UP3jdYimw7wMpJMsqJ4A"
+curl -k -X POST "https://auth-server:8443/oauth2/token" -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode "scope=openid" --data-urlencode "code=5JNMVmRHVmK_G09DgSUrN84sz5cZJ8bgyFHRG871jKLBW01g1Z8wtyRXHjKPv66xFQ7BnjomG-jSEHECiJTF4qiQGgkmQeM4jQxleCfIDEDdv-zK81_JetlZA-Voikp2" --data-urlencode "grant_type=authorization_code" --data-urlencode "client_id=cube" --data-urlencode "client_secret=secret" --data-urlencode "redirect_uri=http://localhost:8080/spring/oidc/callback"  
+
+https://auth-server:8200/v1/identity/oidc/provider/user-provider/.well-known/openid-configuration
+https://auth-server:8443/.well-known/openid-configuration
+
+https://localhost:8200/ui/vault/identity/oidc/provider/user-provider/authorize?with=github&client_id=cube&redirect_uri=https%3A%2F%2Flocalhost%3A8080%2Fvault%2Foidc%2Fcallback&response_type=code&scope=openid%20user%20groups"
+https://auth-server:8443/oauth2/authorize?client_id=cube&redirect_uri=https%3A%2F%2Flocalhost%3A8080%2Fspring%2Foidc%2Fcallback&response_type=code&scope=openid&nonce=www

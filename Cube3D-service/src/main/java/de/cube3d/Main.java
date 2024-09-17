@@ -13,6 +13,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import de.cube3d.components.SpringOIDCClient;
+import de.cube3d.components.VaultOIDCClient;
 import de.cube3d.filter.RestAPIFilter;
 import de.cube3d.service.JwtService;
 import de.cube3d.utils.HibernateUtil;
@@ -38,6 +39,9 @@ public class Main extends SpringBootServletInitializer{
 	
 	@Autowired
 	private SpringOIDCClient springOIDCClient;
+	
+	@Autowired
+	private VaultOIDCClient vaultOIDCClient;
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
@@ -57,6 +61,7 @@ public class Main extends SpringBootServletInitializer{
 		jwtService.setSecretKey(jwtSecretKey);
 		restAPIFilterRegistration.getFilter().setJwtService(jwtService);
 		restAPIFilterRegistration.getFilter().setSpringOIDCClient(springOIDCClient);
+		restAPIFilterRegistration.getFilter().setVaultOIDCClient(vaultOIDCClient);
 		restAPIFilterRegistration.getFilter().setForceValidation(forceValidation);
 	}
 }
