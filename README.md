@@ -4,8 +4,9 @@ Important use lfs clone
 git lfs clone https://github.com/pohldaniel/Cube3D.git C:\Cube
 
 #Certificate Setup
-- install Cyggwin with openssl and jq
+- install Cyggwin with "openssl" and "jq" and "dos2unix"
 - open Cygwin and change directory to vault-terraform subfolder "cd /cygdrive/c/Cube/vault-terraform"
+- run the command "dos2unix create-initial-certs"
 - run the command "./create-initial-certs"
 - unfortunately it seems there is no possibility to create the needed truststore with openssl so it has to be done manually 
   * Copy the Certificate cube-iss.crt to the used JDK e.g. C:\JDKs\jdk-22.0.2\bin and run the command
@@ -68,3 +69,6 @@ https://auth-server:8443/.well-known/openid-configuration
 
 https://localhost:8200/ui/vault/identity/oidc/provider/user-provider/authorize?with=github&client_id=cube&redirect_uri=https%3A%2F%2Flocalhost%3A8080%2Fvault%2Foidc%2Fcallback&response_type=code&scope=openid%20user%20groups"
 https://auth-server:8443/oauth2/authorize?client_id=cube&redirect_uri=https%3A%2F%2Flocalhost%3A8080%2Fspring%2Foidc%2Fcallback&response_type=code&scope=openid&nonce=www
+
+https://auth-server:8443/download/own
+https://auth-server:8443/download/root

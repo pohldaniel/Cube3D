@@ -33,7 +33,7 @@ public class BouncyCastleCertificateGenerator {
     private static final String KEY_ALGORITHM = "RSA";
     private static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
 
-	public static void createUserStore(X509Certificate intCert, X509Certificate issCert, RSAPublicKey issPublic, RSAPrivateKey issPrivate) throws Exception{
+	public static void createUserStore(X509Certificate intCert, X509Certificate issCert, RSAPublicKey issPublic, RSAPrivateKey issPrivate, String issuer, String path) throws Exception{
         // Add the BouncyCastle Provider
         Security.addProvider(new BouncyCastleProvider());
 
@@ -96,7 +96,7 @@ public class BouncyCastleCertificateGenerator {
         issuedCert.verify(issCert.getPublicKey(), BC_PROVIDER);
 
         //writeCertToFileBase64Encoded(issuedCert, "actionmanager.crt");
-        exportKeyPairToKeystoreFile((RSAPrivateKey)issuedCertKeyPair.getPrivate(), issuedCert, issCert, intCert, "actionmanager", "actionmanager.p12", "PKCS12", "");
+        exportKeyPairToKeystoreFile((RSAPrivateKey)issuedCertKeyPair.getPrivate(), issuedCert, issCert, intCert, issuer, path + issuer + ".p12", "PKCS12", "");
 
     }
 
@@ -106,6 +106,7 @@ public class BouncyCastleCertificateGenerator {
         sslKeyStore.setKeyEntry(alias, userPrivate, null, new X509Certificate[]{userCert, issCert, intCert});
         FileOutputStream keyStoreOs = new FileOutputStream(fileName);
         sslKeyStore.store(keyStoreOs, storePass.toCharArray());
+        keyStoreOs.close();
     }
 
     static void writeCertToFileBase64Encoded(Certificate certificate, String fileName) throws Exception {

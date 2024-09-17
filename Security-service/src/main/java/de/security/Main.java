@@ -31,6 +31,7 @@ public class Main extends SpringBootServletInitializer{
 		//System.setProperty("javax.net.ssl.trustStore", "classpath:certs/spring-trust.p12"); 
 		//System.setProperty("javax.net.ssl.trustStorePassword", "password");
 		//System.setProperty("javax.net.ssl.trustStoreType", "PKCS12");
+		SSLUtil.init("password");
 		SpringApplication.run(Main.class, args);    	  	
 	}
 

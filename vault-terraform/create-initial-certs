@@ -1,4 +1,5 @@
 mkdir -p certs
+dos2unix create-initial-certs
 
 #Create Root Authority
 openssl genrsa -out certs/root.key 4096
@@ -34,6 +35,7 @@ openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in c
 #Cube Issuing
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-iss.key -out certs/cube-iss.csr -subj "/CN=Cube Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
 openssl x509 -req -CA certs/cube-int.crt -CAkey certs/cube-int.key -CAcreateserial -in certs/cube-iss.csr -out certs/cube-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
+openssl x509 -pubkey -noout -in certs/cube-iss.crt  > certs/cube-iss.pub
 
 #Spring Client
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-client.key -out certs/spring-client.csr -subj "/CN=Spring Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
