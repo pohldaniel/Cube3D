@@ -51,13 +51,13 @@ public class VaultOIDCRestController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VaultOIDCRestController.class);
 	
-	@Value("${oidc.client.id}")
+	@Value("${oidc.vault.client.id}")
 	private String clinetId;
 	
-	@Value("${oidc.client.secret}")
+	@Value("${oidc.vault.client.secret}")
 	private String clientSecret;
 	
-	@Value("${oidc.provider}")
+	@Value("${oidc.vault.client.provider}")
 	private String provider;
 	
 	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fvault%2Foidc%2Fcallback";

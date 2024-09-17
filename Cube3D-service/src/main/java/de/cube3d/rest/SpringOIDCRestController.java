@@ -25,6 +25,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +43,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.cube3d.components.SpringOIDCClient;
 import de.cube3d.utils.SSLUtil;
 
 @RestController
@@ -51,6 +53,9 @@ public class SpringOIDCRestController {
 	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fspring%2Foidc%2Fcallback";
 	private String clinetId = "cube";
 	private String clientSecret = "secret";
+	
+	@Autowired
+	SpringOIDCClient springOIDCClient;
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> login(@RequestAttribute("code") String code, @RequestAttribute("returnUrl") String returnUrl, @RequestAttribute("state") String state) throws URISyntaxException, ParseException, IOException {
@@ -195,5 +200,36 @@ public class SpringOIDCRestController {
 		statusMap.put("token", jwt);
 		statusMap.put("accessToken", actualObj.get("access_token").asText());
 		return ResponseEntity.status(HttpStatus.OK).body(statusMap);
+	}
+	
+	@RequestMapping(value = "/oidc/introspect", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public boolean introspect(@RequestBody JsonNode tokenMap) {
+		LOG.info("/spring/oidc/introspect was called");
+		
+		return springOIDCClient.introspect(tokenMap.get("access_token").asText());
+		/*try {
+			ObjectMapper mapper = new ObjectMapper();
+			String _token = "token=" + URLEncoder.encode(token, StandardCharsets.UTF_8.toString());
+			List<BasicHeader> header = new ArrayList<>(Arrays.asList(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded"), new BasicHeader(HttpHeaders.AUTHORIZATION, "Basic Y3ViZTpzZWNyZXQ"), new BasicHeader(HttpHeaders.ACCEPT, "application/json")));
+			final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
+	
+			CloseableHttpClient client = HttpClients.custom()	
+					.setDefaultHeaders(header)
+					.setSSLSocketFactory(csf)
+					.build();
+			
+			HttpPost httpPost = new HttpPost("https://localhost:8443/oauth2/introspect");        	
+			httpPost.setEntity(new StringEntity(_token));
+			CloseableHttpResponse response = client.execute(httpPost);
+			
+			String output = EntityUtils.toString(response.getEntity());	
+			JsonNode actualObj = mapper.readTree(output);
+			return actualObj.get("active").asBoolean();
+		}catch(Exception e){
+			//statusMap.put("status", "500");
+			//statusMap.put("error", e.getMessage());
+			//return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(statusMap);
+			return false;
+		}*/
 	}
 }

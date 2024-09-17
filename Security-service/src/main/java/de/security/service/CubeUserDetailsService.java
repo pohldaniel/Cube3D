@@ -21,7 +21,7 @@ public class CubeUserDetailsService implements UserDetailsService {
 		 return User.builder()
 				 .username(person.getId())
 				 .password("{noop}" + person.getPasswordHash())
-				 //.authorities(person.getRole().toString(), "USER")
+				 .authorities(person.getRoles().toString(), "USER")
 				 .build();
 	 }
 }

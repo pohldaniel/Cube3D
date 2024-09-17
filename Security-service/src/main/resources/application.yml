@@ -2,7 +2,7 @@
 #  security:
 #    oauth2:
 #      authorizationserver:
-#        issuer: http://auth-server:8200
+#        issuer: https://auth-server:8200
 #        client:
 #          cube-client:
 #            registration:

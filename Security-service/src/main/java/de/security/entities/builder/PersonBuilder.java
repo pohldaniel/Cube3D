@@ -1,5 +1,7 @@
 package de.security.entities.builder;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.builder.Builder;
 import de.security.entities.Person;
 import de.security.entities.enums.Role;
@@ -42,8 +44,13 @@ public class PersonBuilder implements Builder<Person>{
 		return this;
 	}
 
-	public PersonBuilder role(Role role) {
-		this.person.setRole(role);
+	public PersonBuilder roles(Set<Role> roles) {
+		this.person.setRoles(roles);
+		return this;
+	}
+	
+	public PersonBuilder roles(Role... roles) {
+		this.person.addRoles(roles);
 		return this;
 	}
 	

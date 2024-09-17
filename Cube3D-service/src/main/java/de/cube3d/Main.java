@@ -12,6 +12,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import de.cube3d.components.SpringOIDCClient;
 import de.cube3d.filter.RestAPIFilter;
 import de.cube3d.service.JwtService;
 import de.cube3d.utils.HibernateUtil;
@@ -34,6 +35,9 @@ public class Main extends SpringBootServletInitializer{
 	
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private SpringOIDCClient springOIDCClient;
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
@@ -52,6 +56,7 @@ public class Main extends SpringBootServletInitializer{
 		HibernateUtil.createSessionFactoryH2("jdbc:h2:./database/cube;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE", "sa", "main100");   		
 		jwtService.setSecretKey(jwtSecretKey);
 		restAPIFilterRegistration.getFilter().setJwtService(jwtService);
+		restAPIFilterRegistration.getFilter().setSpringOIDCClient(springOIDCClient);
 		restAPIFilterRegistration.getFilter().setForceValidation(forceValidation);
 	}
 }

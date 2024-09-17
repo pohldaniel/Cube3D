@@ -47,7 +47,7 @@ public class JwtService {
 
 		String token = Jwts.builder()
 		        .setSubject(id)
-		        .claim("roles", Arrays.asList(person.getRole(), Role.ACTION_MANAGER))
+		        .claim("roles", person.getRoles())
 		        .setExpiration(cal.getTime())		        
 		        .setIssuedAt(new Date())
 		        .signWith(key)
@@ -81,6 +81,15 @@ public class JwtService {
 	public boolean validateToken(String token) {
 	    try {	    	
 	        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+	        return true;
+	    } catch (Exception e) {
+	        return false;
+	    }
+	}
+	
+	public boolean validateToken(String token, String key) {
+	    try {	    	
+	        Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8))).build().parseClaimsJws(token);
 	        return true;
 	    } catch (Exception e) {
 	        return false;

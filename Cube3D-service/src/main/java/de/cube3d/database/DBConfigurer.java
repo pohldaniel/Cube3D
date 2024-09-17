@@ -80,11 +80,8 @@ public class DBConfigurer {
         topicAreaRepositoryContent.add(t4Created);
         topicAreaRepositoryContent.add(t5Created);
         topicAreaRepositoryContent.add(t6Created);
-        topicAreaRepositoryContent.add(t7Created);
-
-        
+        topicAreaRepositoryContent.add(t7Created);       
     }
-
 
     private Action a1 = new ActionBuilder()
             .name("Action 1")
@@ -129,7 +126,7 @@ public class DBConfigurer {
             .mail("test@test.de")
             .externalCompany("N.N.")
             .passwordHash("3ecf9427c31104fed1364eb3f640671ad22d02b73bdcc5aa78edaf33bbcd659d11c616c3097308547a10131c513d55cf939645fbe1d56e1931d030c18741c616")
-            .role(Role.ADMIN)
+            .roles(Role.ADMIN, Role.USER)
             .build();
     private Person p2 = new PersonBuilder()
             .id("actionmanager")
@@ -138,7 +135,7 @@ public class DBConfigurer {
             .mail("test@test.de")
             .externalCompany("N.N.")
             .passwordHash("3ecf9427c31104fed1364eb3f640671ad22d02b73bdcc5aa78edaf33bbcd659d11c616c3097308547a10131c513d55cf939645fbe1d56e1931d030c18741c616")
-            .role(Role.ACTION_MANAGER)
+            .roles(Role.ACTION_MANAGER)
             .build();
     private Person p3 = new PersonBuilder()
             .id("topicmanager")
@@ -147,7 +144,7 @@ public class DBConfigurer {
             .mail("test@test.de")
             .externalCompany("N.N.")
             .passwordHash("3ecf9427c31104fed1364eb3f640671ad22d02b73bdcc5aa78edaf33bbcd659d11c616c3097308547a10131c513d55cf939645fbe1d56e1931d030c18741c616")
-            .role(Role.TOPICAREA_MANAGER)
+            .roles(Role.TOPICAREA_MANAGER)
             .build();
     private Person p4 = new PersonBuilder()
             .id("user")
@@ -156,9 +153,8 @@ public class DBConfigurer {
             .mail("test@test.de")
             .externalCompany("N.N.")
             .passwordHash("3ecf9427c31104fed1364eb3f640671ad22d02b73bdcc5aa78edaf33bbcd659d11c616c3097308547a10131c513d55cf939645fbe1d56e1931d030c18741c616")
-            .role(Role.USER)
-            .build();
-    
+            .roles(Role.USER)
+            .build();   
     private Person p5 = new PersonBuilder()
             .id("personmanager")
             .prename("Frank")
@@ -166,7 +162,7 @@ public class DBConfigurer {
             .mail("test@test.de")
             .externalCompany("N.N.")
             .passwordHash("3ecf9427c31104fed1364eb3f640671ad22d02b73bdcc5aa78edaf33bbcd659d11c616c3097308547a10131c513d55cf939645fbe1d56e1931d030c18741c616")
-            .role(Role.PERSON_MANAGER)
+            .roles(Role.PERSON_MANAGER)
             .build();
     
     private TopicArea t1 = new TopicAreaBuilder()

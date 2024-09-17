@@ -4,10 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Temporal;
@@ -47,8 +52,11 @@ public class Person {
     @Column(name = "PASSWORD_HASH")
     private String passwordHash;
 
-    @Column(name = "ROLE")
-    private Role role;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "ROLE", joinColumns = @JoinColumn(name = "PERSON_ID"))
+    @Column(name = "ROLE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     @Column(name = "PASSWORD_RESET_TOKEN")
     private String passwordResetToken;
@@ -84,12 +92,12 @@ public class Person {
                 Objects.equals(prename, person.prename) &&
                 Objects.equals(mail, person.mail) &&
                 Objects.equals(externalCompany, person.externalCompany) &&
-                role == person.role ;
+                roles == person.roles ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, surname, prename, mail, externalCompany, role);
+        return Objects.hash(id, surname, prename, mail, externalCompany, roles);
     }
 
     @Override
@@ -101,7 +109,7 @@ public class Person {
                 ", mail='" + mail + '\'' +
                 ", externalCompany='" + externalCompany + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
-                ", role=" + role +
+                ", role=" + roles +
                 '}';
     }
 
@@ -153,12 +161,22 @@ public class Person {
 		this.passwordHash = passwordHash;
 	}
 
-	public Role getRole() {
-		return role;
+	public Set<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
+	public void addRoles(Role... roles) {
+		
+		if(this.roles == null)
+			this.roles = new HashSet<Role>();
+		
+		for (Role role : roles) {
+			this.roles.add(role);
+		}
 	}
 
 	public String getPasswordResetToken() {
@@ -194,7 +212,7 @@ public class Person {
 		
 		this.externalCompany = person.getExternalCompany();
 		this.passwordHash = person.getPasswordHash();
-		this.role = person.getRole();
+		this.roles = person.getRoles();
 
 		this.passwordResetToken = person.getPasswordResetToken();
 		this.passwordResetTokenExpiryDate = person.getPasswordResetTokenExpiryDate();

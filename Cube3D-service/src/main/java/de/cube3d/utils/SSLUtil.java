@@ -23,8 +23,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.SSLException;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.conn.ssl.TrustStrategy;
 
@@ -113,7 +111,7 @@ public class SSLUtil {
 	    return keyStore;
 	}
 	
-	public static SSLContext getSSLContext(String password) throws CertificateException, SSLException {
+	public static SSLContext getSSLContext(String password) {
 		
 		TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
 			@Override
@@ -137,7 +135,8 @@ public class SSLUtil {
 					.build();
 			return sslContext;
 		} catch (Exception e) {	
-			throw new SSLException("Unable to initialize SSL-context", e);
+			//throw new SSLException("Unable to initialize SSL-context", e);
+			return null;
 		} 
 	}
 	

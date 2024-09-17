@@ -56,7 +56,6 @@ export class LoginComponent implements OnInit {
             next: (response : any) =>{
               this.authenticationService.setTokenMapValue(response);
               this.authenticationService.setCurrentJwtValue(response.token);  
-              console.log(response.token);
               let path : string = this.returnUrl === '/' ? '/dashboard': this.returnUrl;
               this.router.navigate([path]);   
             },

@@ -92,7 +92,6 @@ import {Role} from '../models/Role.enum';
   }
 
   refreshTokenOIDC() : Observable<string> {
-    console.log(this.providerSubject.value)
     return this.http.post<string>(environment.baseUrl + '/' + this.providerSubject.value as String  + '/oidc/refresh', {'token': JSON.parse(this.tokenMapSubject.value as string).token, 'accessToken': JSON.parse(this.tokenMapSubject.value as string).accessToken, 'user': JSON.parse(this.tokenMapSubject.value as string).user, 'refreshToken': JSON.parse(this.tokenMapSubject.value as string).refreshToken}, {headers: this.headers});   
   }
 

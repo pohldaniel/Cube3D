@@ -84,5 +84,4 @@ public class LoginRestController {
 	public String confirm(Model model) {		
 		return model.getAttribute("message").toString();
 	}
-	
 }

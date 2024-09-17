@@ -2,7 +2,6 @@ package de.cube3d.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +30,9 @@ import de.cube3d.entities.enums.Role;
 @RequestMapping("/cube/restAPI")
 public class PersonRestController {
 
-	private Logger log = LoggerFactory.getLogger(PersonRestController.class);
-	
+	private Logger log = LoggerFactory.getLogger(PersonRestController.class);	
 	private PersonDao personDao = PersonDao.getInstance();
     
-    @Value("${url}")
-    private String url;
-
     @GetMapping(value = "/persons/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Iterable<Person>> getAllPersons() {  	    	
     	Iterable<Person> persons = personDao.findAll();

@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
+import de.cube3d.components.SpringOIDCClient;
+import de.cube3d.components.VaultOIDCClient;
 import de.cube3d.service.JwtService;
 
 public class RestAPIFilter implements Filter{
@@ -36,6 +38,8 @@ public class RestAPIFilter implements Filter{
 			 "https://0:0:0:0:0:0:0:1:8080"));
 	 
 	 private JwtService jwtService;
+	 private SpringOIDCClient springOIDCClient;	 
+	 private VaultOIDCClient vaultOIDCClient;
 	 private boolean forceValidation;
 	 
 	 public RestAPIFilter() {
@@ -44,6 +48,14 @@ public class RestAPIFilter implements Filter{
 	 
 	 public void setJwtService(JwtService jwtService) {
 		 this.jwtService = jwtService;
+	 }
+	 
+	 public void setSpringOIDCClient(SpringOIDCClient springOIDCClient) {
+		 this.springOIDCClient = springOIDCClient;
+	 }
+	 
+	 public void setVaultOIDCClient(VaultOIDCClient vaultOIDCClient) {
+		 this.vaultOIDCClient = vaultOIDCClient;
 	 }
 	 
 	 public void setForceValidation(boolean forceValidation) {
@@ -65,13 +77,14 @@ public class RestAPIFilter implements Filter{
 	              
 	     httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
 	     httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-	     httpServletResponse.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept, Authorization");
+	     httpServletResponse.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept, Authorization, Provider");
 
 	     if (httpServletRequest.getMethod().equals(HttpMethod.OPTIONS.name())) {
 	    	 return;
 	     }
 	     
-	     String authHeader = httpServletRequest.getHeader("Authorization");	      
+	     String authHeader = httpServletRequest.getHeader("Authorization");	     
+	     String provider = httpServletRequest.getHeader("Provider");	
 	        
 	     if(authHeader != null) { 
 	    	 StringTokenizer st = new StringTokenizer(authHeader);        	
@@ -81,13 +94,16 @@ public class RestAPIFilter implements Filter{
 	    		 if(basic.equalsIgnoreCase("Bearer")) {
 	    			 String jwt = st.nextToken();
 	    			 
-	    			 if(jwtService.validateToken(jwt) || forceValidation) {
+	    			 if((provider.equalsIgnoreCase("spring") && springOIDCClient.introspect(jwt))    || 
+                        (provider.equalsIgnoreCase("vault") && vaultOIDCClient.introspect(provider)) ||
+	    			    (provider.equalsIgnoreCase("jwt") && jwtService.validateToken(jwt))          ||    			     
+	    			     forceValidation) {
 	    				 httpServletRequest.setAttribute("roles", jwtService.getRolesManually(jwt));
 	    				 chain.doFilter(httpServletRequest, httpServletResponse);
-	    				 return;
+	    				 return;	    				 
 	    			 }else {
 	    				 httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-	    				 return;
+	    				 return; 
 	    			 }
 	    		 }
 	    	 }
