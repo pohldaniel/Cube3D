@@ -36,6 +36,7 @@ openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in c
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-iss.key -out certs/cube-iss.csr -subj "/CN=Cube Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
 openssl x509 -req -CA certs/cube-int.crt -CAkey certs/cube-int.key -CAcreateserial -in certs/cube-iss.csr -out certs/cube-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
 openssl x509 -pubkey -noout -in certs/cube-iss.crt  > certs/cube-iss.pub
+openssl pkcs12 -export -out certs/cube-trust.p12 -inkey certs/cube-iss.key -in certs/cube-iss.crt -name "Cube Issuing Pair" -passout pass:password
 
 #Spring Client
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-client.key -out certs/spring-client.csr -subj "/CN=Spring Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
@@ -70,6 +71,9 @@ cat certs/user.crt certs/cube-iss.crt certs/cube-int.crt > certs/user.pem
 openssl pkcs12 -export -out certs/user.p12 -inkey certs/user.key -in certs/user.pem -name "User" -passout pass:
 
 #Spring TrustStore unfortunately there is no way without keytool
-#./keytool -import -trustcacerts -noprompt -file cube-iss.crt -alias "Cube Issuing" -deststoretype PKCS12 -keystore spring-trust.p12 -deststorepass password
+#keytool -import -trustcacerts -noprompt -file certs/cube-iss.crt -alias "Cube Issuing" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+#keytool -import -trustcacerts -noprompt -file certs/cube-int.crt -alias "Cube Intermediate" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+#keytool -import -trustcacerts -noprompt -file certs/root.crt -alias "Cube Root" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+
 #cp certs/cube-iss.crt ../Security-service/src/main/resources/certs
 #keytool -import -trustcacerts -noprompt -file root.crt -alias "Cube Root" -deststoretype PKCS12 -keystore spring-trust-root.p12 -deststorepass password
