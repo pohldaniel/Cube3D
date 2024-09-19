@@ -35,17 +35,27 @@ public class DownloadRestController {
 	
 	@RequestMapping(value = "/own", method = RequestMethod.GET)
 	public void getFile(HttpServletResponse response) throws Exception {
-		/*RSAPublicKey isspub = CertificateService.loadRSAPublicKeyFromStore("password", "cube issuing");
-    	RSAPrivateKey isskey = CertificateService.loadRSAPrivateKeyFromStore("password", "cube issuing pair");
-    	X509Certificate isscert = CertificateService.loadX509CertificateFromStore("password", "cube issuing");
-    	X509Certificate intcert = CertificateService.loadX509CertificateFromStore("password", "cube intermediate");*/
 		
-		RSAPublicKey isspub = CertificateService.loadRSAPublicKey(org.apache.commons.io.IOUtils.toInputStream(Certificate.ISS_PUBLIC, "UTF-8"));
-    	RSAPrivateKey isskey = CertificateService.loadRSAPrivateKey(org.apache.commons.io.IOUtils.toInputStream(Certificate.ISS_PRIVATE, "UTF-8"));
-    	X509Certificate isscert = CertificateService.loadX509Certificate(org.apache.commons.io.IOUtils.toInputStream(Certificate.ISS_CERTIFICATE, "UTF-8"));
-    	X509Certificate intcert = CertificateService.loadX509Certificate(org.apache.commons.io.IOUtils.toInputStream(Certificate.INT_CERTIFICATE, "UTF-8"));
+		//CertificateService.listX509CertificatesFromStore("certs/cube-trust.p12", "password");
+		
+		RSAPublicKey isspub = CertificateService.loadRSAPublicKeyFromStore("certs/cube-trust.p12", "password", "cube issuing");
+    	RSAPrivateKey isskey = CertificateService.loadRSAPrivateKeyFromStore("certs/cube-trust.p12", "password", "cube issuing pair");
+    	X509Certificate isscert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube issuing");
+    	X509Certificate intcert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube intermediate");
+		
+    	//RSAPublicKey isspub = CertificateService.loadRSAPublicKey(Certificate.ISS_PUBLIC);
+    	//RSAPrivateKey isskey = CertificateService.loadRSAPrivateKey(Certificate.ISS_PRIVATE);
+    	//X509Certificate isscert = CertificateService.loadX509Certificate(Certificate.ISS_CERTIFICATE);
+    	//X509Certificate intcert = CertificateService.loadX509Certificate(Certificate.INT_CERTIFICATE);
     	
+    	//CertificateService.writeX509CertificateToFile(isscert, "etc/cube-iss.crt");
+    	//CertificateService.writeRSAPrivateKeyToFile(isskey, "etc/cube-iss.key");
+    	//CertificateService.writeRSAPublicKeyToFile(isspub, "etc/cube-iss.pub");
     	
+    	//CertificateService.writeX509CertificateToConsole(isscert);
+    	//CertificateService.writeRSAPrivateKeyToConsole(isskey);
+    	//CertificateService.writeRSAPublicKeyToConsole(isspub);
+   	
     	BouncyCastleCertificateGenerator.createUserStore(intcert, isscert, isspub, isskey, "actionmanager", "etc/userCerts/");
 		
     	File file = new File("etc/userCerts/actionmanager.p12");

@@ -1,6 +1,7 @@
 package de.security.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import de.security.components.CertificateAuthenticationProvider;
 import de.security.components.PasswordAuthenticationProvider;
@@ -47,9 +47,9 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 		.securityMatcher("/h2-console/**")
-		.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll())
+		.authorizeHttpRequests(auth -> auth.requestMatchers(antMatcher("/h2-console/**")).permitAll())
 	                .headers(headers -> headers.frameOptions(withDefaults()).disable())
-	                .csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")));
+	                .csrf(csrf -> csrf.ignoringRequestMatchers(antMatcher("/h2-console/**")));
 		return http.build();
 	}
 	
@@ -58,9 +58,9 @@ public class SecurityConfig {
 	public SecurityFilterChain downloadFilterChain(HttpSecurity http) throws Exception {
 		http
 		.securityMatcher("/download/**")
-		.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher.antMatcher("/download/**")).permitAll())
+		.authorizeHttpRequests(auth -> auth.requestMatchers(antMatcher("/download/**")).permitAll())
 	                .headers(headers -> headers.frameOptions(withDefaults()).disable())
-	                .csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/download/**")));
+	                .csrf(csrf -> csrf.ignoringRequestMatchers(antMatcher("/download/**")));
 		return http.build();
 	}
 	
