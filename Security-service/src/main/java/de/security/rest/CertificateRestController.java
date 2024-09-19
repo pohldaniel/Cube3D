@@ -11,30 +11,29 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import de.security.service.BouncyCastleCertificateGenerator;
 import de.security.service.CertificateService;
-import de.security.utils.Certificate;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/download")
-public class DownloadRestController {
+@RequestMapping("/cert")
+public class CertificateRestController {
 
 	@RequestMapping(value = "/root", method = RequestMethod.GET)
-	public ResponseEntity<InputStreamResource> root() throws Exception {
-		InputStreamResource resource = new InputStreamResource(org.apache.commons.io.IOUtils.toInputStream(Certificate.ROOT_CERTIFICATE, "UTF-8"));
-		
+	public ResponseEntity<InputStreamResource> root() throws Exception {		
+		X509Certificate rootcert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube root");
+		InputStreamResource resource =  CertificateService.getX509CertificateStream(rootcert);
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.add("Content-Disposition", "attachment; filename=root.crt");
 	    return ResponseEntity.ok().headers(headers).body(resource);
 	}
 	
 	@RequestMapping(value = "/own", method = RequestMethod.GET)
-	public void getFile(HttpServletResponse response) throws Exception {
+	public void getFile(HttpServletResponse response, Authentication authentication) throws Exception {
 		
 		//CertificateService.listX509CertificatesFromStore("certs/cube-trust.p12", "password");
 		
@@ -42,7 +41,7 @@ public class DownloadRestController {
     	RSAPrivateKey isskey = CertificateService.loadRSAPrivateKeyFromStore("certs/cube-trust.p12", "password", "cube issuing pair");
     	X509Certificate isscert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube issuing");
     	X509Certificate intcert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube intermediate");
-		
+    	
     	//RSAPublicKey isspub = CertificateService.loadRSAPublicKey(Certificate.ISS_PUBLIC);
     	//RSAPrivateKey isskey = CertificateService.loadRSAPrivateKey(Certificate.ISS_PRIVATE);
     	//X509Certificate isscert = CertificateService.loadX509Certificate(Certificate.ISS_CERTIFICATE);
@@ -56,10 +55,11 @@ public class DownloadRestController {
     	//CertificateService.writeRSAPrivateKeyToConsole(isskey);
     	//CertificateService.writeRSAPublicKeyToConsole(isspub);
    	
-    	BouncyCastleCertificateGenerator.createUserStore(intcert, isscert, isspub, isskey, "actionmanager", "etc/userCerts/");
+    	String name = authentication.getName();   	
+    	BouncyCastleCertificateGenerator.createUserStore(intcert, isscert, isspub, isskey, name, "etc/userCerts/", authentication.getCredentials().toString());
 		
-    	File file = new File("etc/userCerts/actionmanager.p12");
-	    response.setHeader("Content-Disposition", "attachment; filename=actionmanager.p12");
+    	File file = new File("etc/userCerts/" + name + ".p12");
+	    response.setHeader("Content-Disposition", "attachment; filename=" + name + ".p12");
 
 	    OutputStream out = response.getOutputStream();
 	    FileInputStream in = new FileInputStream(file);

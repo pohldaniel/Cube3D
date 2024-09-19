@@ -3,7 +3,6 @@ package de.security.view;
 import java.security.Principal;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,17 +27,5 @@ public class LoginController {
         return "oidc_login";
     }
 	
-	@GetMapping("/cert")
-    public String certlogin(Model model) {
-    	LoginForm loginForm = new LoginForm();
-    	loginForm.setUsername("admin");
-    	loginForm.setPassword("main100");
-		model.addAttribute("loginForm", loginForm);
-        return "cert_login";
-    }
 	
-	@GetMapping("/cert/dashboard")
-    public String homepage(@AuthenticationPrincipal UserDetails userDetails) {		
-        return "dashboard";
-    }
 }

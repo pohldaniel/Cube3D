@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.InputStreamResource;
 
 public class CertificateService {
 
@@ -98,7 +99,7 @@ public class CertificateService {
 	public static void writeX509CertificateToFile(X509Certificate certificate, String outPath) throws IOException, CertificateEncodingException {
 		StringBuilder sb = new StringBuilder("-----BEGIN CERTIFICATE-----");
     	sb.append(System.getProperty("line.separator"));
-    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().withoutPadding().encode(certificate.getEncoded()));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(certificate.getEncoded()));
     	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
     	is.close();
     	sb.append(result);
@@ -113,7 +114,7 @@ public class CertificateService {
 	public static void writeX509CertificateToConsole(X509Certificate certificate) throws IOException, CertificateEncodingException {
 		StringBuilder sb = new StringBuilder("-----BEGIN CERTIFICATE-----");
     	sb.append(System.getProperty("line.separator"));
-    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().withoutPadding().encode(certificate.getEncoded()));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(certificate.getEncoded()));
     	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
     	is.close();
     	sb.append(result);
@@ -122,13 +123,25 @@ public class CertificateService {
     	System.out.println(sb.toString());
 	}
 	
+	public static InputStreamResource getX509CertificateStream(X509Certificate certificate) throws IOException, CertificateEncodingException {
+		StringBuilder sb = new StringBuilder("-----BEGIN CERTIFICATE-----");
+    	sb.append(System.getProperty("line.separator"));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(certificate.getEncoded()));
+    	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
+    	is.close();
+    	sb.append(result);
+    	sb.append(System.getProperty("line.separator"));
+    	sb.append("-----END CERTIFICATE-----");
+    	return new InputStreamResource(IOUtils.toInputStream(sb.toString(), "UTF-8"));
+	}
+	
 	public static void writeRSAPublicKeyToFile(RSAPublicKey publicKey, String outPath) throws IOException, CertificateEncodingException {
 		StringBuilder sb = new StringBuilder("-----BEGIN PUBLIC KEY-----");
     	sb.append(System.getProperty("line.separator"));
-    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().withoutPadding().encode(publicKey.getEncoded()));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(publicKey.getEncoded()));
     	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
     	is.close();
-    	sb.append(result).append("==");
+    	sb.append(result);
     	sb.append(System.getProperty("line.separator"));
     	sb.append("-----END PUBLIC KEY-----");
     	
@@ -140,10 +153,10 @@ public class CertificateService {
 	public static void writeRSAPublicKeyToConsole(RSAPublicKey publicKey) throws IOException, CertificateEncodingException {
 		StringBuilder sb = new StringBuilder("-----BEGIN PUBLIC KEY-----");
     	sb.append(System.getProperty("line.separator"));
-    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().withoutPadding().encode(publicKey.getEncoded()));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(publicKey.getEncoded()));
     	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
     	is.close();
-    	sb.append(result).append("==");
+    	sb.append(result);
     	sb.append(System.getProperty("line.separator"));
     	sb.append("-----END PUBLIC KEY-----");
     	System.out.println(sb.toString());
@@ -152,10 +165,10 @@ public class CertificateService {
 	public static void writeRSAPrivateKeyToFile(RSAPrivateKey privateKey, String outPath) throws IOException, CertificateEncodingException {
 		StringBuilder sb = new StringBuilder("-----BEGIN PRIVATE KEY-----");
     	sb.append(System.getProperty("line.separator"));
-    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().withoutPadding().encode(privateKey.getEncoded()));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(privateKey.getEncoded()));
     	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
     	is.close();
-    	sb.append(result).append("==");
+    	sb.append(result);
     	sb.append(System.getProperty("line.separator"));
     	sb.append("-----END PRIVATE KEY-----");
     	
@@ -167,10 +180,10 @@ public class CertificateService {
 	public static void writeRSAPrivateKeyToConsole(RSAPrivateKey privateKey) throws IOException, CertificateEncodingException {
 		StringBuilder sb = new StringBuilder("-----BEGIN PRIVATE KEY-----");
     	sb.append(System.getProperty("line.separator"));
-    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().withoutPadding().encode(privateKey.getEncoded()));
+    	InputStream is = new ByteArrayInputStream(Base64.getEncoder().encode(privateKey.getEncoded()));
     	String result = IOUtils.toString(is, StandardCharsets.UTF_8).replaceAll("(.{64})", "$1\n"); 	
     	is.close();
-    	sb.append(result).append("==");
+    	sb.append(result);
     	sb.append(System.getProperty("line.separator"));
     	sb.append("-----END PRIVATE KEY-----");
     	System.out.println(sb.toString());

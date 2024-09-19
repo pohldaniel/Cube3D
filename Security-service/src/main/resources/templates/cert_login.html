@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 
@@ -20,7 +21,7 @@
 
                 <h4 class="font-bold leading-9 mt-10 text-center text-gray-900 text-xl tracking-tight">Sign in to your account</h4>
 
-                <div >
+                <div style="width=300px">
                     <label class="block text-sm font-medium leading-6 text-gray-900" for="username">Username</label>
                     <div class="mt-2">
                         <input class="ring-1 block w-full rounded-md py-1.5 text-gray-900 shadow-sm border-0 ring-inset ring-gray-300 px-3 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" id="username" name="username" type="text" placeholder="Username" th:value="${loginForm.username}">
@@ -29,12 +30,18 @@
 
                 <div>
                     <label class="block text-sm font-medium leading-6 text-gray-900" for="password">Password</label>
-                    <div class="mt-2">
+                    <div class="mt-2" style="position:relative;display:inline-block;width:300px">
                         <input class="ring-1 block w-full rounded-md py-1.5 text-gray-900 shadow-sm border-0 ring-inset ring-gray-300 px-3 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" id="password" name="password" type="password" placeholder="Password" th:value="${loginForm.password}">
-                    </div>
+						<button onclick="toggle();"type="button" style="position: absolute;top:6px;right:5px;border:none;background-color: transparent;cursor: pointer;">
+						<i class="fa fa-eye" style="font-size:24px" onclick="toggleIcon(this)"></i></button>
+					</div>
+					
+					
+					
+					<!--<input type="checkbox" onclick="toggle()">Show Password-->
                 </div>
 
-				<div>
+				<div style="width:300px">
 					<button type="submit" id="submitButton" class="bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white flex w-full justify-center rounded-md  shadow-sm ring-1 ring-inset hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
 						<span>Log in</span>
 					</button>
@@ -43,8 +50,18 @@
             </form>
         </div>
     </div>
-	<script>
-	
+	<script>	
+		function toggle() {
+			var x = document.getElementById("password");
+			if (x.type === "password") {
+				x.type = "text";
+			} else {
+				x.type = "password";
+			}
+		}
+		function toggleIcon(x) {
+			x.classList.toggle("fa-eye-slash");
+		}
 	</script>
 </body>
 </html>

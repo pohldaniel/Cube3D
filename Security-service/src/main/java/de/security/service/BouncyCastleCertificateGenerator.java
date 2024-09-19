@@ -33,7 +33,7 @@ public class BouncyCastleCertificateGenerator {
     private static final String KEY_ALGORITHM = "RSA";
     private static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
 
-	public static void createUserStore(X509Certificate intCert, X509Certificate issCert, RSAPublicKey issPublic, RSAPrivateKey issPrivate, String issuer, String path) throws Exception{
+	public static void createUserStore(X509Certificate intCert, X509Certificate issCert, RSAPublicKey issPublic, RSAPrivateKey issPrivate, String issuer, String path, String storePass) throws Exception{
         // Add the BouncyCastle Provider
         Security.addProvider(new BouncyCastleProvider());
 
@@ -96,7 +96,7 @@ public class BouncyCastleCertificateGenerator {
         issuedCert.verify(issCert.getPublicKey(), BC_PROVIDER);
 
         //writeCertToFileBase64Encoded(issuedCert, "actionmanager.crt");
-        exportKeyPairToKeystoreFile((RSAPrivateKey)issuedCertKeyPair.getPrivate(), issuedCert, issCert, intCert, issuer, path + issuer + ".p12", "PKCS12", "");
+        exportKeyPairToKeystoreFile((RSAPrivateKey)issuedCertKeyPair.getPrivate(), issuedCert, issCert, intCert, issuer, path + issuer + ".p12", "PKCS12", storePass);
 
     }
 

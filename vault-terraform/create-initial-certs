@@ -1,5 +1,4 @@
 mkdir -p certs
-dos2unix create-initial-certs
 
 #Create Root Authority
 openssl genrsa -out certs/root.key 4096
@@ -70,10 +69,11 @@ openssl x509 -req -CA certs/cube-iss.crt -CAkey certs/cube-iss.key -CAcreateseri
 cat certs/user.crt certs/cube-iss.crt certs/cube-int.crt > certs/user.pem
 openssl pkcs12 -export -out certs/user.p12 -inkey certs/user.key -in certs/user.pem -name "User" -passout pass:
 
-#Spring TrustStore unfortunately there is no way without keytool
-#keytool -import -trustcacerts -noprompt -file certs/cube-iss.crt -alias "Cube Issuing" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
-#keytool -import -trustcacerts -noprompt -file certs/cube-int.crt -alias "Cube Intermediate" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
-#keytool -import -trustcacerts -noprompt -file certs/root.crt -alias "Cube Root" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+#Cube TrustStore unfortunately there is no way without keytool
+keytool -import -trustcacerts -noprompt -file certs/cube-iss.crt -alias "Cube Issuing" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+keytool -import -trustcacerts -noprompt -file certs/cube-int.crt -alias "Cube Intermediate" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+keytool -import -trustcacerts -noprompt -file certs/root.crt -alias "Cube Root" -deststoretype PKCS12 -keystore certs/cube-trust.p12 -deststorepass password
+cp certs/spring-client.p12 ../Security-service/src/main/resources/certs
 
 #cp certs/cube-iss.crt ../Security-service/src/main/resources/certs
 #keytool -import -trustcacerts -noprompt -file root.crt -alias "Cube Root" -deststoretype PKCS12 -keystore spring-trust-root.p12 -deststorepass password

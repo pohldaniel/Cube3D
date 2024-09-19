@@ -53,33 +53,29 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-	@Bean
+	@Bean 
 	@Order(2)
-	public SecurityFilterChain downloadFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain otherSecurityFilterChain(HttpSecurity http) throws Exception { 
 		http
-		.securityMatcher("/download/**")
-		.authorizeHttpRequests(auth -> auth.requestMatchers(antMatcher("/download/**")).permitAll())
-	                .headers(headers -> headers.frameOptions(withDefaults()).disable())
-	                .csrf(csrf -> csrf.ignoringRequestMatchers(antMatcher("/download/**")));
-		return http.build();
-	}
-	
-	@Bean
-    @Order(3)
-    SecurityFilterChain formFilterChain(HttpSecurity http) throws Exception {
-        http
         .securityMatcher("/cert/**") 
+      
         .authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/images/**").permitAll().anyRequest().authenticated())
             .userDetailsService(cubeUserDetailsService())
             .authenticationProvider(passwordAuthenticationProvider())
-            .formLogin(form->form.loginPage("/cert").loginProcessingUrl("/cert/login").defaultSuccessUrl("/cert/dashboard", true).permitAll());
-        return http.build();
-    }
+            .formLogin(form->form.loginPage("/cert").loginProcessingUrl("/cert/login").defaultSuccessUrl("/cert/download_page", true).permitAll());
+	         
+	         
+		AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class); 
+		http.authenticationManager(authenticationManagerBuilder.eraseCredentials(false).build());
+		return http.build(); 
+	}
 	
 	@Bean
-	@Order(4)
+	@Order(3)
     public SecurityFilterChain certFilterChain(HttpSecurity http) throws Exception {
-		 http
+		
+  	
+		http
 		 //.securityMatcher("/login") 
 		 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/images/**","/css/**", "/message").permitAll().anyRequest().authenticated())
 		 .x509(cert ->cert.subjectPrincipalRegex("CN=(.*?)(?:,|$)"))

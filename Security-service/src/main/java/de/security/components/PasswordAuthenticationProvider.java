@@ -36,7 +36,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 			if (!userDetails.getPassword().substring(6).equals(hexHash)) {
 				throw new AuthenticationException("Invalid credentials") {};
 			}
-
+			
 			Authentication authenticated = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
 			return authenticated;
 			
