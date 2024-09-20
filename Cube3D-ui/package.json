@@ -29,7 +29,6 @@
     "@fortawesome/free-regular-svg-icons": "~6.6.0",
     "@fortawesome/free-solid-svg-icons": "~6.6.0",
     "@auth0/angular-jwt": "^5.2.0",
-    "@types/lodash": "^4.17.7",
     "lodash": "^4.17.21",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

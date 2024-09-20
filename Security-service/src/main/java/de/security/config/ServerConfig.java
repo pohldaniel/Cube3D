@@ -50,7 +50,7 @@ public class ServerConfig {
 	@Bean
     AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("https://auth-server:8200")
+                //.issuer("https://auth-server:8200")
                 .authorizationEndpoint("/oauth2/authorize")
                 .tokenEndpoint("/oauth2/token")
                 .tokenIntrospectionEndpoint("/oauth2/introspect")

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cube3d-backend
+  namespace: cube
+  labels:
+    app: cube3d-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cube3d-backend
+  template:
+    metadata:
+      labels:
+        app: cube3d-backend
+    spec:
+      containers:
+      - name: cube3d-backend
+        image: public.ecr.aws/a1l1z2r2/cube3d-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:          
+        - name: P12PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: security-server-tls
+              key: password
+              optional: false
+        resources:         
+          limits:
+            memory: "1Gi"
+            cpu: "512m"
+          requests:
+            memory: "512m"
+            cpu: "256m"

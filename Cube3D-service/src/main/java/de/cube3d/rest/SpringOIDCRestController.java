@@ -63,8 +63,8 @@ public class SpringOIDCRestController {
 		
 		if(code.equalsIgnoreCase("undefined")) {	
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("https://auth-server:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
-				new URI("https://auth-server:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
+				new URI("https://localhost:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
+				new URI("https://localhost:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);

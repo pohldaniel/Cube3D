@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-server
+  namespace: cube
+  labels:
+    app: security-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: security-server
+  template:
+    metadata:
+      labels:
+        app: security-server
+    spec:
+      containers:
+      - name: security-server
+        image: public.ecr.aws/a1l1z2r2/security-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+        env:          
+        - name: P12PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: security-server-tls
+              key: password
+              optional: false
+        resources:         
+          limits:
+            memory: "1Gi"
+            cpu: "512m"
+          requests:
+            memory: "512m"
+            cpu: "256m"

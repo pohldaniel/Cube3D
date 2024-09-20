@@ -14,6 +14,9 @@ FROM nginx:latest AS deployer
 	RUN chmod -R 755 /usr/share/nginx/html
     RUN rm /etc/nginx/conf.d/default.conf
     COPY nginx.conf /etc/nginx/nginx.conf
+    #ADD certs/angular-server.crt /etc/nginx/certs/angular-server.crt
+	#ADD certs/angular-server.key /etc/nginx/certs/angular-server.key
+	EXPOSE 4200
     EXPOSE 8080
 	EXPOSE 443
 	EXPOSE 80

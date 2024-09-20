@@ -12,7 +12,7 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {SnackService} from '../../services/snack.service';
 import {SpinnerComponent} from '../../shared/spinner/spinner.component';
 import {Person} from '../../models/Person';
-import * as _ from 'lodash';
+//import * as _ from 'lodash';
 
 @Component({
   selector: 'app-login',
@@ -34,6 +34,8 @@ export class LoginComponent implements OnInit {
 
   showLogout: boolean = false;
 
+  
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -50,7 +52,7 @@ export class LoginComponent implements OnInit {
     this.dataLoaded = false;
     this.route.queryParams.subscribe({
       next: (params : any) => {
-        if(!_.isEmpty(params)) {
+        if(!isObjectEmpty(params)) {
           this.authenticationService.setProvider(params['provider']);  
           this.authenticationService.gethTokenOIDC(params['code']).subscribe( {
             next: (response : any) =>{
@@ -106,3 +108,11 @@ export class LoginComponent implements OnInit {
     this.show = !this.show;
   }
 }
+
+const isObjectEmpty = (objectName : any) => {
+  return (
+    objectName &&
+    Object.keys(objectName).length === 0 &&
+    objectName.constructor === Object
+  );
+};

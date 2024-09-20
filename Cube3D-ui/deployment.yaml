@@ -1,21 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cube3d-deployment
+  name: cube3d-ui
+  namespace: cube
   labels:
-    app: cube3d
+    app: cube3d-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cube3d
+      app: cube3d-ui
   template:
     metadata:
       labels:
-        app: cube3d
+        app: cube3d-ui
     spec:
       containers:
-      - name: cube3d
-        image: public.ecr.aws/a1l1z2r2/cube3d:latest
+      - name: cube3d-ui
+        image: public.ecr.aws/a1l1z2r2/cube3d-ui:latest
+        imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 4200
+        volumeMounts:
+          - name: certificates
+            mountPath: "/etc/nginx/certs/angular-server.crt"
+            subPath: cert
+            readOnly: true
+          - name: certificates
+            mountPath: "/etc/nginx/certs/angular-server.key"
+            subPath: key
+            readOnly: true
+      volumes:
+        - name: certificates
+          secret:
+            secretName: cube3d-ui-tls
+            items:
+              - key: certificate
+                path: cert
+              - key: privatekey
+                path: key

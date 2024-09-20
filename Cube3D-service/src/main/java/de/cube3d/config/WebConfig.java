@@ -1,6 +1,9 @@
 package de.cube3d.config;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +17,8 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import jakarta.servlet.SessionTrackingMode;
 
 @Configuration
 @EnableWebMvc
@@ -54,5 +59,11 @@ public class WebConfig implements WebMvcConfigurer{
 		resolver.setCacheable(false);
 		resolver.setTemplateMode(TemplateMode.HTML);
 		return resolver;
+	}
+	
+	@Bean
+	public ServletContextInitializer servletContextInitializer() {
+	    return servletContext -> servletContext.setSessionTrackingModes(
+	        Collections.singleton(SessionTrackingMode.COOKIE));
 	}
 }
