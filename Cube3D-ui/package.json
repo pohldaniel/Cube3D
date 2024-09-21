@@ -7,8 +7,8 @@
     "build": "ng build",
     "build-prod": "ng build --configuration prod",
     "build-dev": "ng build --configuration dev",
-    "build-prod-shift": "ng build --base-href /Cube3D/ --configuration prod",
-    "build-dev-shift": "ng build --base-href /Cube3D/--configuration dev",
+    "build-prod-shift": "ng build --base-href /cubeui/ --configuration prod",
+    "build-dev-shift": "ng build --base-href /cubeui/ --configuration dev",
     "watch": "ng build --watch --configuration dev"
   },
   "private": true,

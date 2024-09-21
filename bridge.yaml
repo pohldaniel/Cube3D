@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cube3d-ui-service-bridge
+spec:
+  type: ExternalName
+  externalName: cube3d-ui-service.cube.svc.cluster.local

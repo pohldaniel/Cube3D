@@ -4,7 +4,7 @@ FROM node:18.20.0 AS builder
     COPY package*.json ./
     RUN npm install
     COPY ./ ./
-    RUN npm run build-${ENV}
+    RUN npm run build-${ENV}-shift
 
 FROM nginx:latest AS deployer
     ARG ENV
