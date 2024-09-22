@@ -15,7 +15,7 @@ public class FilterInitializer {
 	public FilterRegistrationBean<RestAPIFilter> restAPIFilterRegistration() {
 		FilterRegistrationBean<RestAPIFilter> registration = new FilterRegistrationBean<RestAPIFilter>();
 		registration.setFilter(new RestAPIFilter());
-		registration.addUrlPatterns("/cube/restAPI/*");
+		registration.addUrlPatterns("/restAPI/*");
 		return registration;
 	}
 	

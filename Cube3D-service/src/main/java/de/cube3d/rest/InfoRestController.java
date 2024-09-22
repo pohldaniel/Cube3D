@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import ch.qos.logback.classic.Level;
 
 @RestController
-@RequestMapping("/cube/restAPI")
+@RequestMapping("/restAPI")
 public class InfoRestController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(InfoRestController.class);	

@@ -27,7 +27,7 @@ import de.cube3d.entities.Person;
 import de.cube3d.entities.enums.Role;
 
 @RestController
-@RequestMapping("/cube/restAPI")
+@RequestMapping("/restAPI")
 public class PersonRestController {
 
 	private Logger log = LoggerFactory.getLogger(PersonRestController.class);	

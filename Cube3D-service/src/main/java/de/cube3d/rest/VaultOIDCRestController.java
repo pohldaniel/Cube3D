@@ -60,7 +60,7 @@ public class VaultOIDCRestController {
 	@Value("${oidc.vault.client.provider}")
 	private String provider;
 	
-	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fvault%2Foidc%2Fcallback";
+	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fcube%2Fvault%2Foidc%2Fcallback";
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> login(@RequestAttribute("code") String code, @RequestAttribute("returnUrl") String returnUrl, @RequestAttribute("state") String state) throws URISyntaxException, UnsupportedEncodingException {
@@ -78,8 +78,8 @@ public class VaultOIDCRestController {
 		}else {
 
 			URI uri = state.equalsIgnoreCase("none") ?
-				new URI("https://localhost:4200/gateway?code=" + code + "&provider=vault") :			
-				new URI("https://localhost:4200/gateway?code=" + code + "&provider=vault"+ "&returnUrl=" + state);
+				new URI("https://localhost:4200/cubeui/gateway?code=" + code + "&provider=vault") :			
+				new URI("https://localhost:4200/cubeui/gateway?code=" + code + "&provider=vault"+ "&returnUrl=" + state);
 
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -107,7 +107,7 @@ public class VaultOIDCRestController {
 		parameters.put("code", code);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://localhost:8080/vault/oidc/callback");
+		parameters.put("redirect_uri", "https://localhost:8080/cube/vault/oidc/callback");
 		parameters.put("scope", "openid user groups");
 		
 		String form = parameters.keySet().stream()
@@ -165,7 +165,7 @@ public class VaultOIDCRestController {
 		parameters.put("refresh_token", accessToken);
 		parameters.put("client_id", this.clinetId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://localhost:8080/vault/oidc/callback");
+		parameters.put("redirect_uri", "https://localhost:8080/cube/vault/oidc/callback");
 		parameters.put("scope", "openid,user,groups");
 		
 		String form = parameters.keySet().stream()

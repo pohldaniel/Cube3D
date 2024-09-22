@@ -15,7 +15,7 @@ import de.cube3d.entities.Person;
 import de.cube3d.entities.TopicArea;
 
 @RestController
-@RequestMapping("/cube/restAPI")
+@RequestMapping("/restAPI")
 public class TopicAreaRestController {
 
 	private Logger log = LoggerFactory.getLogger(TopicAreaRestController.class);

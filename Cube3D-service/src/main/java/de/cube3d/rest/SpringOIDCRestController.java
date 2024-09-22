@@ -26,6 +26,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,9 +51,16 @@ import de.cube3d.utils.SSLUtil;
 @RequestMapping("/spring")
 public class SpringOIDCRestController {
 	private static final Logger LOG = LoggerFactory.getLogger(SpringOIDCRestController.class);
-	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fspring%2Foidc%2Fcallback";
-	private String clientId = "cube";
-	private String clientSecret = "secret";
+	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fcube%2Fspring%2Foidc%2Fcallback";
+
+	@Value("${oidc.vault.client.endpoint}")
+	private String endpoint;
+	
+	@Value("${oidc.spring.client.id}")
+	private String clientId;
+	
+	@Value("${oidc.spring.client.secret}")
+	private String clientSecret;
 	
 	@Autowired
 	SpringOIDCClient springOIDCClient;
@@ -63,8 +71,8 @@ public class SpringOIDCRestController {
 		
 		if(code.equalsIgnoreCase("undefined")) {	
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("https://localhost:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
-				new URI("https://localhost:8443/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
+				new URI("https://localhost:8443/idp/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
+				new URI("https://localhost:8443/idp/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -72,8 +80,8 @@ public class SpringOIDCRestController {
 		}else {
 
 			URI uri = state.equalsIgnoreCase("none") ?
-				new URI("https://localhost:4200/gateway?code=" + code + "&provider=spring") :			
-				new URI("https://localhost:4200/gateway?code=" + code + "&provider=spring" + "&returnUrl=" + state);
+				new URI("https://localhost:4200/cubeui/gateway?code=" + code + "&provider=spring") :			
+				new URI("https://localhost:4200/cubeui/gateway?code=" + code + "&provider=spring" + "&returnUrl=" + state);
 
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -101,7 +109,7 @@ public class SpringOIDCRestController {
 		parameters.put("code", code);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://localhost:8080/spring/oidc/callback");
+		parameters.put("redirect_uri", "https://localhost:8080/cube/spring/oidc/callback");
 		parameters.put("scope", "openid");
 		
 		String form = parameters.keySet().stream()
@@ -123,7 +131,7 @@ public class SpringOIDCRestController {
 				.setSSLSocketFactory(csf)
 				.build();
 
-		HttpPost httpPost = new HttpPost("https://localhost:8443/oauth2/token");        	
+		HttpPost httpPost = new HttpPost("https://localhost:8443/idp/oauth2/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
@@ -160,7 +168,7 @@ public class SpringOIDCRestController {
 		parameters.put("refresh_token", refreshToken);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://localhost:8080/spring/oidc/callback");
+		parameters.put("redirect_uri", "https://localhost:8080/cube/spring/oidc/callback");
 		parameters.put("scope", "openid");
 		
 		String form = parameters.keySet().stream()
@@ -181,7 +189,7 @@ public class SpringOIDCRestController {
 				.setSSLSocketFactory(csf)
 				.build();
 		
-		HttpPost httpPost = new HttpPost("https://localhost:8443/oauth2/token");        	
+		HttpPost httpPost = new HttpPost("https://localhost:8443/idp/oauth2/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		

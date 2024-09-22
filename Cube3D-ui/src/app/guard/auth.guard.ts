@@ -62,7 +62,7 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
           }else{     
             snackService.open('ERROR', "Token Expired");
             authenticationService.logout();
-            window.location.href = environment.baseUrl + '/spring/login?returnUrl=' + state.url.replace(/\//g, "");
+            window.location.href = environment.baseUrl + '/cube/spring/login?returnUrl=' + state.url.replace(/\//g, "");
             return false;
           }
         }),
@@ -76,7 +76,7 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
     }
   }else{
     //router.navigate(['/login'], { queryParams: { returnUrl: state.url.replace(/\//g, "") }});
-    window.location.href = environment.baseUrl + '/' + environment.defaultProvider +'/login?returnUrl=' + state.url.replace(/\//g, "");
+    window.location.href = environment.baseUrl + '/cube/' + environment.defaultProvider +'/login?returnUrl=' + state.url.replace(/\//g, "");
     return false;
   }
 };

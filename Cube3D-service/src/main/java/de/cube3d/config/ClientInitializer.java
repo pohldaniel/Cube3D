@@ -34,7 +34,7 @@ public class ClientInitializer {
 	@Bean
 	public SpringOIDCClient springOIDCClient() {
 		return new SpringOIDCClient.Builder()
-				.endpoint(endpointSpring)
+				.endpoint(endpointSpring + "/idp")
 				.clientId(clientIdSpring)
 				.clientSecret(clientSecretSpring)	
 				.build(); 

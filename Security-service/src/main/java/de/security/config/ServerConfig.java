@@ -75,7 +75,7 @@ public class ServerConfig {
 	                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
 	                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 	                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-	                .redirectUri("https://localhost:8080/spring/oidc/callback")
+	                .redirectUri("https://localhost:8080/cube/spring/oidc/callback")
 	                .scope("openid")	               
 	                .build();
 	}

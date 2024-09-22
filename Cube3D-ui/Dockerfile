@@ -17,7 +17,6 @@ FROM nginx:latest AS deployer
     #ADD certs/angular-server.crt /etc/nginx/certs/angular-server.crt
 	#ADD certs/angular-server.key /etc/nginx/certs/angular-server.key
 	EXPOSE 4200
-    EXPOSE 8080
 	EXPOSE 443
 	EXPOSE 80
 	CMD ["nginx", "-g", "daemon off;"]

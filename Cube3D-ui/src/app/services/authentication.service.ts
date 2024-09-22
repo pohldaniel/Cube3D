@@ -74,25 +74,25 @@ import {Role} from '../models/Role.enum';
   }
 
   login(id: string, password: string) {
-    return this.http.post<Person>(environment.baseUrl + '/auth/authenticate', {id, password}, {headers: this.headers});
+    return this.http.post<Person>(environment.baseUrl + '/cube/auth/authenticate', {id, password}, {headers: this.headers});
   }
 
   getToken(person: Person) {
-    return this.http.post<Person>(environment.baseUrl + '/auth/token', JSON.stringify(person), {headers: this.headers});
+    return this.http.post<Person>(environment.baseUrl + '/cube/auth/token', JSON.stringify(person), {headers: this.headers});
   }
 
   refreshToken() : Observable<string> {
-    return this.http.post<string>(environment.baseUrl + '/auth/refresh', {'token': this.jwtSubject.value}, {headers: this.headers});   
+    return this.http.post<string>(environment.baseUrl + '/cube/auth/refresh', {'token': this.jwtSubject.value}, {headers: this.headers});   
   }
 
   gethTokenOIDC(code : string){
     const params = new HttpParams()
     .set('code', code)
-    return this.http.get<any[]>(environment.baseUrl + '/' + this.providerSubject.value as String + '/oidc/token', {params, headers: this.headers});
+    return this.http.get<any[]>(environment.baseUrl + '/cube/' + this.providerSubject.value as String + '/oidc/token', {params, headers: this.headers});
   }
 
   refreshTokenOIDC() : Observable<string> {
-    return this.http.post<string>(environment.baseUrl + '/' + this.providerSubject.value as String  + '/oidc/refresh', {'token': JSON.parse(this.tokenMapSubject.value as string).token, 'accessToken': JSON.parse(this.tokenMapSubject.value as string).accessToken, 'user': JSON.parse(this.tokenMapSubject.value as string).user, 'refreshToken': JSON.parse(this.tokenMapSubject.value as string).refreshToken}, {headers: this.headers});   
+    return this.http.post<string>(environment.baseUrl + '/cube/' + this.providerSubject.value as String  + '/oidc/refresh', {'token': JSON.parse(this.tokenMapSubject.value as string).token, 'accessToken': JSON.parse(this.tokenMapSubject.value as string).accessToken, 'user': JSON.parse(this.tokenMapSubject.value as string).user, 'refreshToken': JSON.parse(this.tokenMapSubject.value as string).refreshToken}, {headers: this.headers});   
   }
 
   logout() {

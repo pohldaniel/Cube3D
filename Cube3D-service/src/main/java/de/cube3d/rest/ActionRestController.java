@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/cube/restAPI")
+@RequestMapping("/restAPI")
 public class ActionRestController {
 
 	private Logger log = LoggerFactory.getLogger( ActionRestController.class);
