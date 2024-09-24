@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --serve-path /cubeui",
     "build": "ng build",
     "build-prod": "ng build --configuration prod",
     "build-dev": "ng build --configuration dev",

@@ -72,7 +72,7 @@ public class SpringOIDCClient {
                                                                  new BasicHeader(HttpHeaders.ACCEPT, "application/json"),
 																 new BasicHeader("Authorization", "Basic " + credentials64)));
 		
-		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
+		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getDefaultSSLContext());
 		
 		client = HttpClients.custom()	
 				.setDefaultHeaders(header)

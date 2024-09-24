@@ -16,6 +16,7 @@ public class CertificateAuthenticationProvider implements AuthenticationProvider
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		System.out.println("Username: " + authentication.getName());
 		UserDetails  userDetails = userDetailsService.loadUserByUsername(authentication.getName());
 		Authentication authenticated = new UsernamePasswordAuthenticationToken(userDetails, "not used", userDetails.getAuthorities());
 		return authenticated;

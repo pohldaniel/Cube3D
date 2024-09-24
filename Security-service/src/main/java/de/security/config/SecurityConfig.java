@@ -11,10 +11,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter;
 
+
+import de.security.CertificateFilter;
 import de.security.components.CertificateAuthenticationProvider;
 import de.security.components.PasswordAuthenticationProvider;
 import de.security.service.CubeUserDetailsService;
+
 
 @EnableWebSecurity
 @Configuration
@@ -72,12 +76,11 @@ public class SecurityConfig {
 	
 	@Bean
 	@Order(3)
-    public SecurityFilterChain certFilterChain(HttpSecurity http) throws Exception {
-		
-  	
+    public SecurityFilterChain certFilterChain(HttpSecurity http) throws Exception { 	
 		http
-		 //.securityMatcher("/login") 
+		 .securityMatcher("/login", "/perform_login") 
 		 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/images/**","/css/**", "/message").permitAll().anyRequest().authenticated())
+		 .addFilterBefore(new CertificateFilter(), X509AuthenticationFilter.class)
 		 .x509(cert ->cert.subjectPrincipalRegex("CN=(.*?)(?:,|$)"))
 		 .userDetailsService(cubeUserDetailsService())
 		 .authenticationProvider(certificateAuthenticationProvider()).formLogin(form->form
@@ -87,6 +90,7 @@ public class SecurityConfig {
                  .permitAll());
 	     return http.build();
 	}
+	
 	
 	
 	/*private ClientRegistration cubeClientRegistration() {

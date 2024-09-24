@@ -5,6 +5,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -26,6 +27,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class ServerConfig {
 
+	@Value("${oidc.spring.client.callback}")
+	private String callback;
+	
 	@Bean
     @Order(0)
     SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -75,7 +79,7 @@ public class ServerConfig {
 	                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
 	                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 	                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-	                .redirectUri("https://localhost:8080/cube/spring/oidc/callback")
+	                .redirectUri(callback)
 	                .scope("openid")	               
 	                .build();
 	}

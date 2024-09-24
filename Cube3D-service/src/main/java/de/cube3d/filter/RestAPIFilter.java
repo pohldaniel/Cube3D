@@ -30,15 +30,18 @@ public class RestAPIFilter implements Filter{
 			 "http://localhost:8080",
 			 "http://127.0.0.1:8080", 
 			 "http://0:0:0:0:0:0:0:1:8080",
+			 "http://fluentsoul.org",
 			 "https://localhost:4200", 
 			 "https://127.0.0.1:4200", 
 			 "https://0:0:0:0:0:0:0:1:4200",
 			 "https://localhost:8080",
 			 "https://127.0.0.1:8080", 
-			 "https://0:0:0:0:0:0:0:1:8080"));
+			 "https://0:0:0:0:0:0:0:1:8080", 
+			 "https://fluentsoul.org"));
 	 
 	 private JwtService jwtService;
 	 private SpringOIDCClient springOIDCClient;	 
+	 @SuppressWarnings("unused")
 	 private VaultOIDCClient vaultOIDCClient;
 	 private boolean forceValidation;
 	 

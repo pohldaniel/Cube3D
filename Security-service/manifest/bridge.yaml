@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: security-server-service-bridge
+spec:
+  type: ExternalName
+  externalName: security-server-service.cube.svc.cluster.local

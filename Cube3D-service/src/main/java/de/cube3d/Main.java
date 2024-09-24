@@ -15,6 +15,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import de.cube3d.components.SpringOIDCClient;
 import de.cube3d.components.VaultOIDCClient;
 import de.cube3d.filter.RestAPIFilter;
+import de.cube3d.rest.SpringOIDCRestController;
 import de.cube3d.service.JwtService;
 import de.cube3d.utils.HibernateUtil;
 import de.cube3d.utils.SSLUtil;
@@ -42,11 +43,14 @@ public class Main extends SpringBootServletInitializer{
 	
 	@Autowired
 	private VaultOIDCClient vaultOIDCClient;
+	
+	@Autowired
+	private SpringOIDCRestController springOIDCRestContrller;
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
 		Locale.setDefault(Locale.GERMANY);
-		SSLUtil.init("password");
+		SSLUtil.init(System.getenv("P12PASSWORD"));
 		SpringApplication.run(Main.class, args);    	  	
 	}
 
@@ -63,5 +67,6 @@ public class Main extends SpringBootServletInitializer{
 		restAPIFilterRegistration.getFilter().setSpringOIDCClient(springOIDCClient);
 		restAPIFilterRegistration.getFilter().setVaultOIDCClient(vaultOIDCClient);
 		restAPIFilterRegistration.getFilter().setForceValidation(forceValidation);
+		springOIDCRestContrller.init();
 	}
 }

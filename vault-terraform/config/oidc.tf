@@ -44,8 +44,8 @@ resource "vault_identity_oidc_client" "cube" {
   depends_on = [vault_identity_oidc_assignment.userassignment]
   name          = "cube"
   redirect_uris = [
-    "http://localhost:8080/vault/oidc/callback",
-	"https://localhost:8080/vault/oidc/callback"
+    "http://localhost:8080/cube/vault/oidc/callback",
+	"https://localhost:8080/cube/vault/oidc/callback"
   ]
   key = "key"
   assignments = ["user-assignment"]

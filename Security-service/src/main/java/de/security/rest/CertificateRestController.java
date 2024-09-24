@@ -8,6 +8,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/cert")
 public class CertificateRestController {
 
+	@Value("${server.ssl.trust-store-password}")
+	private String sslpassword;
+	
 	@RequestMapping(value = "/root", method = RequestMethod.GET)
 	public ResponseEntity<InputStreamResource> root() throws Exception {		
-		X509Certificate rootcert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube root");
+		X509Certificate rootcert = CertificateService.loadX509CertificateFromStore("certs/timera-trust.p12", sslpassword, "timera root");
 		InputStreamResource resource =  CertificateService.getX509CertificateStream(rootcert);
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.add("Content-Disposition", "attachment; filename=root.crt");
@@ -35,12 +39,12 @@ public class CertificateRestController {
 	@RequestMapping(value = "/own", method = RequestMethod.GET)
 	public void getFile(HttpServletResponse response, Authentication authentication) throws Exception {
 		
-		//CertificateService.listX509CertificatesFromStore("certs/cube-trust.p12", "password");
+		//CertificateService.listX509CertificatesFromStore("certs/cube-trust.p12", sslpassword);
 		
-		RSAPublicKey isspub = CertificateService.loadRSAPublicKeyFromStore("certs/cube-trust.p12", "password", "cube issuing");
-    	RSAPrivateKey isskey = CertificateService.loadRSAPrivateKeyFromStore("certs/cube-trust.p12", "password", "cube issuing pair");
-    	X509Certificate isscert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube issuing");
-    	X509Certificate intcert = CertificateService.loadX509CertificateFromStore("certs/cube-trust.p12", "password", "cube intermediate");
+		RSAPublicKey isspub = CertificateService.loadRSAPublicKeyFromStore("certs/timera-trust.p12", sslpassword, "timera issuing");
+    	RSAPrivateKey isskey = CertificateService.loadRSAPrivateKeyFromStore("certs/timera-trust.p12", sslpassword, "timera issuing pair");
+    	X509Certificate isscert = CertificateService.loadX509CertificateFromStore("certs/timera-trust.p12", sslpassword, "timera issuing");
+    	X509Certificate intcert = CertificateService.loadX509CertificateFromStore("certs/timera-trust.p12", sslpassword, "timera intermediate");
     	
     	//RSAPublicKey isspub = CertificateService.loadRSAPublicKey(Certificate.ISS_PUBLIC);
     	//RSAPrivateKey isskey = CertificateService.loadRSAPrivateKey(Certificate.ISS_PRIVATE);

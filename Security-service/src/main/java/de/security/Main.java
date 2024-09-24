@@ -6,6 +6,7 @@ import java.security.cert.X509Certificate;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -31,7 +32,7 @@ public class Main extends SpringBootServletInitializer{
 		//System.setProperty("javax.net.ssl.trustStore", "classpath:certs/spring-trust.p12"); 
 		//System.setProperty("javax.net.ssl.trustStorePassword", "password");
 		//System.setProperty("javax.net.ssl.trustStoreType", "PKCS12");
-		SSLUtil.init("password");
+		SSLUtil.init(System.getenv("P12PASSWORD"));
 		SpringApplication.run(Main.class, args);    	  	
 	}
 

@@ -53,7 +53,7 @@ public class BouncyCastleCertificateGenerator {
         
         // Generate a new KeyPair and sign it using the Root Cert Private Key
         // by generating a CSR (Certificate Signing Request)
-        X500Name issuedCertSubject = new X500Name("CN=actionmanager,OU=Development,C=DE,ST=Saxonia,L=Leipzig,O=Main Gruppe");
+        X500Name issuedCertSubject = new X500Name("CN=" + issuer + ",OU=Development,C=DE,ST=Saxonia,L=Leipzig,O=Main Gruppe");
         BigInteger issuedCertSerialNum = BigInteger.valueOf(System.currentTimeMillis());
         KeyPair issuedCertKeyPair = keyPairGenerator.generateKeyPair();
 

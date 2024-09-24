@@ -81,7 +81,7 @@ public class VaultOIDCClient {
 		List<BasicHeader> header = new ArrayList<>(Arrays.asList(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded"),
                                                                  new BasicHeader(HttpHeaders.ACCEPT, "application/json")));
 		
-		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
+		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getDefaultSSLContext());
 		
 		client = HttpClients.custom()	
 				.setDefaultHeaders(header)

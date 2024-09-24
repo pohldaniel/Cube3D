@@ -50,11 +50,18 @@ import de.cube3d.utils.SSLUtil;
 @RestController
 @RequestMapping("/spring")
 public class SpringOIDCRestController {
+	
 	private static final Logger LOG = LoggerFactory.getLogger(SpringOIDCRestController.class);
-	private String redirect = "https%3A%2F%2Flocalhost%3A8080%2Fcube%2Fspring%2Foidc%2Fcallback";
+	private String redirect;
 
-	@Value("${oidc.vault.client.endpoint}")
-	private String endpoint;
+	@Value("${oidc.spring.client.endpoint.idp}")
+	private String endpointIdp;
+	
+	@Value("${oidc.spring.client.endpoint.ui}")
+	private String endpointUI;
+	
+	@Value("${oidc.spring.client.callback}")
+	private String callback;
 	
 	@Value("${oidc.spring.client.id}")
 	private String clientId;
@@ -65,23 +72,27 @@ public class SpringOIDCRestController {
 	@Autowired
 	SpringOIDCClient springOIDCClient;
 	
+	public void init() throws UnsupportedEncodingException {
+		this.redirect = URLEncoder.encode(callback, StandardCharsets.UTF_8.toString());
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> login(@RequestAttribute("code") String code, @RequestAttribute("returnUrl") String returnUrl, @RequestAttribute("state") String state) throws URISyntaxException, ParseException, IOException {
 		LOG.info("/spring/login was called");	
 		
 		if(code.equalsIgnoreCase("undefined")) {	
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("https://localhost:8443/idp/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
-				new URI("https://localhost:8443/idp/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
-	
+				new URI(endpointIdp + "/idp/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www") :			
+				new URI(endpointIdp + "/idp/oauth2/authorize?client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid&nonce=www&state=" + returnUrl);
+			
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
 			return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 		}else {
 
 			URI uri = state.equalsIgnoreCase("none") ?
-				new URI("https://localhost:4200/cubeui/gateway?code=" + code + "&provider=spring") :			
-				new URI("https://localhost:4200/cubeui/gateway?code=" + code + "&provider=spring" + "&returnUrl=" + state);
+				new URI(endpointUI +"/cubeui/gateway?code=" + code + "&provider=spring") :			
+				new URI(endpointUI +"/cubeui/gateway?code=" + code + "&provider=spring" + "&returnUrl=" + state);
 
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -109,7 +120,7 @@ public class SpringOIDCRestController {
 		parameters.put("code", code);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://localhost:8080/cube/spring/oidc/callback");
+		parameters.put("redirect_uri", "https://fluentsoul.org/cube/spring/oidc/callback");
 		parameters.put("scope", "openid");
 		
 		String form = parameters.keySet().stream()
@@ -124,14 +135,14 @@ public class SpringOIDCRestController {
 		
 		
 		List<BasicHeader> header = new ArrayList<>(Arrays.asList(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")));
-		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
+		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getDefaultSSLContext());
 
 		CloseableHttpClient client = HttpClients.custom()	
 				.setDefaultHeaders(header)
 				.setSSLSocketFactory(csf)
 				.build();
 
-		HttpPost httpPost = new HttpPost("https://localhost:8443/idp/oauth2/token");        	
+		HttpPost httpPost = new HttpPost(endpointIdp + "/idp/oauth2/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
@@ -168,7 +179,7 @@ public class SpringOIDCRestController {
 		parameters.put("refresh_token", refreshToken);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://localhost:8080/cube/spring/oidc/callback");
+		parameters.put("redirect_uri", "https://fluentsoul.org/cube/spring/oidc/callback");
 		parameters.put("scope", "openid");
 		
 		String form = parameters.keySet().stream()
@@ -182,14 +193,14 @@ public class SpringOIDCRestController {
 						.collect(Collectors.joining("&"));
 		
 		List<BasicHeader> header = new ArrayList<>(Arrays.asList(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")));
-		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
+		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getDefaultSSLContext());
 
 		CloseableHttpClient client = HttpClients.custom()	
 				.setDefaultHeaders(header)
 				.setSSLSocketFactory(csf)
 				.build();
 		
-		HttpPost httpPost = new HttpPost("https://localhost:8443/idp/oauth2/token");        	
+		HttpPost httpPost = new HttpPost(endpointIdp + "/idp/oauth2/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
@@ -219,7 +230,7 @@ public class SpringOIDCRestController {
 			ObjectMapper mapper = new ObjectMapper();
 			String _token = "token=" + URLEncoder.encode(token, StandardCharsets.UTF_8.toString());
 			List<BasicHeader> header = new ArrayList<>(Arrays.asList(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded"), new BasicHeader(HttpHeaders.AUTHORIZATION, "Basic Y3ViZTpzZWNyZXQ"), new BasicHeader(HttpHeaders.ACCEPT, "application/json")));
-			final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getSSLContext("password"));
+			final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(SSLUtil.getDefaultSSLContext());
 	
 			CloseableHttpClient client = HttpClients.custom()	
 					.setDefaultHeaders(header)

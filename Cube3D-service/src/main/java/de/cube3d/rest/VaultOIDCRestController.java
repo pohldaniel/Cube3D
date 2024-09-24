@@ -51,6 +51,9 @@ public class VaultOIDCRestController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VaultOIDCRestController.class);
 	
+	@Value("${oidc.vault.client.endpoint}")
+	private String endpoint;
+	
 	@Value("${oidc.vault.client.id}")
 	private String clientId;
 	
@@ -69,8 +72,8 @@ public class VaultOIDCRestController {
 		if(code.equalsIgnoreCase("undefined")) {
 						
 			URI uri = returnUrl.equalsIgnoreCase("none") ?
-				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
-				new URI("https://localhost:8200/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
+				new URI(endpoint + "/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups") :			
+				new URI(endpoint + "/ui/vault/identity/oidc/provider/" + provider + "/authorize?with=github&client_id=" + this.clientId + "&redirect_uri=" + this.redirect + "&response_type=code&scope=openid%20user%20groups&state=" + returnUrl);
 	
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.setLocation(uri);
@@ -131,7 +134,7 @@ public class VaultOIDCRestController {
 				//.setProxy(new HttpHost(proxyHost, proxyPort, "http"))
 				.build();
 
-		HttpPost httpPost = new HttpPost("https://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
+		HttpPost httpPost = new HttpPost(endpoint + "/v1/identity/oidc/provider/" + provider + "/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
@@ -189,7 +192,7 @@ public class VaultOIDCRestController {
 				//.setProxy(new HttpHost(proxyHost, proxyPort, "http"))
 				.build();
 		
-		HttpPost httpPost = new HttpPost("https://localhost:8200/v1/identity/oidc/provider/" + provider + "/token");        	
+		HttpPost httpPost = new HttpPost(endpoint + "/v1/identity/oidc/provider/" + provider + "/token");        	
 		httpPost.setEntity(new StringEntity(form));
 		CloseableHttpResponse response = client.execute(httpPost);
 		
