@@ -24,8 +24,8 @@ cp certs/spring-server.p12 ../Security-service/src/main/resources/certs
 #Angular Server
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/angular-server.key -out certs/angular-server.csr -subj "/CN=Angular Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
 openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/angular-server.csr -out certs/angular-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
-cp certs/angular-server.crt ../Cube3D-ui
-cp certs/angular-server.key ../Cube3D-ui
+cp certs/angular-server.crt ../Cube3D-ui/certs
+cp certs/angular-server.key ../Cube3D-ui/certs
 
 #Cube Intermediate
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-int.key -out certs/cube-int.csr -subj "/CN=Cube Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"

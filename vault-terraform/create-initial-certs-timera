@@ -1,0 +1,81 @@
+mkdir -p certs
+
+#Create Root Authority
+openssl genrsa -out certs/root.key 4096
+openssl req -x509 -new -nodes -key certs/root.key -sha256 -days 3650 -out certs/root.crt -subj "/CN=Timera Root CA/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
+cat certs/root.key certs/root.crt > certs/root.pem
+
+#Timera Server
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/timera-server.key -out certs/timera-server.csr -subj "/CN=Timera Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,DNS:cube3d-backend,DNS:security-server,DNS:fluentsoul.org,IP:127.0.0.1,IP:3.75.169.156,IP:35.157.11.109" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/timera-server.csr -out certs/timera-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,DNS:cube3d-backend,DNS:security-server,DNS:fluentsoul.org,IP:127.0.0.1,IP:3.75.169.156,IP:35.157.11.109\nextendedKeyUsage=serverAuth\nkeyUsage=critical,digitalSignature")
+
+#Timera Client
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/timera-client.key -out certs/timera-client.csr -subj "/CN=Timera Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/timera-client.csr -out certs/timera-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth\nkeyUsage=critical,digitalSignature")
+
+#Spring Server
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-server.key -out certs/spring-server.csr -subj "/CN=Spring Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,DNS:cube3d-backend,DNS:security-server,DNS:fluentsoul.org,IP:127.0.0.1,IP:3.75.169.156,IP:35.157.11.109" -addext "extendedKeyUsage=serverAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/spring-server.csr -out certs/spring-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,DNS:cube3d-backend,DNS:security-server,DNS:fluentsoul.org,IP:127.0.0.1,IP:3.75.169.156,IP:35.157.11.109\nextendedKeyUsage=serverAuth")
+cat certs/spring-server.crt certs/root.crt > certs/spring-server.pem
+openssl pkcs12 -export -out certs/spring-server.p12 -inkey certs/spring-server.key -in certs/spring-server.crt -name "Spring Server" -passout pass:raupenschmaus
+cp certs/spring-server.p12 ../Cube3D-service/src/main/resources/certs
+cp certs/spring-server.p12 ../Security-service/src/main/resources/certs
+
+#Angular Server
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/angular-server.key -out certs/angular-server.csr -subj "/CN=Angular Server/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "subjectAltName=DNS:localhost,DNS:cube3d-backend,DNS:security-server,DNS:fluentsoul.org,IP:127.0.0.1,IP:3.75.169.156,IP:35.157.11.109" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=serverAuth,clientAuth"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/angular-server.csr -out certs/angular-server.crt -days 3650 -extfile <(printf "subjectAltName=DNS:localhost,DNS:cube3d-backend,DNS:security-server,DNS:fluentsoul.org,IP:127.0.0.1,IP:3.75.169.156,IP:35.157.11.109\nextendedKeyUsage=serverAuth,clientAuth\nkeyUsage=critical,digitalSignature")
+cp certs/angular-server.crt ../Cube3D-ui/certs
+cp certs/angular-server.key ../Cube3D-ui/certs
+
+#Timera Intermediate
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/timera-int.key -out certs/timera-int.csr -subj "/CN=Timera Intermediate/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage =critical,cRLSign,keyCertSign"
+openssl x509 -req -CA certs/root.crt -CAkey certs/root.key -CAcreateserial -in certs/timera-int.csr -out certs/timera-int.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:1\nkeyUsage =critical,cRLSign,keyCertSign")
+
+#Timera Issuing
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/timera-iss.key -out certs/timera-iss.csr -subj "/CN=Timera Issuing/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "keyUsage=critical,cRLSign,keyCertSign"
+openssl x509 -req -CA certs/timera-int.crt -CAkey certs/timera-int.key -CAcreateserial -in certs/timera-iss.csr -out certs/timera-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign")
+openssl x509 -pubkey -noout -in certs/timera-iss.crt  > certs/timera-iss.pub
+openssl pkcs12 -export -out certs/timera-trust.p12 -inkey certs/timera-iss.key -in certs/timera-iss.crt -name "Timera Issuing Pair" -passout pass:raupenschmaus
+cat certs/timera-iss.crt certs/timera-int.crt certs/root.crt > certs/nginx.crt
+
+
+#Spring Client
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-client.key -out certs/spring-client.csr -subj "/CN=Spring Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/timera-iss.crt -CAkey certs/timera-iss.key -CAcreateserial -in certs/spring-client.csr -out certs/spring-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
+#cat certs/spring-client.crt certs/timera-iss.crt > certs/spring-client.pem
+openssl pkcs12 -export -out certs/spring-client.p12 -inkey certs/spring-client.key -in certs/spring-client.crt -name "Spring Client" -passout pass:raupenschmaus
+cp certs/spring-client.p12 ../Cube3D-service/src/main/resources/certs
+cp certs/spring-client.p12 ../Security-service/src/main/resources/certs
+
+#Daniel Cert
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/daniel.key -out certs/daniel.csr -subj "/CN=Daniel Pohl/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/timera-iss.crt -CAkey certs/timera-iss.key -CAcreateserial -in certs/daniel.csr -out certs/daniel.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
+cat certs/daniel.crt certs/timera-iss.crt certs/timera-int.crt > certs/daniel.pem
+openssl pkcs12 -export -out certs/daniel.p12 -inkey certs/daniel.key -in certs/daniel.pem -name "Daniel Pohl" -passout pass:
+
+#Admin Cert
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/admin.key -out certs/admin.csr -subj "/CN=admin/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/timera-iss.crt -CAkey certs/timera-iss.key -CAcreateserial -in certs/admin.csr -out certs/admin.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
+cat certs/admin.crt certs/timera-iss.crt certs/timera-int.crt > certs/admin.pem
+openssl pkcs12 -export -out certs/admin.p12 -inkey certs/admin.key -in certs/admin.pem -name "Admin" -passout pass:
+
+#Personmanager Cert
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/personmanager.key -out certs/personmanager.csr -subj "/CN=personmanager/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/timera-iss.crt -CAkey certs/timera-iss.key -CAcreateserial -in certs/personmanager.csr -out certs/personmanager.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
+cat certs/personmanager.crt certs/timera-iss.crt certs/timera-int.crt > certs/personmanager.pem
+openssl pkcs12 -export -out certs/personmanager.p12 -inkey certs/personmanager.key -in certs/personmanager.pem -name "Personmanager" -passout pass:
+
+#User Cert
+openssl req -new -newkey rsa:4096 -nodes -keyout certs/user.key -out certs/user.csr -subj "/CN=user/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
+openssl x509 -req -CA certs/timera-iss.crt -CAkey certs/timera-iss.key -CAcreateserial -in certs/user.csr -out certs/user.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
+cat certs/user.crt certs/timera-iss.crt certs/timera-int.crt > certs/user.pem
+openssl pkcs12 -export -out certs/user.p12 -inkey certs/user.key -in certs/user.pem -name "User" -passout pass:
+
+#Timera TrustStore unfortunately there is no way without keytool
+keytool -import -trustcacerts -noprompt -file certs/timera-iss.crt -alias "Timera Issuing" -deststoretype PKCS12 -keystore certs/timera-trust.p12 -deststorepass raupenschmaus
+keytool -import -trustcacerts -noprompt -file certs/timera-int.crt -alias "Timera Intermediate" -deststoretype PKCS12 -keystore certs/timera-trust.p12 -deststorepass raupenschmaus
+keytool -import -trustcacerts -noprompt -file certs/root.crt -alias "Timera Root" -deststoretype PKCS12 -keystore certs/timera-trust.p12 -deststorepass raupenschmaus
+cp certs/timera-trust.p12 ../Security-service/src/main/resources/certs
+
+#cp certs/timera-iss.crt ../Security-service/src/main/resources/certs
+#keytool -import -trustcacerts -noprompt -file root.crt -alias "Timera Root" -deststoretype PKCS12 -keystore spring-trust-root.p12 -deststorepass password
