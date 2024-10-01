@@ -9,6 +9,8 @@ import {PersonComponent} from './pages/person/person.component';
 import {SettingsComponent} from './pages/settings/settings.component';
 import {WebglComponent} from './pages/webgl/webgl.component';
 import {FibonacciComponent} from './pages/fibonacci/fibonacci.component';
+import {TriangleComponent} from './pages/triangle/triangle.component';
+import {Wasm3dCubeComponent} from './pages/cube/3d-cube.component';
 import {authGuard} from './guard/auth.guard';
 import {Role, RoleList} from './models/Role.enum';
 
@@ -33,11 +35,21 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data : {showSidebar: true, Roles: RoleList  }
   }, 
-  { path: 'wasm', 
+  { path: 'fibonacci', 
     component: FibonacciComponent,
     canActivate: [authGuard],
     data : {showSidebar: true, Roles: RoleList}
   },  
+  { path: 'triangle', 
+    component: TriangleComponent,
+    canActivate: [authGuard],
+    data : {showSidebar: true, Roles: RoleList}
+  },  
+  { path: 'cube', 
+    component: Wasm3dCubeComponent,
+    canActivate: [authGuard],
+    data : {showSidebar: true, Roles: RoleList}
+  }, 
   { path: 'person', 
     component: PersonComponent,
     canActivate: [authGuard],

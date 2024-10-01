@@ -72,3 +72,8 @@ https://auth-server:8443/oauth2/authorize?client_id=cube&redirect_uri=https%3A%2
 
 https://auth-server:8443/download/own
 https://auth-server:8443/download/root
+
+
+emcc fibonacci.c -Os -s WASM=1 -s MODULARIZE=1 -o fibonacci.js
+emcc -Os SOIL/src/image_DXT.c SOIL/src/image_helper.c SOIL/src/SOIL.c SOIL/src/stb_image_aug.c 3d-cube.c -o 3d-cube.js -s LEGACY_GL_EMULATION=1 -I SOIL/src -s EXPORTED_RUNTIME_METHODS="['ccall']" -s FORCE_FILESYSTEM=1 -s MODULARIZE=1 -s EXPORT_NAME='Cube3dModule'
+em++ librarytest.cc --js-library library.js -o triangle.js -s "EXPORTED_FUNCTIONS=['_WAFNDraw','_main']" -s "EXPORTED_RUNTIME_METHODS=['ccall', 'print', 'printErr']" -s MODULARIZE=1 -s EXPORT_NAME='TriangleModule'

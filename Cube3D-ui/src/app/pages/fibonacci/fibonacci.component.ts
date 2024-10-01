@@ -2,14 +2,13 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Subscription} from 'rxjs';
 import {filter, tap} from 'rxjs/operators';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {FibonacciWasmService} from './../../services/fibonacci-wasm.service';
 
 @Component({
   selector: 'app-fibonacci',
   templateUrl: './fibonacci.component.html',
   styleUrls: ['./fibonacci.component.scss'],
-  //providers: [FibonacciWasmService],
   imports: [CommonModule, FormsModule],
   standalone: true,
 })

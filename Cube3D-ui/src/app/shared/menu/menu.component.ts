@@ -85,7 +85,9 @@ export class MenuComponent implements OnInit{
     .set(Math.pow(2, 2), {target : '/help', description: 'Hilfe', description2: '', class : 'two-three', index : 2} as MenuItem)
 
     .set(Math.pow(2, 3), {target : '/webgl', description: 'Web GL', description2: '', class : 'three-one', index : 3} as MenuItem)
-    .set(Math.pow(2, 6), {target : '/wasm', description: 'WebAssembly', description2: '', class : 'three-two', index : 6} as MenuItem)
+    .set(Math.pow(2, 6), {target : '/fibonacci', description: 'Fibonacci', description2: '', class : 'three-two', index : 6} as MenuItem)
+    .set(Math.pow(2, 7), {target : '/triangle', description: 'Triangle', description2: '', class : 'three-three', index : 7} as MenuItem)
+    .set(Math.pow(2, 8), {target : '/cube', description: 'Cube', description2: '', class : 'three-four', index : 8} as MenuItem)
 
     .set(Math.pow(2, 4), {target : '/person', description: 'Benutzerverwaltung', description2: '', class : 'four-one', index : 4} as MenuItem)
     .set(Math.pow(2, 5), {target : '/settings', description: 'Einstellungen', description2: '', class : 'four-two', index : 5} as MenuItem);

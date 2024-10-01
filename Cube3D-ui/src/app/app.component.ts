@@ -29,15 +29,16 @@ export class AppComponent {
       //immediately logout
       this.showSidebar$ = this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      map(() => activatedRoute),
-      map(route => {      
+        map(() => activatedRoute),
+        map(route => {      
           while (route.firstChild) {
             route = route.firstChild;
           }
           return route;
-        }),
+          }),
         mergeMap(route => route.data),
-        map(data => data.hasOwnProperty('showSidebar') ? data['showSidebar'] : this.defaultShowSidebar),       
+        map(data => data.hasOwnProperty('showSidebar') ? data['showSidebar'] : this.defaultShowSidebar),
+       
       )
-    }      
+  }  
 }

@@ -34,7 +34,8 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3",
     "roboto-fontface": "^0.10.0",
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "angular2-ladda": "^5.0.0"
   },
   "devDependencies": {
     "@angular/build": "^18.1.4",
