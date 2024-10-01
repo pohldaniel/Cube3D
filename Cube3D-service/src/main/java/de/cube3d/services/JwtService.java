@@ -1,4 +1,4 @@
-package de.cube3d.service;
+package de.cube3d.services;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

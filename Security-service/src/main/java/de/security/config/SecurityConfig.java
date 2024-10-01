@@ -13,12 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter;
 
-
 import de.security.CertificateFilter;
 import de.security.components.CertificateAuthenticationProvider;
 import de.security.components.PasswordAuthenticationProvider;
-import de.security.service.CubeUserDetailsService;
-
+import de.security.services.CubeUserDetailsService;
 
 @EnableWebSecurity
 @Configuration
@@ -30,7 +28,7 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	public PasswordAuthenticationProvider passwordAuthenticationProvider() {		
+	public PasswordAuthenticationProvider passwordAuthenticationProvider() {	
 		return new PasswordAuthenticationProvider();
 	}
 	

@@ -16,9 +16,11 @@ import de.cube3d.components.SpringOIDCClient;
 import de.cube3d.components.VaultOIDCClient;
 import de.cube3d.filter.RestAPIFilter;
 import de.cube3d.rest.SpringOIDCRestController;
-import de.cube3d.service.JwtService;
+import de.cube3d.services.JwtService;
 import de.cube3d.utils.HibernateUtil;
 import de.cube3d.utils.SSLUtil;
+import de.cube3d.components.CubePasswordEncoder;
+import de.cube3d.services.CipherService;
 import jakarta.annotation.PostConstruct;
 
 /** starts the application in case everything is running check "localhost:8080/h2-console" */
@@ -46,11 +48,17 @@ public class Main extends SpringBootServletInitializer{
 	
 	@Autowired
 	private SpringOIDCRestController springOIDCRestContrller;
+	
+	@Autowired
+	CubePasswordEncoder cubePasswordEncoder;
+	
+	@Autowired
+	CipherService cipherService;
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
 		Locale.setDefault(Locale.GERMANY);
-		SSLUtil.init(System.getenv("P12PASSWORD"));
+		SSLUtil.init("raupenschmaus");
 		SpringApplication.run(Main.class, args);    	  	
 	}
 
@@ -68,5 +76,6 @@ public class Main extends SpringBootServletInitializer{
 		restAPIFilterRegistration.getFilter().setVaultOIDCClient(vaultOIDCClient);
 		restAPIFilterRegistration.getFilter().setForceValidation(forceValidation);
 		springOIDCRestContrller.init();
+		cubePasswordEncoder.setCipherService(cipherService);
 	}
 }

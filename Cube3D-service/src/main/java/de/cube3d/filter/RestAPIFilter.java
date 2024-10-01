@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 
 import de.cube3d.components.SpringOIDCClient;
 import de.cube3d.components.VaultOIDCClient;
-import de.cube3d.service.JwtService;
+import de.cube3d.services.JwtService;
 
 public class RestAPIFilter implements Filter{
 	

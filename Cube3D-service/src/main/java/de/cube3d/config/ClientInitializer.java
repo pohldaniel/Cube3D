@@ -10,7 +10,7 @@ import de.cube3d.components.VaultOIDCClient;
 @Configuration
 public class ClientInitializer {
 	
-	@Value("${oidc.spring.client.endpoint}") 
+	@Value("${oidc.spring.client.endpoint.idp}") 
 	private String endpointSpring;
 	
 	@Value("${oidc.spring.client.id}") 
@@ -19,7 +19,7 @@ public class ClientInitializer {
 	@Value("${oidc.spring.client.secret}")
 	private String clientSecretSpring;
 	
-	@Value("${oidc.vault.client.endpoint}") 
+	@Value("${oidc.vault.client.endpoint.idp}") 
 	private String endpointVault;
 	
 	@Value("${oidc.vault.client.id}") 

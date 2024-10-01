@@ -16,8 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import de.security.service.BouncyCastleCertificateGenerator;
-import de.security.service.CertificateService;
+import de.security.services.BouncyCastleCertificateGenerator;
+import de.security.services.CertificateService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController

@@ -1,4 +1,4 @@
-package de.security.view;
+package de.security.views;
 
 import java.security.Principal;
 

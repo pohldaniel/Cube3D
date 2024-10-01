@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
-import de.security.service.OidcUserInfoService;
+import de.security.services.OidcUserInfoService;
 
 @Configuration
 public class IdTokenCustomizerConfig {

@@ -120,7 +120,7 @@ public class SpringOIDCRestController {
 		parameters.put("code", code);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://fluentsoul.org/cube/spring/oidc/callback");
+		parameters.put("redirect_uri", this.callback);
 		parameters.put("scope", "openid");
 		
 		String form = parameters.keySet().stream()
@@ -179,7 +179,7 @@ public class SpringOIDCRestController {
 		parameters.put("refresh_token", refreshToken);
 		parameters.put("client_id", this.clientId);
 		parameters.put("client_secret", this.clientSecret);
-		parameters.put("redirect_uri", "https://fluentsoul.org/cube/spring/oidc/callback");
+		parameters.put("redirect_uri", this.callback);
 		parameters.put("scope", "openid");
 		
 		String form = parameters.keySet().stream()

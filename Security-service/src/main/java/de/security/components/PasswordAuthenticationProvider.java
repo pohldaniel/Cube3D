@@ -1,9 +1,5 @@
 package de.security.components;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,15 +8,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import de.security.service.CubeUserDetailsService;
+import de.security.services.CubeUserDetailsService;
 
 public class PasswordAuthenticationProvider implements AuthenticationProvider {
 
-	private String pepper = "sjddjw768wlsmj882z2rnknlahffajsdgw2mAW!sjhjsc9870asfj3f";
-	
 	@Autowired 
 	private CubeUserDetailsService userDetailsService; 
-	
+		
 	@SuppressWarnings("serial")
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -30,10 +24,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 			String password = authentication.getCredentials().toString();
         
 			UserDetails  userDetails = userDetailsService.loadUserByUsername(username);
-			MessageDigest digest = MessageDigest.getInstance("SHA-512");		
-			byte[] hash = digest.digest((password + pepper).getBytes());
-			String hexHash = String.format("%x", new BigInteger(1, hash));
-			if (!userDetails.getPassword().substring(6).equals(hexHash)) {
+			if(!CubePasswordEncoder.getInstance().matches(password, userDetails.getPassword().substring(6))){
 				throw new AuthenticationException("Invalid credentials") {};
 			}
 			
@@ -41,8 +32,6 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 			return authenticated;
 			
 		} catch (UsernameNotFoundException ue) {
-			throw new UsernameNotFoundException("User not found");
-		}catch (NoSuchAlgorithmException ne) {
 			throw new UsernameNotFoundException("User not found");
 		}
 	}

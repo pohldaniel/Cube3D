@@ -1,4 +1,4 @@
-package de.security.service;
+package de.security.services;
 
 import java.util.stream.Collectors;
 

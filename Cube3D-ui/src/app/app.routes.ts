@@ -8,6 +8,7 @@ import {TimesheetComponent} from './pages/timesheet/timesheet.component';
 import {PersonComponent} from './pages/person/person.component';
 import {SettingsComponent} from './pages/settings/settings.component';
 import {WebglComponent} from './pages/webgl/webgl.component';
+import {FibonacciComponent} from './pages/fibonacci/fibonacci.component';
 import {authGuard} from './guard/auth.guard';
 import {Role, RoleList} from './models/Role.enum';
 
@@ -31,6 +32,11 @@ export const routes: Routes = [
     component: WebglComponent,
     canActivate: [authGuard],
     data : {showSidebar: true, Roles: RoleList  }
+  }, 
+  { path: 'wasm', 
+    component: FibonacciComponent,
+    canActivate: [authGuard],
+    data : {showSidebar: true, Roles: RoleList}
   },  
   { path: 'person', 
     component: PersonComponent,

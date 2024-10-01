@@ -38,6 +38,13 @@
               </span>                       
             </button>  
           </li> 
+          <li id="three-two" class="list-item-button">
+            <button [attr.tabindex]="router.url=='/wasm' ? -1 : (storeTargetedSubmenu=='three' ? 0 : -1)" (click)="navigate('/wasm')" [class.active]="router.url == '/wasm'">Web Assembly
+              <span [attr.tabindex]="storeTargetedSubmenu=='three' ? 0 : -1"  (click)="updateFavorites($event, 6, checked[6]); $event.stopPropagation();" class="icon-box" aria-label="als favorit auswählen">
+                <mat-icon aria-hidden="false" aria-label="als favorit auswählen">{{checked[6] ? 'star' : 'star_outline'}}</mat-icon>                 
+              </span>                       
+            </button>  
+          </li> 
         </ul>
       </li>
       <li id="four" [ngStyle]="{'display' : getAccessAdmin() || getAccessPersonManager() ? 'revert' : 'none'}">

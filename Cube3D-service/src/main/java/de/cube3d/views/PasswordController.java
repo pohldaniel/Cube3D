@@ -1,17 +1,17 @@
-package de.cube3d.view;
+package de.cube3d.views;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import de.cube3d.components.CubePasswordEncoder;
 import de.cube3d.dao.PersonDao;
 import de.cube3d.entities.Person;
 
@@ -27,8 +27,10 @@ import jakarta.validation.Valid;
 @RequestMapping("/password")
 public class PasswordController {
 
+	@Autowired
+	private CubePasswordEncoder cubePasswordEncoder;
+	
 	private PersonDao personDao = PersonDao.getInstance();
-	private String pepper = "sjddjw768wlsmj882z2rnknlahffajsdgw2mAW!sjhjsc9870asfj3f";
 	
 	@RequestMapping(value = "/change", method = RequestMethod.GET)
 	public String change(Model model, @RequestParam(name = "token", defaultValue = "aaa") String token){				
@@ -50,15 +52,13 @@ public class PasswordController {
         try {
         	Person user = personDao.findByPasswordResetToken(token);
             if(user != null) { 
-                if (user.getPasswordResetTokenExpiryDate().after(Calendar.getInstance())) {
-                    MessageDigest digest = MessageDigest.getInstance("SHA-512");
-                    byte[] hash = digest.digest((passwordForm.getPassword() + pepper).getBytes());
-                    String hexHash = String.format("%x", new BigInteger(1, hash));
-                    if(hexHash.equals(user.getPasswordHash())) {
+                if (user.getPasswordResetTokenExpiryDate().after(Calendar.getInstance())) {                   
+                    if(cubePasswordEncoder.matches(passwordForm.getPassword(), user.getPasswordHash())) {
                         redirAttrs.addFlashAttribute("message", "The new password cannot be the old one");
                       	return "redirect:/password/confirm";                   	
                     }
-                    user.setPasswordHash(hexHash);
+                    
+                    user.setPasswordHash(cubePasswordEncoder.encode(passwordForm.getPassword().toString()));
                     user.setPasswordResetTokenExpiryDate(null);
                     user.setPasswordResetToken(null);
                     personDao.save(user);

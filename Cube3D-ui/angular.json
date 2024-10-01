@@ -61,7 +61,9 @@
                 "./"
               ]
             },
-            "scripts": [],
+            "scripts": [
+			  "src/assets/wasm/fibonacci.js"
+			],
             "baseHref": "/cubeui/"
           },
           "defaultConfiguration": "prod",

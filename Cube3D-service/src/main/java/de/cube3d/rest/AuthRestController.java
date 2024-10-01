@@ -1,7 +1,5 @@
 package de.cube3d.rest;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.cube3d.components.CubePasswordEncoder;
 import de.cube3d.dao.PersonDao;
 import de.cube3d.entities.Person;
-import de.cube3d.service.JwtService;
+import de.cube3d.services.JwtService;
 
 @RestController
 @ConfigurationProperties
@@ -33,8 +32,11 @@ public class AuthRestController {
 	
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private CubePasswordEncoder cubePasswordEncoder;
+	
 	private PersonDao personDao = PersonDao.getInstance();
-	private String pepper = "sjddjw768wlsmj882z2rnknlahffajsdgw2mAW!sjhjsc9870asfj3f";
 	
 	@RequestMapping(value = "/token", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> token(@RequestBody Person person){
@@ -50,13 +52,11 @@ public class AuthRestController {
     public ResponseEntity<Object> authenticatePerson(@RequestBody Map<String, String> resp) {
         log.info("/auth/authenticate was called");
         try {
-            Person optionalPerson = personDao.findById(resp.get("id"));
-            MessageDigest digest = MessageDigest.getInstance("SHA-512");
-            byte[] hash = digest.digest((resp.get("password") + pepper).getBytes());
-            String hexHash = String.format("%x", new BigInteger(1, hash));
+            Person optionalPerson = personDao.findById(resp.get("id"));         
             if (optionalPerson != null) {
                 Person person = optionalPerson;
-                if (person.getPasswordHash() != null && person.getPasswordHash().equals(hexHash)) {
+                
+                if (cubePasswordEncoder.matches(resp.get("password"), person.getPasswordHash())) {
                     return ResponseEntity.status(HttpStatus.ACCEPTED).body(person);
                 }else {
                 	ObjectMapper mapper = new ObjectMapper(); 

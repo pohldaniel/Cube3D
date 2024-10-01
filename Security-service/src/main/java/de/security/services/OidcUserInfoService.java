@@ -1,4 +1,4 @@
-package de.security.service;
+package de.security.services;
 
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
