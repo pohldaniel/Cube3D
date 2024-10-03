@@ -36,7 +36,7 @@ openssl req -new -newkey rsa:4096 -nodes -keyout certs/timera-iss.key -out certs
 openssl x509 -req -CA certs/timera-int.crt -CAkey certs/timera-int.key -CAcreateserial -in certs/timera-iss.csr -out certs/timera-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign")
 openssl x509 -pubkey -noout -in certs/timera-iss.crt  > certs/timera-iss.pub
 openssl pkcs12 -export -out certs/timera-trust.p12 -inkey certs/timera-iss.key -in certs/timera-iss.crt -name "Timera Issuing Pair" -passout pass:raupenschmaus
-cat certs/timera-iss.crt certs/timera-int.crt certs/root.crt > certs/nginx.crt
+cat certs/timera-iss.crt certs/timera-int.crt certs/root.crt > certs/ca.crt
 
 
 #Spring Client

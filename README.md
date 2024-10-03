@@ -77,3 +77,9 @@ https://auth-server:8443/download/root
 emcc fibonacci.c -Os -s WASM=1 -s MODULARIZE=1 -o fibonacci.js
 emcc -Os SOIL/src/image_DXT.c SOIL/src/image_helper.c SOIL/src/SOIL.c SOIL/src/stb_image_aug.c 3d-cube.c -o 3d-cube.js -s LEGACY_GL_EMULATION=1 -I SOIL/src -s EXPORTED_RUNTIME_METHODS="['ccall']" -s FORCE_FILESYSTEM=1 -s MODULARIZE=1 -s EXPORT_NAME='Cube3dModule'
 em++ librarytest.cc --js-library library.js -o triangle.js -s "EXPORTED_FUNCTIONS=['_WAFNDraw','_main']" -s "EXPORTED_RUNTIME_METHODS=['ccall', 'print', 'printErr']" -s MODULARIZE=1 -s EXPORT_NAME='TriangleModule'
+
+
+emcc snake.c -o snake_c.js -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -I. -I C:/raylib/src -I C:/raylib/src/external -L. -L C:/raylib/src -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 C:/raylib/src/web/libraylib.a -DPLATFORM_WEB -s "EXPORTED_FUNCTIONS=['_free','_malloc','_main']" -s "EXPORTED_RUNTIME_METHODS=['ccall']" -s MODULARIZE=1 -s EXPORT_NAME='SnakeModule'
+
+
+emcc snake.cpp -o snake.js -Wall -std=c++14 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -I. -I C:/raylib/src -I C:/raylib/src/external -L. -L C:/raylib/src -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 --preload-file Graphics --preload-file Sounds C:/raylib/src/web/libraylib.a -DPLATFORM_WEB -s "EXPORTED_FUNCTIONS=['_free','_malloc','_main']" -s "EXPORTED_RUNTIME_METHODS=['ccall']" -s MODULARIZE=1 -s EXPORT_NAME='SnakeModule'
