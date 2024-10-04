@@ -1,3 +1,5 @@
+//https://stackoverflow.com/questions/73973701/emscripten-how-to-override-locatefile-when-compiled-with-modularize-options
+
 import { AfterViewInit, Directive } from "@angular/core";
 import { loadScript } from "./tools";
 
@@ -9,7 +11,7 @@ export abstract class EmscriptenWasmComponent<M extends EmscriptenModule = Emscr
   private resolvedModule!: M;
   protected moduleDecorator!: EmscriptenModuleDecorator<M>;
 
-  protected constructor(private moduleExportName: string, private pathJs: string, private pathWasm: string) {}
+  protected constructor(private moduleExportName: string, private pathJs: string, private pathWasm: string, private pathData?: string) {}
 
   get module(): M {
     return this.resolvedModule;
@@ -24,8 +26,11 @@ export abstract class EmscriptenWasmComponent<M extends EmscriptenModule = Emscr
       .then(() => {
         const module = <M>{
           locateFile: (file: string) => {
+            if (file.endsWith(".data")) {
+              return this.pathData;
+            }
             return this.pathWasm;
-          },
+          }
         };
         const moduleDecorator: EmscriptenModuleDecorator<M> = this.moduleDecorator || noopModuleDecorator;
         moduleDecorator(module);

@@ -50,8 +50,7 @@
             canvas: (function() {
                 var canvas = document.getElementById('canvas');
                 return canvas;
-                })(),
-			resizeCanvas: function() {console.log('ttt');}
+                })()
         };
 
         var start_function = function(o) {
@@ -76,18 +75,7 @@
     </script>
     <script>
 
-          (function() {
-            var memoryInitializer = 'naked_owl.js.mem';
-            if (typeof Module['locateFile'] === 'function') {
-              memoryInitializer = Module['locateFile'](memoryInitializer);
-            } else if (Module['memoryInitializerPrefixURL']) {
-              memoryInitializer = Module['memoryInitializerPrefixURL'] + memoryInitializer;
-            }
-            var xhr = Module['memoryInitializerRequest'] = new XMLHttpRequest();
-            xhr.open('GET', memoryInitializer, true);
-            xhr.responseType = 'arraybuffer';
-            xhr.send(null);
-          })();
+         
 
           var script = document.createElement('script');
           script.src = "naked_owl.js";

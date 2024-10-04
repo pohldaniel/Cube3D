@@ -20,5 +20,5 @@ export class SnakeComponent extends EmscriptenWasmComponent {
         }
       };
     };
-  }
+  } 
 }
