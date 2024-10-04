@@ -83,3 +83,6 @@ emcc snake.c -o snake_c.js -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces 
 
 
 emcc snake.cpp -o snake.js -Wall -std=c++14 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -I. -I C:/raylib/src -I C:/raylib/src/external -L. -L C:/raylib/src -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 --preload-file Graphics --preload-file Sounds C:/raylib/src/web/libraylib.a -DPLATFORM_WEB -s "EXPORTED_FUNCTIONS=['_free','_malloc','_main']" -s "EXPORTED_RUNTIME_METHODS=['ccall']" -s MODULARIZE=1 -s EXPORT_NAME='SnakeModule'
+
+
+emcc naked_owl.cpp --js-library library.js -s WASM=1 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s "SDL2_IMAGE_FORMATS=['png']" -s USE_SDL_TTF=2 -s "EXPORTED_FUNCTIONS=['_mainf','_setSize']" -s "EXPORTED_RUNTIME_METHODS=['ccall']" -s ASYNCIFY -O2 --preload-file assets -o naked_owl.js
