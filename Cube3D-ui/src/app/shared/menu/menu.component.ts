@@ -91,6 +91,7 @@ export class MenuComponent implements OnInit{
     .set(Math.pow(2, 9), {target : '/snake', description: 'Snake', description2: '', class : 'three-five', index : 9} as MenuItem)
     .set(Math.pow(2, 10), {target : '/snakecpp', description: 'Snake Cpp', description2: '', class : 'three-six', index : 10} as MenuItem)
     .set(Math.pow(2, 11), {target : '/owl', description: 'Owl', description2: '', class : 'three-seven', index : 11} as MenuItem)
+    .set(Math.pow(2, 12), {target : '/snke3', description: 'Snake 3', description2: '', class : 'three-eight', index : 12} as MenuItem)
 
     .set(Math.pow(2, 4), {target : '/person', description: 'Benutzerverwaltung', description2: '', class : 'four-one', index : 4} as MenuItem)
     .set(Math.pow(2, 5), {target : '/settings', description: 'Einstellungen', description2: '', class : 'four-two', index : 5} as MenuItem);

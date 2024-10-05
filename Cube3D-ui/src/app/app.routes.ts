@@ -13,6 +13,7 @@ import {TriangleComponent} from './pages/triangle/triangle.component';
 import {Wasm3dCubeComponent} from './pages/cube/3d-cube.component';
 import {SnakeComponent} from './pages/snake/snake.component';
 import {SnakeCppComponent} from './pages/snakeCpp/snakeCpp.component';
+import {Snake3Component} from './pages/snake3/snake3.component';
 import {OwlComponent} from './pages/owl/owl.component';
 import {authGuard} from './guard/auth.guard';
 import {Role, RoleList} from './models/Role.enum';
@@ -60,6 +61,11 @@ export const routes: Routes = [
   },
   { path: 'snakecpp', 
     component: SnakeCppComponent,
+    canActivate: [authGuard],
+    data : {showSidebar: true, Roles: RoleList}
+  },
+  { path: 'snake3', 
+    component: Snake3Component,
     canActivate: [authGuard],
     data : {showSidebar: true, Roles: RoleList}
   },
