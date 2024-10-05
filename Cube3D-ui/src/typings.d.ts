@@ -16,11 +16,12 @@ interface EmscriptenModule {
   print?(what: string): void;
   printErr?(what: string): void;
   locateFile?(file: string): string;
+  onRuntimeInitialized?(): void;
   ccall?<T>(
     funcName: string,
     returnType: string,
     argumentTypes: string[],
-    arguments: unknown[],
+    arguments?: unknown[],
     options?: CcallOptions
   ): T;
   preRun?: Function[];

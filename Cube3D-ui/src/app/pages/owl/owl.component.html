@@ -1,0 +1,7 @@
+
+<div id="loadingDiv">The owl is loading...</div>
+<canvas class="emscripten" oncontextmenu="event.preventDefault()" id="canvas" #canvas></canvas>
+<div style="width:200px; margin-left:auto; margin-right:auto">
+  <p class="startButton" #ElementRef (click)="start(ElementRef)">Click to start</p>
+  <p id="fullScreenButton" (click)="setSize(canvas);">Click for full-screen</p>
+</div>
