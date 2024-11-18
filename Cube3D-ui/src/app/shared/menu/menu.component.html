@@ -87,6 +87,13 @@
               </span>                       
             </button>  
           </li> 
+          <li id="three-nine" class="list-item-button">
+            <button [attr.tabindex]="router.url=='/open' ? -1 : (storeTargetedSubmenu=='open' ? 0 : -1)" (click)="navigate('/open')" [class.active]="router.url == '/open'">Open
+              <span [attr.tabindex]="storeTargetedSubmenu=='three' ? 0 : -1"  (click)="updateFavorites($event, 13, checked[13]); $event.stopPropagation();" class="icon-box" aria-label="als favorit auswählen">
+                <mat-icon aria-hidden="false" aria-label="als favorit auswählen">{{checked[13] ? 'star' : 'star_outline'}}</mat-icon>                 
+              </span>                       
+            </button>  
+          </li> 
         </ul>
       </li>
       <li id="four" [ngStyle]="{'display' : getAccessAdmin() || getAccessPersonManager() ? 'revert' : 'none'}">
