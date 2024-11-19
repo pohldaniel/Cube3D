@@ -11,7 +11,7 @@ declare var Module: any;
 export class TriangleComponent extends EmscriptenWasmComponent implements OnInit, AfterViewInit, OnDestroy {
  
   constructor() {
-    super("TriangleModule",  'assets/wasm/triangle.js', 'assets/wasm/triangle.wasm');
+    super("TriangleModule",  'assets/wasm/triangle/triangle.js', 'assets/wasm/triangle/triangle.wasm');
   }
 
   ngOnInit() {

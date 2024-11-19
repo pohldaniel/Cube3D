@@ -62,7 +62,7 @@
               ]
             },
             "scripts": [
-			  "src/assets/wasm/fibonacci.js"
+			  "src/assets/wasm/fibonacci/fibonacci.js"
 			],
             "baseHref": "/cubeui/"
           },

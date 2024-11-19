@@ -3,15 +3,15 @@ import {EmscriptenWasmComponent} from "../emscripten-wasm.component";
 
 @Component({
   selector: 'app-snake',
-  templateUrl: './snake.component.html',
-  styleUrls: ['./snake.component.sass'],
+  templateUrl: './snakec.component.html',
+  styleUrls: ['./snakec.component.sass'],
   standalone: true,
 })
-export class SnakeComponent extends EmscriptenWasmComponent {
+export class SnakecComponent extends EmscriptenWasmComponent {
   @ViewChild("canvas") canvas!: ElementRef;
   error!: string;
   constructor(private ngZone: NgZone) {
-    super("SnakeModule",  'assets/wasm/snake_c.js', 'assets/wasm/snake_c.wasm');
+    super("SnakeModule",  'assets/wasm/snakec/snake_c.js', 'assets/wasm/snakec/snake_c.wasm');
     this.moduleDecorator = (mod) => {
       mod.canvas = <HTMLCanvasElement>this.canvas.nativeElement;
       mod.printErr = (what: string) => {

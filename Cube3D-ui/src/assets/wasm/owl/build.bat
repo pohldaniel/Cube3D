@@ -1,0 +1,3 @@
+rem emcc naked_owl.cpp -s WASM=1 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s "SDL2_IMAGE_FORMATS=['png']" -s USE_SDL_TTF=2 -s "EXPORTED_FUNCTIONS=['_mainf','_setSize']" -s "EXPORTED_RUNTIME_METHODS=['ccall']" -s ASYNCIFY -O2 --preload-file assets -o naked_owl.js
+emcc naked_owl.cpp -s WASM=1 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s "SDL2_IMAGE_FORMATS=['png']" -s USE_SDL_TTF=2 -s "EXPORTED_FUNCTIONS=['_mainf','_setSize']" -s "EXPORTED_RUNTIME_METHODS=['ccall']" -s ASYNCIFY -O2 --preload-file assets -o naked_owl_module.js -s MODULARIZE=1 -s EXPORT_NAME='OwlModule'
+cmd /k

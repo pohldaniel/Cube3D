@@ -36,11 +36,12 @@ openssl req -new -newkey rsa:4096 -nodes -keyout certs/cube-iss.key -out certs/c
 openssl x509 -req -CA certs/cube-int.crt -CAkey certs/cube-int.key -CAcreateserial -in certs/cube-iss.csr -out certs/cube-iss.crt -days 3650 -extfile <(printf "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,cRLSign,keyCertSign\n[server_ext]\nauthorityInfoAccess=CA Issuers - URI:https://127.0.0.1:8200/v1/pki_int/ca")
 openssl x509 -pubkey -noout -in certs/cube-iss.crt  > certs/cube-iss.pub
 openssl pkcs12 -export -out certs/cube-trust.p12 -inkey certs/cube-iss.key -in certs/cube-iss.crt -name "Cube Issuing Pair" -passout pass:password
+cat certs/cube-iss.crt certs/cube-int.crt certs/root.crt > certs/ca.crt
 
 #Spring Client
 openssl req -new -newkey rsa:4096 -nodes -keyout certs/spring-client.key -out certs/spring-client.csr -subj "/CN=Spring Client/OU=Development/C=DE/ST=Saxonia/L=Leipzig/O=Main Gruppe" -addext "extendedKeyUsage=clientAuth"
 openssl x509 -req -CA certs/cube-iss.crt -CAkey certs/cube-iss.key -CAcreateserial -in certs/spring-client.csr -out certs/spring-client.crt -days 3650 -extfile <(printf "extendedKeyUsage=clientAuth")
-cat certs/spring-client.crt certs/cube-iss.crt > certs/spring-client.pem
+#cat certs/spring-client.crt certs/cube-iss.crt > certs/spring-client.pem
 openssl pkcs12 -export -out certs/spring-client.p12 -inkey certs/spring-client.key -in certs/spring-client.crt -name "Spring Client" -passout pass:password
 cp certs/spring-client.p12 ../Cube3D-service/src/main/resources/certs
 cp certs/spring-client.p12 ../Security-service/src/main/resources/certs

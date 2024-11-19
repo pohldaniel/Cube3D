@@ -14,7 +14,7 @@ export interface Settings {
 export interface MenuItem {
   target: string;
   description: string;
-  description2: string;
+  descriptionLineBreak: string;
   class : string;
   index: number;
 }
@@ -80,22 +80,23 @@ export class MenuComponent implements OnInit{
     this.favoriteList = [];
     this.checked = [];
     let map = new Map<number, MenuItem>()
-    .set(Math.pow(2, 0), {target : '/dashboard', description: 'Dashboard', description2: '', class : 'two-one', index : 0} as MenuItem)
-    .set(Math.pow(2, 1), {target : '/timesheet', description: 'Zeiterfassung', description2: '', class : 'two-two', index : 1} as MenuItem)
-    .set(Math.pow(2, 2), {target : '/help', description: 'Hilfe', description2: '', class : 'two-three', index : 2} as MenuItem)
+    .set(Math.pow(2, 0), {target : '/dashboard', description: 'Dashboard', descriptionLineBreak: '', class : 'two-one', index : 0} as MenuItem)
+    .set(Math.pow(2, 1), {target : '/timesheet', description: 'Zeiterfassung', descriptionLineBreak: '', class : 'two-two', index : 1} as MenuItem)
+    .set(Math.pow(2, 2), {target : '/help', description: 'Hilfe', descriptionLineBreak: '', class : 'two-three', index : 2} as MenuItem)
 
-    .set(Math.pow(2, 3), {target : '/webgl', description: 'Web GL', description2: '', class : 'three-one', index : 3} as MenuItem)
-    .set(Math.pow(2, 6), {target : '/fibonacci', description: 'Fibonacci', description2: '', class : 'three-two', index : 6} as MenuItem)
-    .set(Math.pow(2, 7), {target : '/triangle', description: 'Triangle', description2: '', class : 'three-three', index : 7} as MenuItem)
-    .set(Math.pow(2, 8), {target : '/cube', description: 'Cube', description2: '', class : 'three-four', index : 8} as MenuItem)
-    .set(Math.pow(2, 9), {target : '/snake', description: 'Snake', description2: '', class : 'three-five', index : 9} as MenuItem)
-    .set(Math.pow(2, 10), {target : '/snakecpp', description: 'Snake Cpp', description2: '', class : 'three-six', index : 10} as MenuItem)
-    .set(Math.pow(2, 11), {target : '/owl', description: 'Owl', description2: '', class : 'three-seven', index : 11} as MenuItem)
-    .set(Math.pow(2, 12), {target : '/snke3', description: 'Snake 3', description2: '', class : 'three-eight', index : 12} as MenuItem)
-    .set(Math.pow(2, 13), {target : '/open', description: 'Open', description2: '', class : 'three-nine', index : 13} as MenuItem)
+    .set(Math.pow(2, 3), {target : '/webgl', description: 'Web GL', descriptionLineBreak: '', class : 'three-one', index : 3} as MenuItem)
+    .set(Math.pow(2, 6), {target : '/fibonacci', description: 'Fibonacci', descriptionLineBreak: '', class : 'three-two', index : 6} as MenuItem)
+    .set(Math.pow(2, 7), {target : '/triangle', description: 'Triangle', descriptionLineBreak: '', class : 'three-three', index : 7} as MenuItem)
+    .set(Math.pow(2, 8), {target : '/cube', description: 'Cube', descriptionLineBreak: '', class : 'three-four', index : 8} as MenuItem)
+    .set(Math.pow(2, 9), {target : '/snake', description: 'Snake', descriptionLineBreak: '', class : 'three-five', index : 9} as MenuItem)
+    .set(Math.pow(2, 10), {target : '/snakecpp', description: 'Snake Cpp', descriptionLineBreak: '', class : 'three-six', index : 10} as MenuItem)
+    .set(Math.pow(2, 11), {target : '/owl', description: 'Owl', descriptionLineBreak: '', class : 'three-seven', index : 11} as MenuItem)
+    .set(Math.pow(2, 12), {target : '/snke3', description: 'Snake 3', descriptionLineBreak: '', class : 'three-eight', index : 12} as MenuItem)
+    .set(Math.pow(2, 13), {target : '/open', description: 'Open', descriptionLineBreak: '', class : 'three-nine', index : 13} as MenuItem)
+    .set(Math.pow(2, 14), {target : '/imgui', description: 'ImGui', descriptionLineBreak: '', class : 'three-ten', index : 13} as MenuItem)
 
-    .set(Math.pow(2, 4), {target : '/person', description: 'Benutzerverwaltung', description2: '', class : 'four-one', index : 4} as MenuItem)
-    .set(Math.pow(2, 5), {target : '/settings', description: 'Einstellungen', description2: '', class : 'four-two', index : 5} as MenuItem);
+    .set(Math.pow(2, 4), {target : '/person', description: 'Benutzerverwaltung', descriptionLineBreak: '', class : 'four-one', index : 4} as MenuItem)
+    .set(Math.pow(2, 5), {target : '/settings', description: 'Einstellungen', descriptionLineBreak: '', class : 'four-two', index : 5} as MenuItem);
    
     for(let key of map.keys()) {
 

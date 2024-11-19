@@ -2,16 +2,16 @@ import {Component, OnInit, AfterViewInit,ViewChild,ElementRef, OnDestroy, NgZone
 import {EmscriptenWasmComponent} from "../emscripten-wasm.component";
 
 @Component({
-  selector: 'app-snake-cpp',
-  templateUrl: './snakecpp.component.html',
-  styleUrls: ['./snakecpp.component.sass'],
+  selector: 'app-imgui-cpp',
+  templateUrl: './imgui.component.html',
+  styleUrls: ['./imgui.component.sass'],
   standalone: true,
 })
-export class SnakecppComponent extends EmscriptenWasmComponent {
+export class ImguiComponent extends EmscriptenWasmComponent {
   @ViewChild("canvas") canvas!: ElementRef;
   error!: string;
   constructor(private ngZone: NgZone) {
-    super("SnakeModule",  'assets/wasm/snakecpp/snake.js', 'assets/wasm/snakecpp/snake.wasm', 'assets/wasm/snakecpp/snake.data');
+    super("ImguiWebModule",  'assets/wasm/imgui/ImguiWeb.js', 'assets/wasm/imgui/ImguiWeb.wasm');
     this.moduleDecorator = (mod) => {     
       mod.canvas = <HTMLCanvasElement>this.canvas.nativeElement;
       mod.printErr = (what: string) => {

@@ -1,10 +1,11 @@
 #https://github.com/kubernetes/ingress-nginx/issues/3122
-
+#https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cube-ingress
   annotations:
+    #cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
     nginx.ingress.kubernetes.io/proxy-buffering: "on"

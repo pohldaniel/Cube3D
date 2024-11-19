@@ -11,7 +11,7 @@ export class OwlComponent extends EmscriptenWasmComponent {
   @ViewChild("canvas") canvas!: ElementRef;
   error!: string;
   constructor(private ngZone: NgZone) {
-    super("OwlModule",  'assets/wasm/Owl/naked_owl_module.js', 'assets/wasm/Owl/naked_owl_module.wasm', 'assets/wasm/Owl/naked_owl_module.data');
+    super("OwlModule",  'assets/wasm/owl/naked_owl_module.js', 'assets/wasm/owl/naked_owl_module.wasm', 'assets/wasm/owl/naked_owl_module.data');
     this.moduleDecorator = (mod) => {   
       mod.canvas = <HTMLCanvasElement>this.canvas.nativeElement;
       mod.printErr = (what: string) => {

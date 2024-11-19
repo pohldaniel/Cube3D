@@ -11,7 +11,7 @@ export class Snake3Component extends EmscriptenWasmComponent {
   @ViewChild("canvas") canvas!: ElementRef;
   error!: string;
   constructor(private ngZone: NgZone) {
-    super("SnakeModule",  'assets/wasm/Snake3/snake_module.js', 'assets/wasm/Snake3/snake_module.wasm', 'assets/wasm/Snake3/snake_module.data');
+    super("SnakeModule",  'assets/wasm/snake3/snake_module.js', 'assets/wasm/snake3/snake_module.wasm', 'assets/wasm/snake3/snake_module.data');
     this.moduleDecorator = (mod) => {
       mod.canvas = <HTMLCanvasElement>this.canvas.nativeElement;
       mod.printErr = (what: string) => {

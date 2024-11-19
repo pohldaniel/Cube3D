@@ -18,7 +18,7 @@ export class FibonacciWasmService {
   );
 
   constructor() {
-    this.instantiateWasm('/assets/wasm/fibonacci.wasm');
+    this.instantiateWasm('/assets/wasm/fibonacci/fibonacci.wasm');
   }
 
   private async instantiateWasm(url: string) {

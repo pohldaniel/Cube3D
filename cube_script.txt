@@ -1,0 +1,19 @@
+kubectl create namespace cube
+kubectl create secret generic cube-ui-tls --from-file=certificate=./certs/angular-server.crt --from-file=privatekey=./certs/angular-server.key -n timera
+kubectl create secret tls tls-secret --key ./certs/angular-server.key --cert ./certs/angular-server.crt
+kubectl create secret generic ca-secret --from-file=ca.crt=./certsca.crt
+kubectl create secret generic p12-password --from-literal=password=raupenschmaus -n cube
+
+kubectl apply -f Cube3D-ui/manifest/service.yaml
+kubectl apply -f Cube3D-ui/manifest/bridge.yaml
+kubectl apply -f Cube3D-ui/manifest/deployment.yaml
+
+kubectl apply -f Cube3D-service/manifest/service.yaml
+kubectl apply -f Cube3D-service/manifest/bridge.yaml
+kubectl apply -f Cube3D-service/manifest/deployment.yaml
+
+kubectl apply -f Security-service/manifest/service.yaml
+kubectl apply -f Security-service/manifest/bridge.yaml
+kubectl apply -f Security-service/manifest/deployment.yaml
+
+kubectl apply -f ingress.yaml
